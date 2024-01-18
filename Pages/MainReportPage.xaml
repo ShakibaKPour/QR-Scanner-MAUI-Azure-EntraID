@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RepRepair.MainReportPage"
+             xmlns:viewmodels="clr-namespace:RepRepair.ViewModels"
+             x:DataType="viewmodels:ReportViewModel"
+             Title="MainReportPage">
+    <VerticalStackLayout>
+        <Label 
+            Text="Choose an alternative"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Button Text="Record a voice message" Padding="10" Command="{Binding NavigateToVoiceRecordCommand}"></Button>
+        <Button Text="Write to us"></Button>
+        <Button Text=" Choose from a list"></Button>
+    </VerticalStackLayout>
+</ContentPage>

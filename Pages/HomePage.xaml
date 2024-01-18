@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodels="clr-namespace:RepRepair.ViewModels"
+             x:DataType="viewmodels:HomeViewModel"
+             x:Class="RepRepair.HomePage"
+             Title="Home">
+    <ScrollView>
+        <VerticalStackLayout Spacing="25" Padding="30">
+
+            <Label Text="Welcome to RepRepair!"
+                   HorizontalOptions="Center"
+                   FontSize="Large"/>
+
+
+            <Button Text="Start Scanning"
+                    HorizontalOptions="Fill"
+                    Command="{Binding ScanCommand}"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
