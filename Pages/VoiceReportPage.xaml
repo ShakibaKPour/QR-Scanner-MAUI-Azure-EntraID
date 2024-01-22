@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodels="clr-namespace:RepRepair.ViewModels"
              x:DataType="viewmodels:VoiceReportViewModel"
-             x:Class="RepRepair.VoiceReportPage"
+             x:Class="RepRepair.Pages.VoiceReportPage"
              Title="VoiceReportPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Record a voice message!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Label 
-            Text="Press the mic to record"
-            VerticalOptions="Center"
-            HorizontalOptions="Center"/>
-        <Button Text="Record" Command="{Binding RecordCommand}"></Button>
-        <Entry Text="Transcription"></Entry> 
-        <Button Text="Review" Command="{Binding ReviewTranscriptionCommand}"></Button>
-        <Button Text="Submit" Command="{Binding SubmitCommand}"></Button>
-    </VerticalStackLayout>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"></toolkit:InvertedBoolConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout Padding="20">
+        <Button Text="Record" Command="{Binding RecordCommand}" IsVisible="{Binding IsRecording, Converter={StaticResource InvertedBoolConverter}}"/>
+        <Button Text="Stop Recording" Command="{Binding RecordCommand}" IsVisible="{Binding IsRecording}"/>
+        <Editor Text="{Binding TranscribedText}" IsVisible="{Binding IsTranscriptionVisible}" />
+        <Button Text="Edit" Command="{Binding EditTranscriptionCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
+        <Button Text="Delete" Command="{Binding DeleteRecordingCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
+        <Button Text="Submit" Command="{Binding SubmitCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
+    </StackLayout>
 </ContentPage>

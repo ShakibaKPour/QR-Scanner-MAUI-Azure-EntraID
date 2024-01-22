@@ -1,4 +1,5 @@
-﻿using RepRepair.Models;
+﻿using RepRepair.Extensions;
+using RepRepair.Models;
 using RepRepair.Services.Navigation;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -11,9 +12,9 @@ public class ReportViewModel : BaseViewModel
     public ReportInfo Report { get; set; }
     public ICommand NavigateToVoiceRecordCommand { get; set; }
 
-    public ReportViewModel(INavigationService navigationService)
+    public ReportViewModel()
     {
-        _navigationService = navigationService;
+        _navigationService = ServiceHelper.GetService<INavigationService>();
         Report = new ReportInfo();
         NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
     }

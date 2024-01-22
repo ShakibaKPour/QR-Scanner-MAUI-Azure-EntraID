@@ -3,14 +3,14 @@ using Microsoft.Maui.Controls;
 using System;
 using RepRepair.Services.Navigation;
 
-namespace RepRepair;
+namespace RepRepair.Pages;
 
 public partial class HomePage : ContentPage
 {
     //TODO Implement the language selection 
-    public HomePage(INavigationService navigationService)
-	{
+    public HomePage()
+    {
         InitializeComponent();
-        BindingContext = new HomeViewModel(navigationService);
-	}
+        BindingContext = new HomeViewModel();
+    }
 }

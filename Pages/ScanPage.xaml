@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="RepRepair.ScanPage"
+             x:Class="RepRepair.Pages.ScanPage"
              xmlns:viewmodels="clr-namespace:RepRepair.ViewModels;assembly=RepRepair"
              xmlns:local="clr-namespace:RepRepair.ViewModels"
              x:DataType="viewmodels:ScanViewModel"
@@ -14,20 +14,20 @@
             Padding="30,0"
             VerticalOptions="Fill"
             HorizontalOptions="Fill">
-            <zxing:CameraBarcodeReaderView x:Name="cameraView" WidthRequest="300" HeightRequest="400"
-                              IsDetecting="True"
+            <zxing:CameraBarcodeReaderView x:Name="cameraView" WidthRequest="300" HeightRequest="400"/>
+            <!--IsDetecting="True"
                               IsTorchOn="False"
                               CameraLocation="Rear"
                               Loaded="cameraView_Loaded"
-                              BarcodesDetected="cameraView_BarcodesDetected">
-                <!--<zxing:CameraBarcodeReaderView.Behaviors>
+                              BarcodesDetected="cameraView_BarcodesDetected"-->
+            <!--<zxing:CameraBarcodeReaderView.Behaviors>
                     <toolkit:EventToCommandBehavior
                         EventName="Loaded"
                         Command="{Binding LoadObjectInfo}">
                         
                     </toolkit:EventToCommandBehavior>
                 </zxing:CameraBarcodeReaderView.Behaviors>-->
-            </zxing:CameraBarcodeReaderView>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

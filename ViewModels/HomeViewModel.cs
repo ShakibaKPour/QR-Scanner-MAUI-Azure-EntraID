@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Controls;
+using RepRepair.Extensions;
 using RepRepair.Services.Navigation;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -10,9 +11,9 @@ public partial class HomeViewModel : BaseViewModel
     private readonly INavigationService _navigationService;
     public ICommand ScanCommand { get; set; }
 
-    public HomeViewModel(INavigationService  navigationService)
+    public HomeViewModel()
     {
-        _navigationService = navigationService;
+        _navigationService = ServiceHelper.GetService<INavigationService>();
         ScanCommand = new Command(async () => await OnScanAsync());
 
     }
@@ -23,5 +24,10 @@ public partial class HomeViewModel : BaseViewModel
         await _navigationService.NavigateToAsync<ScanViewModel>();
     }
 
-   // public event PropertyChangedEventHandler? PropertyChanged;
+     public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

@@ -1,4 +1,5 @@
-﻿using RepRepair.ViewModels;
+﻿using RepRepair.Pages;
+using RepRepair.ViewModels;
 
 namespace RepRepair.Services.Navigation;
 
@@ -31,12 +32,12 @@ public class NavigationService : INavigationService
             {
                 await viewModel.InitializeAsync(parameter);
             }
-            await Application.Current.MainPage.Navigation.PushAsync(page);
+            await Application.Current.MainPage .Navigation.PushAsync(page);
         }
     }
 
-    public async Task NavigateToAsync<TViewModel>()
-    {
-        await Application.Current.MainPage.Navigation.PopAsync();
-    }
+    //public async Task NavigateToAsync<TViewModel>()
+    //{
+    //    await Application.Current.MainPage.Navigation.PopAsync();
+    //}
 }

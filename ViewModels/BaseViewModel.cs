@@ -17,4 +17,9 @@ public abstract class BaseViewModel : INotifyPropertyChanged
     {
         return Task.CompletedTask;
     }
+
+    //Consider to put the Navigationservice in the BaseViewModel class
+    //so that it stores the navigationService instance in a NavigationService property, of type INavigationService.
+    //Therefore, all view-model classes, which derive from the BaseViewModel class,
+    //can use the NavigationService property to access the methods specified by the INavigationService interface.
 }

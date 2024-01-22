@@ -1,4 +1,5 @@
-﻿using RepRepair.Services.DB;
+﻿using RepRepair.Extensions;
+using RepRepair.Services.DB;
 using RepRepair.Services.Navigation;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -50,10 +51,10 @@ public class ScanViewModel : BaseViewModel
             OnPropertyChanged(nameof(ObjectId));
         }
     }
-    public ScanViewModel(IDatabaseService databaseService, INavigationService navigationService)
+    public ScanViewModel()
     {
-        _databaseService = databaseService;
-        _navigationService = navigationService;
+        _databaseService = ServiceHelper.GetService<IDatabaseService>();
+        _navigationService = ServiceHelper.GetService<INavigationService>();
     }
 
     private async void LoadObjectInfo(string qrCode)
@@ -67,5 +68,12 @@ public class ScanViewModel : BaseViewModel
 
             await _navigationService.NavigateToAsync<ReportViewModel>(objectInfo);
         }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

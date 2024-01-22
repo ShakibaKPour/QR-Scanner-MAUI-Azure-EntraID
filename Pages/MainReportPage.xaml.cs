@@ -1,15 +1,15 @@
 using RepRepair.Services.Navigation;
 using RepRepair.ViewModels;
 
-namespace RepRepair;
+namespace RepRepair.Pages;
 
 public partial class MainReportPage : ContentPage
 {
     //TODO Implement the language selection 
-    public MainReportPage(INavigationService navigationService)
+    public MainReportPage()
 	{
 		InitializeComponent();
-		BindingContext = new ReportViewModel(navigationService);
+		BindingContext = new ReportViewModel();
 		
 	}
 

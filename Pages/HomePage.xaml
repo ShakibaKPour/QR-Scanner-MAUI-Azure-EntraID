@@ -5,7 +5,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodels="clr-namespace:RepRepair.ViewModels"
              x:DataType="viewmodels:HomeViewModel"
-             x:Class="RepRepair.HomePage"
+             x:Class="RepRepair.Pages.HomePage"
              Title="Home">
     <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="30">

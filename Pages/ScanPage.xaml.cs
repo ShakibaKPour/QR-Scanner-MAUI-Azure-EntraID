@@ -3,21 +3,21 @@ using RepRepair.Services.Navigation;
 using RepRepair.ViewModels;
 using ZXing.Net.Maui;
 
-namespace RepRepair;
+namespace RepRepair.Pages;
 
 public partial class ScanPage : ContentPage
 {
-	public ScanPage(IDatabaseService databaseService, INavigationService navigationService)
+	public ScanPage()
 	{
 		InitializeComponent();
-		BindingContext = new ScanViewModel(databaseService, navigationService);
+		BindingContext = new ScanViewModel();
     }
 
-    private void cameraView_BarcodesDetected(object sender, ZXing.Net.Maui.BarcodeDetectionEventArgs e)
-    {
-        //Dispatcher.Dispatch(() =>
-        //{
+    //private void cameraView_BarcodesDetected(object sender, ZXing.Net.Maui.BarcodeDetectionEventArgs e)
+    //{
+    //    //Dispatcher.Dispatch(() =>
+    //    //{
             
-        //});
-    }
+    //    //});
+    //}
 }

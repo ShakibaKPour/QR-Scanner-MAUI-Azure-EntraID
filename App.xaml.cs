@@ -1,4 +1,6 @@
-﻿namespace RepRepair
+﻿using RepRepair.Pages;
+
+namespace RepRepair
 {
     public partial class App : Application
     {

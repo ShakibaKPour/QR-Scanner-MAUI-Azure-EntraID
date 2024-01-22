@@ -1,5 +1,8 @@
 ﻿using Plugin.Maui.Audio;
+using RepRepair.Extensions;
 using RepRepair.Models;
+using RepRepair.Services.Cognitive;
+using RepRepair.Services.VoiceRecording;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -7,60 +10,93 @@ namespace RepRepair.ViewModels;
 
 public class VoiceReportViewModel : BaseViewModel
 {
-    private readonly IAudioManager _audioManager;
-    private readonly IAudioRecorder _audioRecorder;
-    public VoiceMessageInfo VoiceMessage { get; set; }
-    public ICommand RecordCommand { get; private set; }
-    public ICommand ReviewTranscriptionCommand { get; private set; }
-    public ICommand SubmitCommand { get; private set; }
+    //Todo: implement the structure for azurecognitiveservice and inject it here
 
-    public VoiceReportViewModel(IAudioManager audioManager)
+    private string _transcribedText;
+    private bool _isRecording;
+    private bool _isTranscriptionVisible;
+    private readonly IVoiceRecordingService _voiceRecordingService;
+    private readonly IAzureCognitiveService _cognitiveServices;
+
+    public string TranscribedText
     {
-        _audioManager = audioManager;
-        _audioRecorder = audioManager.CreateRecorder();
-        VoiceMessage = new VoiceMessageInfo();
-        RecordCommand = new Command(async () => await RecordVoiceMessageAsync());
-        ReviewTranscriptionCommand = new Command(ReviewTranscription);
-        SubmitCommand = new Command(Submit);
-    }
-    private async Task RecordVoiceMessageAsync()
-    {
-        if (await Permissions.RequestAsync<Permissions.Microphone>() != PermissionStatus.Granted)
+        get => _transcribedText;
+        set
         {
-            // Inform user about the permission status
-            return;
+            _transcribedText = value;
+            OnPropertyChanged(nameof(TranscribedText));
         }
+    }
 
-        if (!_audioRecorder.IsRecording)
+    public bool IsRecording
+    {
+        get => _isRecording;
+        set
         {
-            await _audioRecorder.StartAsync(); // Consider providing a file path
+            _isRecording = value;
+            OnPropertyChanged(nameof(IsRecording));
+        }
+    }
+
+    public bool IsTranscriptionVisible
+    {
+        get => _isTranscriptionVisible;
+        set
+        {
+            _isTranscriptionVisible = value;
+            OnPropertyChanged(nameof(IsTranscriptionVisible));
+        }
+    }
+
+    public ICommand RecordCommand { get; }
+    public ICommand EditTranscriptionCommand { get; }
+    public ICommand DeleteRecordingCommand { get; }
+    public ICommand SubmitCommand { get; }
+
+    public VoiceReportViewModel()
+    {
+        RecordCommand = new Command(OnRecord);
+        EditTranscriptionCommand = new Command(EditTranscription);
+        DeleteRecordingCommand = new Command(DeleteRecording);
+        SubmitCommand = new Command(Submit);
+        _cognitiveServices = ServiceHelper.GetService<IAzureCognitiveService>();
+        _voiceRecordingService = ServiceHelper.GetService<IVoiceRecordingService>();
+    }
+
+    private async void OnRecord()
+    {
+        // Logic to start or stop recording
+        // Update IsRecording and IsTranscriptionVisible as needed
+
+        if (!IsRecording)
+        {
+            await _voiceRecordingService.StartRecordingAsync();
         }
         else
         {
-            var recordedAudio = await _audioRecorder.StopAsync();
-            var player = _audioManager.CreatePlayer(recordedAudio.GetAudioStream());
-            player.Play();
+            var recordedAudioStream = await _voiceRecordingService.StopRecordingAsync();
+            // now we can send this stream to Cognitive Services for transcription
+            //var transcription = await _cognitiveServices.TranscribeAudioAsync(audioStream);
+            //TranscribedText = transcription;
+            //IsTranscriptionVisible = true;
         }
+
     }
 
-    private void ReviewTranscription() // check what parameter I should send to MS cognitive services and how to add parameter to receive the recordedAudio
+    private void EditTranscription()
     {
-        // Logic to submit the voice message to MS Cognitive services
-        // do the compution in the azure functions where it is transcripted and if not swedish, translated
-        // return the transcription and translation, deserialize or tostring which will be shown on the page
-    }
-    private void EditTranscription() // add parameter to receive the transcripted
-    {
-        //edit transcription
-
-         
+        // Logic to edit the transcription
     }
 
-    private void Submit(object obj) 
+    private void DeleteRecording()
     {
-        // logic to receive the trasncirption and translation as parameter
-        // sending it to the backend. the database shoudl be updating columns in voicemessage table, reportTable, defecttable
-        // or maybe all this logic can be in a utils and reused in other ways of reporting like emails and choose from the text too
+        // Logic to delete the recording
+        // Update IsTranscriptionVisible to false
+    }
+
+    private void Submit()
+    {
+        // Logic to submit the transcription and recording
     }
 
 }

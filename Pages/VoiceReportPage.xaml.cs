@@ -1,15 +1,16 @@
 using Plugin.Maui.Audio;
+using RepRepair.Services.Cognitive;
+using RepRepair.Services.VoiceRecording;
 using RepRepair.ViewModels;
 
-namespace RepRepair;
+namespace RepRepair.Pages;
 
 public partial class VoiceReportPage : ContentPage
 {
 	public VoiceReportPage()
 	{
 		InitializeComponent();
-		var audioManager = AudioManager.Current;
-		BindingContext = new VoiceReportViewModel(audioManager);
-	}
+        BindingContext = new VoiceReportViewModel();
+    }
 
 }
