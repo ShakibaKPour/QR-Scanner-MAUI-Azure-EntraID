@@ -28,7 +28,7 @@ namespace RepRepair.Services.VoiceRecording
 
             if (!_audioRecorder.IsRecording)
             {
-                await _audioRecorder.StartAsync(); // Consider providing a file path
+                await _audioRecorder.StartAsync(); // maybe providing a file path?
             }
             
         }

@@ -10,7 +10,7 @@ namespace RepRepair.ViewModels;
 
 public class VoiceReportViewModel : BaseViewModel
 {
-    //Todo: implement the structure for azurecognitiveservice and inject it here
+    //Todo: implement the structure for azurecognitiveservice
 
     private string _transcribedText;
     private bool _isRecording;
