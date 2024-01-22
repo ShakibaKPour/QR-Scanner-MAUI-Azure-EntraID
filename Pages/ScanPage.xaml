@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="RepRepair.Pages.ScanPage"
              xmlns:viewmodels="clr-namespace:RepRepair.ViewModels;assembly=RepRepair"
@@ -14,20 +14,13 @@
             Padding="30,0"
             VerticalOptions="Fill"
             HorizontalOptions="Fill">
-            <zxing:CameraBarcodeReaderView x:Name="cameraView" WidthRequest="300" HeightRequest="400"/>
-            <!--IsDetecting="True"
-                              IsTorchOn="False"
-                              CameraLocation="Rear"
-                              Loaded="cameraView_Loaded"
-                              BarcodesDetected="cameraView_BarcodesDetected"-->
-            <!--<zxing:CameraBarcodeReaderView.Behaviors>
-                    <toolkit:EventToCommandBehavior
-                        EventName="Loaded"
-                        Command="{Binding LoadObjectInfo}">
-                        
-                    </toolkit:EventToCommandBehavior>
-                </zxing:CameraBarcodeReaderView.Behaviors>-->
-
+            <cv:CameraView x:Name="cameraView" 
+                           WidthRequest="300" 
+                           HeightRequest="300" 
+                           BarCodeDetectionEnabled="True"
+                           CamerasLoaded="OnCameraLoaded"
+                           BarcodeDetected="OnBarcodeDetected">
+            </cv:CameraView>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

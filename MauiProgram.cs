@@ -20,6 +20,7 @@ namespace RepRepair
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCameraView()
                 .UseMauiCommunityToolkit()
                 .UseBarcodeReader()
                 .ConfigureFonts(fonts =>

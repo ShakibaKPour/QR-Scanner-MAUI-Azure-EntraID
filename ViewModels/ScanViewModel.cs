@@ -14,6 +14,7 @@ public class ScanViewModel : BaseViewModel
     private string objectName;
     private string objectLocation;
     private int objectId;
+    public ICommand OnBarcodeDetected { get; }
     public string QRCode
     {
         get => qrCode;
@@ -55,25 +56,22 @@ public class ScanViewModel : BaseViewModel
     {
         _databaseService = ServiceHelper.GetService<IDatabaseService>();
         _navigationService = ServiceHelper.GetService<INavigationService>();
+        OnBarcodeDetected = new Command<string>(LoadInfo);
     }
 
-    private async void LoadObjectInfo(string qrCode)
+
+    public async void LoadInfo(string qrCode)
     {
-        var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync(qrCode);
-        if (objectInfo != null)
-        {
-            ObjectName = objectInfo.Name;
-            ObjectId = objectInfo.ObjectId;
-            ObjectLocation = objectInfo.Location;
+            QRCode = qrCode;
+            var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync(qrCode);
+            if (objectInfo != null)
+            {
+                ObjectName = objectInfo.Name;
+                ObjectId = objectInfo.ObjectId;
+                ObjectLocation = objectInfo.Location;
 
-            await _navigationService.NavigateToAsync<ReportViewModel>(objectInfo);
-        }
+                await _navigationService.NavigateToAsync<ReportViewModel>(objectInfo);
+            }
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }
