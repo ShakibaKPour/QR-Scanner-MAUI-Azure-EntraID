@@ -1,4 +1,5 @@
 ﻿using RepRepair.Extensions;
+using RepRepair.Pages;
 using RepRepair.Services.DB;
 using RepRepair.Services.Navigation;
 using System.ComponentModel;
@@ -70,7 +71,10 @@ public class ScanViewModel : BaseViewModel
                 ObjectId = objectInfo.ObjectId;
                 ObjectLocation = objectInfo.Location;
 
-                await _navigationService.NavigateToAsync<ReportViewModel>(objectInfo);
+            // setting up a messagingcenter to send objectInfo to reportViewModel
+            MessagingCenter.Send(this, "ObjectInfoMessage", objectInfo);
+
+            await _navigationService.NavigateToAsync<ReportViewModel>();
             }
     }
 

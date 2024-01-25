@@ -1,10 +1,6 @@
 ﻿using Plugin.Maui.Audio;
 using System.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Maui.Storage;
 
 namespace RepRepair.Services.VoiceRecording
 {
@@ -18,29 +14,30 @@ namespace RepRepair.Services.VoiceRecording
             _audioManager = audioManager;
             _audioRecorder = audioManager.CreateRecorder();
         }
-        public async Task StartRecordingAsync()
+        public async Task<string> StartRecordingAsync()
         {
             if (await Permissions.RequestAsync<Permissions.Microphone>() != PermissionStatus.Granted)
             {
                 // Inform user about the permission status
-                return;
+                return "This function needs to use the mic! Allow the permission to proceed";
             }
 
-            if (!_audioRecorder.IsRecording)
-            {
-                await _audioRecorder.StartAsync(); // maybe providing a file path?
-            }
-            
+            string fileName = $"recording_{DateTime.Now:yyyyMMddHHmmss}.wav";
+            string filePath = Path.Combine(FileSystem.CacheDirectory, fileName);
+
+            // Start recording and save to the filePath
+            await _audioRecorder.StartAsync(filePath);
+
+            return filePath;
+
+
         }
 
-        public async Task<Stream> StopRecordingAsync()
+        public async Task<IAudioSource> StopRecordingAsync()
         {    
-            if (!_audioRecorder.IsRecording)
-            {
-                var recordedAudio = await _audioRecorder.StopAsync();
-                return recordedAudio.GetAudioStream();
-            }
-            return null;
+
+            return await _audioRecorder.StopAsync();
+                
         }
     }
 }

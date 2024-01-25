@@ -32,12 +32,12 @@ public class NavigationService : INavigationService
             {
                 await viewModel.InitializeAsync(parameter);
             }
-            await Application.Current.MainPage .Navigation.PushAsync(page);
+            await Application.Current.MainPage.Navigation.PushAsync(page);
         }
     }
 
-    //public async Task NavigateToAsync<TViewModel>()
-    //{
-    //    await Application.Current.MainPage.Navigation.PopAsync();
-    //}
+    public async Task NavigateToAsync<TViewModel>()
+    {
+        await Application.Current.MainPage.Navigation.PopAsync();
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using RepRepair.Pages;
+using RepRepair.ViewModels;
 
 namespace RepRepair
 {
@@ -7,7 +8,6 @@ namespace RepRepair
         public App()
         {
             InitializeComponent();
-
             MainPage = new AppShell();
         }
     }

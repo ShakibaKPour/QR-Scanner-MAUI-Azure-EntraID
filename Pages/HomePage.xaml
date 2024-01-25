@@ -3,17 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              xmlns:viewmodels="clr-namespace:RepRepair.ViewModels"
              x:DataType="viewmodels:HomeViewModel"
              x:Class="RepRepair.Pages.HomePage"
              Title="Home">
     <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="30">
+            <Picker ItemsSource="{Binding AvailableLanguages}"
+                    SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
+            </Picker>
 
             <Label Text="Welcome to RepRepair!"
                    HorizontalOptions="Center"
                    FontSize="Large"/>
-
+            <cv:BarcodeImage WidthRequest="400" HeightRequest="400" BarcodeHeight="400" BarcodeWidth="400"
+                             BarcodeBackground="White" BarcodeForeground="Purple" BarcodeMargin="5"
+                             BarcodeFormat="QR_CODE" Barcode="MockObjectQRCode"></cv:BarcodeImage>
 
             <Button Text="Start Scanning"
                     HorizontalOptions="Fill"

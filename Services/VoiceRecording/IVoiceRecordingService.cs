@@ -1,9 +1,11 @@
-﻿namespace RepRepair.Services.VoiceRecording
+﻿using Plugin.Maui.Audio;
+
+namespace RepRepair.Services.VoiceRecording
 {
     public interface IVoiceRecordingService
     {
-        Task StartRecordingAsync();
-        Task<Stream> StopRecordingAsync();
+        Task<string> StartRecordingAsync();
+        Task<IAudioSource> StopRecordingAsync();
 
     }
 }

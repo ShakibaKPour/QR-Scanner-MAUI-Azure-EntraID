@@ -8,7 +8,8 @@ namespace RepRepair.Services.Cognitive
 {
     public interface IAzureCognitiveService
     {
-        //public Task<string> TranscribeAudioAsync(Stream audioStream);
-        //public Task<string> TranslateTextAsync(string text, string targetLanguage);
+        public Task<string> TranscribeAudioAsync();
+       // public Task<string> TranscribeAudioAsync(Stream audioStream);
+     //   public Task<string> TranslateTextAsync();
     }
 }

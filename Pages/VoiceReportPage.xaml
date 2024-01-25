@@ -12,9 +12,12 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout Padding="20">
-        <Button Text="Record" Command="{Binding RecordCommand}" IsVisible="{Binding IsRecording, Converter={StaticResource InvertedBoolConverter}}"/>
-        <Button Text="Stop Recording" Command="{Binding RecordCommand}" IsVisible="{Binding IsRecording}"/>
+        <Picker ItemsSource="{Binding AvailableLanguages}"
+                    SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
+        </Picker>
+        <Button Text="Record" Command="{Binding RecordCommand}"/>
         <Editor Text="{Binding TranscribedText}" IsVisible="{Binding IsTranscriptionVisible}" />
+        <Editor Text="{Binding TranslatedText}"/>
         <Button Text="Edit" Command="{Binding EditTranscriptionCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
         <Button Text="Delete" Command="{Binding DeleteRecordingCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
         <Button Text="Submit" Command="{Binding SubmitCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
