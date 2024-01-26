@@ -45,14 +45,15 @@ public class ReportViewModel : BaseViewModel
 
     public ReportViewModel()
     {
-        _languageSettingsService= ServiceHelper.GetService<LanguageSettingsService>();
-        //Setting up a messaging subscriber to receive the objectinfo and then use it to initialize the ReportViewModel
+        
         MessagingCenter.Subscribe<ScanViewModel, ObjectInfo>(this, "ObjectInfoMessage", (sender, arg) =>
         {
-            ObjectInfo = arg;
+            ObjectInfo = arg;  // Objectinfo becomes null?
         });
+        _objectInfo = ObjectInfo;
+        _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
         _navigationService = ServiceHelper.GetService<INavigationService>();
-        _objectInfo = new ObjectInfo();
+       
         NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
     }
 

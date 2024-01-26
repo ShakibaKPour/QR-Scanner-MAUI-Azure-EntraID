@@ -70,6 +70,7 @@ public class ScanViewModel : BaseViewModel
                 ObjectName = objectInfo.Name;
                 ObjectId = objectInfo.ObjectId;
                 ObjectLocation = objectInfo.Location;
+                QRCode = objectInfo.QRCode;
 
             // setting up a messagingcenter to send objectInfo to reportViewModel
             MessagingCenter.Send(this, "ObjectInfoMessage", objectInfo);

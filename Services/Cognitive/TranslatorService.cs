@@ -13,21 +13,12 @@ namespace RepRepair.Services.Cognitive
 {
     public class TranslatorService
     {
-        private readonly string _key; // "fb58a08c2f454884bc7b434f40794193";
-        private readonly string _endpoint; // "https://api.cognitive.microsofttranslator.com";
-        private readonly string _location;
-       // private readonly LanguageSettingsService _languageSettingsService;
-
-        // location, also known as region.
-        // required if you're using a multi-service or regional (not global) resource. It can be found in the Azure portal on the Keys and Endpoint page.
-        //"swedencentral";
-
-        public TranslatorService(string key, string endpoint, string location)
+        static string translateKey = Environment.GetEnvironmentVariable("TRANSLATE_KEY");
+        static string translateRegion = Environment.GetEnvironmentVariable("TRANSLATE_REGION");
+        static string translateEndpoint = Environment.GetEnvironmentVariable("TRANSLATE_ENDPOINT");
+        public TranslatorService()
         {
-            _key = key;
-            _endpoint = endpoint;
-            _location = location;
-           // _languageSettingsService= ServiceHelper.GetService<LanguageSettingsService>();
+
         }
 
         public async Task<string> TranslateTextAsync(string textToTranslate, string targetLanguage, string selectedLanguage)
@@ -40,10 +31,10 @@ namespace RepRepair.Services.Cognitive
             using (var request = new HttpRequestMessage())
             {
                 request.Method = HttpMethod.Post;
-                request.RequestUri = new Uri(_endpoint + route);
+                request.RequestUri = new Uri(translateEndpoint + route);
                 request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-                request.Headers.Add("Ocp-Apim-Subscription-Key", _key);
-                request.Headers.Add("Ocp-Apim-Subscription-Region", _location);
+                request.Headers.Add("Ocp-Apim-Subscription-Key", translateKey);
+                request.Headers.Add("Ocp-Apim-Subscription-Region", translateRegion);
 
                 HttpResponseMessage response = await client.SendAsync(request).ConfigureAwait(false);
                 string result = await response.Content.ReadAsStringAsync();

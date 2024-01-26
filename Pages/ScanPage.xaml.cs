@@ -16,7 +16,15 @@ public partial class ScanPage : ContentPage
         BindingContext = _viewModel;
         cameraView.CamerasLoaded += OnCameraLoaded;
         cameraView.BarcodeDetected += OnBarcodeDetected;
-
+        cameraView.BarCodeOptions = new Camera.MAUI.ZXingHelper.BarcodeDecodeOptions
+        {
+            AutoRotate = true,
+            PossibleFormats = { ZXing.BarcodeFormat.QR_CODE },
+            ReadMultipleCodes = false,
+            TryHarder = true,
+            TryInverted = true
+        };
+        cameraView.BarCodeDetectionEnabled = true;
     }
 
     private void OnBarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
