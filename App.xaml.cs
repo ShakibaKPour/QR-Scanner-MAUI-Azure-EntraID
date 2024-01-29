@@ -1,7 +1,4 @@
-﻿using RepRepair.Pages;
-using RepRepair.ViewModels;
-
-namespace RepRepair
+﻿namespace RepRepair
 {
     public partial class App : Application
     {

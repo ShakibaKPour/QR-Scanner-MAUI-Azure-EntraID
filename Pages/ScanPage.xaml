@@ -21,6 +21,16 @@
                            CamerasLoaded="OnCameraLoaded"
                            BarcodeDetected="OnBarcodeDetected">
             </cv:CameraView>
+            <Button Text="Simulate camera scan" 
+                    Command="{Binding SimulateScan}"></Button>
+            <Label Text="Scan Result:"></Label>
+            <Label Text="{Binding ObjectInfo.ObjectId, StringFormat='ID: {0}'}"></Label>
+            <Label Text="{Binding ObjectInfo.Name, StringFormat='Name: {0}'}"></Label>
+            <Label Text="{Binding ObjectInfo.Location, StringFormat='Location: {0}'}"></Label>
+            <Button Text="Report" 
+                    Command="{Binding OnReport}"></Button>
+            <Button Text="Scan again" 
+                    Clicked="ScanAgain"></Button>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

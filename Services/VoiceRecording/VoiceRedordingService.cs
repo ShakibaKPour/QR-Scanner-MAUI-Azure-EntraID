@@ -1,6 +1,4 @@
 ﻿using Plugin.Maui.Audio;
-using System.IO;
-using Microsoft.Maui.Storage;
 
 namespace RepRepair.Services.VoiceRecording
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-public class TranslationResponse
+﻿public class TranslationResponse
 {
     public DetectedLanguage detectedLanguage { get; set; }
     public List<Translation> translations { get; set; }

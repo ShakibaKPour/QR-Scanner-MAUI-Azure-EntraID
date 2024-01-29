@@ -1,9 +1,8 @@
 ﻿using RepRepair.Extensions;
-using RepRepair.Pages;
 using RepRepair.Services.DB;
 using RepRepair.Services.Navigation;
-using System.ComponentModel;
 using System.Windows.Input;
+using RepRepair.Models;
 
 namespace RepRepair.ViewModels;
 
@@ -11,72 +10,72 @@ public class ScanViewModel : BaseViewModel
 {
     private readonly INavigationService _navigationService; 
     private readonly IDatabaseService _databaseService;
-    private string qrCode;
-    private string objectName;
-    private string objectLocation;
-    private int objectId;
+    private ObjectInfo objectInfo;
     public ICommand OnBarcodeDetected { get; }
-    public string QRCode
+    public ICommand SimulateScan { get; }
+    public ICommand OnReport { get; }
+    public ObjectInfo ObjectInfo
     {
-        get => qrCode;
+        get => objectInfo;
         set
         {
-            qrCode = value;
-            OnPropertyChanged(nameof(QRCode));
+            if (objectInfo != value)
+            {
+                objectInfo= value;
+                OnPropertyChanged(nameof(ObjectInfo));
+                UpdateObjectProperties(objectInfo);
+            }
         }
+    }
 
-    }
-    public string ObjectName 
-    {
-        get => objectName;
-        set 
-        {
-            objectName = value;
-            OnPropertyChanged(nameof(objectName));
-        }
-    }
-    public string ObjectLocation
-    {
-        get => objectLocation;
-        set
-        {
-            objectLocation = value;
-            OnPropertyChanged(nameof(ObjectLocation));
-        }
-    }
-    public int ObjectId
-    {
-        get => objectId;
-        set
-        {
-            objectId = value;
-            OnPropertyChanged(nameof(ObjectId));
-        }
-    }
     public ScanViewModel()
     {
         _databaseService = ServiceHelper.GetService<IDatabaseService>();
         _navigationService = ServiceHelper.GetService<INavigationService>();
         OnBarcodeDetected = new Command<string>(LoadInfo);
+        SimulateScan = new Command(SimulateLoadInfoAsync);
+        OnReport = new Command(async () => await OnReportAsync());
+    }
+
+    private async Task OnReportAsync()
+    {
+        await _navigationService.NavigateToAsync<ReportViewModel>();
+        MessagingCenter.Send(this, "ObjectInfoMessage", objectInfo);
+    }
+
+    private void UpdateObjectProperties(ObjectInfo obj)
+    {
+        if (obj != null)
+        {
+            OnPropertyChanged(nameof(ObjectInfo.Name));
+            OnPropertyChanged(nameof(ObjectInfo.ObjectId));
+            OnPropertyChanged(nameof(ObjectInfo.Location));
+            OnPropertyChanged(nameof(ObjectInfo.QRCode));
+        }
+
+    }
+    public async void SimulateLoadInfoAsync()
+    {
+        var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync("MockObjectQRCode");
+        if (objectInfo != null)
+        {
+            ObjectInfo = objectInfo;
+        }
+        UpdateObjectProperties(objectInfo);
+
     }
 
 
     public async void LoadInfo(string qrCode)
     {
-            QRCode = qrCode;
-            var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync(qrCode);
-            if (objectInfo != null)
-            {
-                ObjectName = objectInfo.Name;
-                ObjectId = objectInfo.ObjectId;
-                ObjectLocation = objectInfo.Location;
-                QRCode = objectInfo.QRCode;
+            objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync(qrCode);
+        if (objectInfo != null)
+        {
+            ObjectInfo = objectInfo;
+        }
 
-            // setting up a messagingcenter to send objectInfo to reportViewModel
-            MessagingCenter.Send(this, "ObjectInfoMessage", objectInfo);
-
-            await _navigationService.NavigateToAsync<ReportViewModel>();
-            }
+        UpdateObjectProperties(objectInfo);
+         
     }
 
 }

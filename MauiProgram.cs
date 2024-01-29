@@ -1,6 +1,5 @@
 ﻿using Camera.MAUI;
 using CommunityToolkit.Maui;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;
 using RepRepair.Services.DB;
@@ -12,7 +11,6 @@ using RepRepair.Pages;
 using RepRepair.Extensions;
 using RepRepair.Services.Cognitive;
 using RepRepair.Services.Language;
-using Microsoft.Extensions.Configuration;
 
 namespace RepRepair
 {

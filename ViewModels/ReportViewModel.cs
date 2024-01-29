@@ -3,7 +3,6 @@ using RepRepair.Models;
 using RepRepair.Services.Language;
 using RepRepair.Services.Navigation;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Input;
 
 namespace RepRepair.ViewModels;
@@ -24,10 +23,15 @@ public class ReportViewModel : BaseViewModel
         get => _objectInfo;
         set
         {
-            _objectInfo = value;
-            OnPropertyChanged(nameof(ObjectInfo));
+            if (_objectInfo != value)
+            {
+                _objectInfo = value;
+                OnPropertyChanged(nameof(ObjectInfo));
+                UpdateObjectProperties(_objectInfo);
+            }
         }
     }
+
 
     public string SelectedLanguage
     {
@@ -45,16 +49,31 @@ public class ReportViewModel : BaseViewModel
 
     public ReportViewModel()
     {
-        
-        MessagingCenter.Subscribe<ScanViewModel, ObjectInfo>(this, "ObjectInfoMessage", (sender, arg) =>
-        {
-            ObjectInfo = arg;  // Objectinfo becomes null?
-        });
-        _objectInfo = ObjectInfo;
         _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
         _navigationService = ServiceHelper.GetService<INavigationService>();
-       
+        _objectInfo = new ObjectInfo();
+        SubscribeToMessages();
         NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
+    }
+
+    private void SubscribeToMessages()
+    {
+        MessagingCenter.Subscribe<ScanViewModel, ObjectInfo>(this, "ObjectInfoMessage", (sender, arg) =>
+        {
+            _objectInfo = arg;
+            OnPropertyChanged(nameof(ObjectInfo)); // Notify UI about the change
+        });
+    }
+
+    private void UpdateObjectProperties(ObjectInfo objectInfo)
+    {
+        if (objectInfo != null)
+        {
+            OnPropertyChanged(nameof(ObjectInfo.Name));
+            OnPropertyChanged(nameof(ObjectInfo.ObjectId));
+            OnPropertyChanged(nameof(ObjectInfo.Location));
+            OnPropertyChanged(nameof(ObjectInfo.QRCode));
+        }
     }
 
     ~ReportViewModel()
@@ -62,21 +81,22 @@ public class ReportViewModel : BaseViewModel
         MessagingCenter.Unsubscribe<ScanViewModel, ObjectInfo>(this, "ObjectInfoMessage");
     }
 
-    public override Task InitializeAsync(object parameter)
-    {
-        if (parameter is ObjectInfo objectInfo)
-        {
-            _objectInfo = objectInfo;
-            // Notify UI about the property change
-            OnPropertyChanged(nameof(_objectInfo));
-        }
-        return Task.CompletedTask;
-    }
+    //public override Task InitializeAsync(object parameter)
+    //{
+    //    if (parameter is ObjectInfo objectInfo)
+    //    {
+    //        _objectInfo = objectInfo;
+    //        // Notify UI about the property change
+    //        OnPropertyChanged(nameof(_objectInfo));
+    //    }
+    //    return Task.CompletedTask;
+    //}
 
 
     private async Task NavigateToVoiceRecordCommandAsync()
     {
         await _navigationService.NavigateToAsync<VoiceReportViewModel>();
+        MessagingCenter.Send(this, "ObjectInfoMessage", _objectInfo);
     }
 
 }

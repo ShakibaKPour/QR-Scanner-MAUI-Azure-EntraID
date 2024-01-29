@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Storage;
-
-namespace RepRepair.Services.Language
+﻿namespace RepRepair.Services.Language
 {
     public class LanguageSettingsService
     {

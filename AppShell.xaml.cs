@@ -1,6 +1,4 @@
 ﻿using RepRepair.Pages;
-using RepRepair.Services.Navigation;
-using RepRepair.ViewModels;
 
 namespace RepRepair
 {

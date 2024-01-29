@@ -16,7 +16,9 @@
             Text="Choose an alternative"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
-        <Button Text="Record a voice message" Padding="10" Command="{Binding NavigateToVoiceRecordCommand}"></Button>
+        <Button Text="Record a voice message" 
+                Padding="10" 
+                Command="{Binding NavigateToVoiceRecordCommand}"></Button>
         <Button Text="Write to us"></Button>
         <Button Text=" Choose from a list"></Button>
     </VerticalStackLayout>

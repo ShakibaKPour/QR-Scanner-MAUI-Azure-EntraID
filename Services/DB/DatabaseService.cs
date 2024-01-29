@@ -12,8 +12,9 @@ public class DatabaseService : IDatabaseService
             {
                 Name = "Mock Object",
                 Location = "ObjectLocation",
-                ObjectId = 1
-            });
+                ObjectId = 1,
+                QRCode = "MockObjectQRCode"
+        });
         }
         return Task.FromResult<ObjectInfo>(null);
     }

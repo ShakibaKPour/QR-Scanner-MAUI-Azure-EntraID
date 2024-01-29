@@ -15,11 +15,22 @@
         <Picker ItemsSource="{Binding AvailableLanguages}"
                     SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
         </Picker>
-        <Button Text="Record" Command="{Binding RecordCommand}"/>
-        <Editor Text="{Binding TranscribedText}" IsVisible="{Binding IsTranscriptionVisible}" />
+        <Label Text="{Binding ObjectInfo.ObjectId}"></Label>
+        <Label Text="{Binding ObjectInfo.Name}"></Label>
+        <Label Text="{Binding ObjectInfo.Location}"></Label>
+        <Button Text="Record" 
+                Command="{Binding RecordCommand}"/>
+        <Editor Text="{Binding TranscribedText}" 
+                IsVisible="{Binding IsTranscriptionVisible}" />
         <Editor Text="{Binding TranslatedText}"/>
-        <Button Text="Edit" Command="{Binding EditTranscriptionCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
-        <Button Text="Delete" Command="{Binding DeleteRecordingCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
-        <Button Text="Submit" Command="{Binding SubmitCommand}" IsVisible="{Binding IsTranscriptionVisible}"/>
+        <Button Text="Edit" 
+                Command="{Binding EditTranscriptionCommand}" 
+                IsVisible="{Binding IsTranscriptionVisible}"/>
+        <Button Text="Delete" 
+                Command="{Binding DeleteRecordingCommand}" 
+                IsVisible="{Binding IsTranscriptionVisible}"/>
+        <Button Text="Submit"
+                Command="{Binding SubmitCommand}"
+                IsVisible="{Binding IsTranscriptionVisible}"/>
     </StackLayout>
 </ContentPage>
