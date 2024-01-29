@@ -5,13 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:RepRepair.Pages"
     Title="RepRepair">
-
-    <!--<FlyoutItem>
-        <ShellContent Title="Home" ContentTemplate="{DataTemplate pages:HomePage}"></ShellContent>
-    </FlyoutItem>-->
-
     <TabBar>
-        <ShellContent Title="Home" Route="HomePage" ContentTemplate="{DataTemplate pages:HomePage}" />
+        <ShellContent Title="Home" Route="HomePage"  ContentTemplate="{DataTemplate pages:HomePage}" />
  
         <ShellContent Title="Scan" Route="ScanPage" ContentTemplate="{DataTemplate pages:ScanPage}" />
 

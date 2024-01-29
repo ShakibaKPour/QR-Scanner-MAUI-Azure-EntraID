@@ -8,7 +8,6 @@ namespace RepRepair.ViewModels;
 
 public partial class HomeViewModel : BaseViewModel
 {
-    private readonly INavigationService _navigationService;
     private readonly LanguageSettingsService _languageSettingsService;
     public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
     {
@@ -32,13 +31,12 @@ public partial class HomeViewModel : BaseViewModel
     public HomeViewModel()
     {
         _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
-        _navigationService = ServiceHelper.GetService<INavigationService>();
         ScanCommand = new Command(async () => await OnScanAsync());
 
     }
 
     private async Task OnScanAsync()
     {
-        await _navigationService.NavigateToAsync<ScanViewModel>();
+        await Shell.Current.GoToAsync("//ScanPage");
     }
 }

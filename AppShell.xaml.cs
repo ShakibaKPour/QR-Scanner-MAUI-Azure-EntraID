@@ -7,7 +7,7 @@ namespace RepRepair
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute("VoiceReport", typeof(VoiceReportPage));
+            Routing.RegisterRoute("VoiceReportPage", typeof(VoiceReportPage));
         }
     }
 }

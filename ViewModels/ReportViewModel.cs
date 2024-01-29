@@ -9,7 +9,6 @@ namespace RepRepair.ViewModels;
 
 public class ReportViewModel : BaseViewModel
 {
-    private readonly INavigationService _navigationService;
     private ObjectInfo _objectInfo;
     private readonly LanguageSettingsService _languageSettingsService;
     public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
@@ -50,7 +49,6 @@ public class ReportViewModel : BaseViewModel
     public ReportViewModel()
     {
         _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
-        _navigationService = ServiceHelper.GetService<INavigationService>();
         _objectInfo = new ObjectInfo();
         SubscribeToMessages();
         NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
@@ -81,21 +79,9 @@ public class ReportViewModel : BaseViewModel
         MessagingCenter.Unsubscribe<ScanViewModel, ObjectInfo>(this, "ObjectInfoMessage");
     }
 
-    //public override Task InitializeAsync(object parameter)
-    //{
-    //    if (parameter is ObjectInfo objectInfo)
-    //    {
-    //        _objectInfo = objectInfo;
-    //        // Notify UI about the property change
-    //        OnPropertyChanged(nameof(_objectInfo));
-    //    }
-    //    return Task.CompletedTask;
-    //}
-
-
     private async Task NavigateToVoiceRecordCommandAsync()
     {
-        await _navigationService.NavigateToAsync<VoiceReportViewModel>();
+        await Shell.Current.GoToAsync("VoiceReportPage");
         MessagingCenter.Send(this, "ObjectInfoMessage", _objectInfo);
     }
 

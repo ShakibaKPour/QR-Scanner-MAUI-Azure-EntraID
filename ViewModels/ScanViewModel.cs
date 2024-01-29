@@ -8,7 +8,6 @@ namespace RepRepair.ViewModels;
 
 public class ScanViewModel : BaseViewModel
 {
-    private readonly INavigationService _navigationService; 
     private readonly IDatabaseService _databaseService;
     private ObjectInfo objectInfo;
     public ICommand OnBarcodeDetected { get; }
@@ -31,7 +30,6 @@ public class ScanViewModel : BaseViewModel
     public ScanViewModel()
     {
         _databaseService = ServiceHelper.GetService<IDatabaseService>();
-        _navigationService = ServiceHelper.GetService<INavigationService>();
         OnBarcodeDetected = new Command<string>(LoadInfo);
         SimulateScan = new Command(SimulateLoadInfoAsync);
         OnReport = new Command(async () => await OnReportAsync());
@@ -39,7 +37,7 @@ public class ScanViewModel : BaseViewModel
 
     private async Task OnReportAsync()
     {
-        await _navigationService.NavigateToAsync<ReportViewModel>();
+        await Shell.Current.GoToAsync("//MainReportPage");
         MessagingCenter.Send(this, "ObjectInfoMessage", objectInfo);
     }
 
@@ -74,8 +72,7 @@ public class ScanViewModel : BaseViewModel
             ObjectInfo = objectInfo;
         }
 
-        UpdateObjectProperties(objectInfo);
-         
+        UpdateObjectProperties(objectInfo);       
     }
 
 }
