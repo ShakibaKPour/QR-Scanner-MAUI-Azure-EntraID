@@ -11,6 +11,7 @@ using RepRepair.Pages;
 using RepRepair.Extensions;
 using RepRepair.Services.Cognitive;
 using RepRepair.Services.Language;
+using RepRepair.Services.AlertService;
 
 namespace RepRepair
 {
@@ -33,6 +34,7 @@ namespace RepRepair
             builder.Services.AddSingleton<IVoiceRecordingService,VoiceRedordingService>();
             builder.Services.AddSingleton<IAudioManager, AudioManager>();
             builder.Services.AddSingleton<IAzureCognitiveService, AzureCognitiveService>();
+            builder.Services.AddSingleton<IAlertService, AlertService>();
             builder.Services.AddSingleton<TranslatorService>();
             builder.Services.AddSingleton<LanguageSettingsService>();
             builder.Services.AddSingleton<HomeViewModel>();

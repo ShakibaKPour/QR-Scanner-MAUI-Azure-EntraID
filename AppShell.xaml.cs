@@ -8,6 +8,7 @@ namespace RepRepair
         {
             InitializeComponent();
             Routing.RegisterRoute("VoiceReportPage", typeof(VoiceReportPage));
+            Routing.RegisterRoute("ThankYouPage", typeof(ThankYouPage));
         }
     }
 }

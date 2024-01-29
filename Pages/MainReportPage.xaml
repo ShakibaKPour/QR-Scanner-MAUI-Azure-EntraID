@@ -9,9 +9,6 @@
         <Picker ItemsSource="{Binding AvailableLanguages}"
                     SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
         </Picker>
-        <Label Text="{Binding ObjectInfo.ObjectId}"></Label>
-        <Label Text="{Binding ObjectInfo.Name}"></Label>
-        <Label Text="{Binding ObjectInfo.Location}"></Label>
         <Label 
             Text="Choose an alternative"
             VerticalOptions="Center" 

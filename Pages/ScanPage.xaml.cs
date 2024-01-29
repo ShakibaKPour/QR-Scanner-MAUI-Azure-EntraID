@@ -48,6 +48,6 @@ public partial class ScanPage : ContentPage
 
     private void ScanAgain(object sender, EventArgs e)
     {
-
+        // clear the objectinfo properties, startup the camera and barcode detected
     }
 }

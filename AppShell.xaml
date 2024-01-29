@@ -11,6 +11,7 @@
         <ShellContent Title="Scan" Route="ScanPage" ContentTemplate="{DataTemplate pages:ScanPage}" />
 
         <ShellContent Title="Report" Route="MainReportPage" ContentTemplate="{DataTemplate pages:MainReportPage}" />
+        
     </TabBar>
 
 </Shell>

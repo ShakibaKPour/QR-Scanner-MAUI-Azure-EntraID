@@ -1,10 +1,13 @@
-﻿using RepRepair.Extensions;
+﻿using CommunityToolkit.Maui.Core.Views;
+using RepRepair.Extensions;
 using RepRepair.Models;
 using RepRepair.Services.Cognitive;
+using RepRepair.Services.DB;
 using RepRepair.Services.Language;
 using RepRepair.Services.VoiceRecording;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Maui.Alerts;
 
 namespace RepRepair.ViewModels;
 
@@ -16,6 +19,7 @@ public class VoiceReportViewModel : BaseViewModel
     private bool _isTranscriptionVisible;
     private bool _isTranslationVisible;
     private ObjectInfo _objectInfo;
+    private readonly IDatabaseService _databaseService;
     private readonly LanguageSettingsService _languageSettingsService;
     public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
     {
@@ -26,7 +30,6 @@ public class VoiceReportViewModel : BaseViewModel
     private readonly TranslatorService _translatorService;
     public ICommand RecordCommand { get; }
     //public ICommand StopCommand { get; }
-    public ICommand EditTranscriptionCommand { get; }
     public ICommand DeleteRecordingCommand { get; }
     public ICommand SubmitCommand { get; }
 
@@ -114,11 +117,11 @@ public class VoiceReportViewModel : BaseViewModel
         RecordCommand = new Command(OnRecord);
         _translatorService = ServiceHelper.GetService<TranslatorService>();
         //StopCommand = new Command(OnStop);
-        EditTranscriptionCommand = new Command(EditTranscription);
         DeleteRecordingCommand = new Command(DeleteRecording);
         SubmitCommand = new Command(Submit);
         _cognitiveServices = ServiceHelper.GetService<IAzureCognitiveService>();
         _voiceRecordingService = ServiceHelper.GetService<IVoiceRecordingService>();
+        _databaseService = ServiceHelper.GetService<IDatabaseService>();
         _objectInfo = new ObjectInfo();
         SubscribeToMessages();
     }
@@ -147,9 +150,13 @@ public class VoiceReportViewModel : BaseViewModel
         try
         {
             var transcription = await _cognitiveServices.TranscribeAudioAsync();
-            TranscribedText = transcription;
-            IsTranscriptionVisible = true;
-            Translate(transcription);
+            if (transcription != null)
+            {
+                TranscribedText = transcription;
+                IsTranscriptionVisible = true;
+                Translate(transcription);
+            }
+            else TranscribedText = string.Empty;
   
         }
         catch (Exception ex)
@@ -160,26 +167,59 @@ public class VoiceReportViewModel : BaseViewModel
     }
     private async void Translate(string text)
     {
-        var textTobeTranslated = text;
-        var translate = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
-        TranslatedText = translate;
-        IsTranslationVisible = true;
+        if (!string.IsNullOrEmpty(text))
+        {
+            var textTobeTranslated = text;
+            var translate = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
+            TranslatedText = translate;
+            IsTranslationVisible = true;
+        }
+        //else
+        //{
+        //    Task.Run(async () =>
+        //    {
+        //        await Task.Delay(1000);
+        //        App.AlertSvc.ShowAlertAsync("Empty Input", "Press OnRedord and talk into your mic!", "OK");
+        //    });
+        //}
+ 
     }
-
-    private void EditTranscription()
-    {
-        // Logic to edit the transcription
-    }
-
     private void DeleteRecording()
     {
-        // Logic to delete the recording
-        // Update IsTranscriptionVisible to false
+        TranscribedText = string.Empty;
+        TranslatedText = string.Empty;
+        IsTranslationVisible=false;
+        IsTranscriptionVisible= false;
+        //also deleting the cached??
     }
 
-    private void Submit()
+    private async void Submit()
     {
         // Logic to submit the transcription and recording
+        if (!string.IsNullOrEmpty(TranscribedText) && !string.IsNullOrEmpty(TranslatedText) && ObjectInfo != null)
+        {
+            var newVoiceMessageInfo = new VoiceMessageInfo
+            {
+                Language = _languageSettingsService.CurrentLanguage,
+                Transcription = TranscribedText,
+                Translation = TranslatedText,
+            };
+           var success =  await _databaseService.AddVoiceMessageInfoAsync(newVoiceMessageInfo);
+            if (success)
+            {
+                var allVoiceMessages = await _databaseService.GetAllVoiceMessagesAsync();
+                await Shell.Current.GoToAsync("ThankYouPage");
+            }
+            ClearFields();
+            // Updating of the relevant tables will happen automatically via another method (azure functions) that updates related tables => which are defectinfo and report info table
+        }
     }
 
+    private void ClearFields()
+    {
+        TranscribedText=string.Empty;
+        TranslatedText=string.Empty;
+        IsTranscriptionVisible = false;
+        IsTranslationVisible=false;
+    }
 }
