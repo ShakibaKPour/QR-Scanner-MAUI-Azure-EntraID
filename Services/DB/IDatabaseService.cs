@@ -1,4 +1,4 @@
-﻿using RepRepair.Models;
+﻿using RepRepair.Models.DatabaseModels;
 
 namespace RepRepair.Services.DB;
 

@@ -18,6 +18,7 @@
                 Command="{Binding NavigateToVoiceRecordCommand}"></Button>
         <Button Text="Write to us"
                 Command="{Binding NavigateToEmailCommand}"></Button>
-        <Button Text=" Choose from a list"></Button>
+        <Button Text=" Choose from a list"
+                Command="{Binding NavigateToDefectListCommand}"></Button>
     </VerticalStackLayout>
 </ContentPage>

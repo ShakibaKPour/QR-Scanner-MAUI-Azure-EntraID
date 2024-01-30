@@ -1,4 +1,4 @@
-﻿using RepRepair.Models;
+﻿using RepRepair.Models.DatabaseModels;
 
 namespace RepRepair.Services.DB;
 
@@ -36,10 +36,9 @@ public class DatabaseService : IDatabaseService
     public Task<bool> AddTextReport(string textReport)
     {
 
-        _textReport.EmailContent = textReport;
+        _textReport.TextContent = textReport;
         _textReport.ReportedDate = DateTime.Now;
         _textReport.VoiceMessageId = null;
-        _textReport.TextContent = null;
         _textReports.Add(_textReport);
 
         return Task.FromResult(true);

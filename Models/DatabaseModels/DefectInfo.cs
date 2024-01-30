@@ -1,4 +1,4 @@
-﻿namespace RepRepair.Models;
+﻿namespace RepRepair.Models.DatabaseModels;
 
 public class DefectInfo
 {

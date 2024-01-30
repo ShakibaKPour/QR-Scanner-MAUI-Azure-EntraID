@@ -1,5 +1,5 @@
 ﻿using RepRepair.Extensions;
-using RepRepair.Models;
+using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.Language;
 using RepRepair.Services.Navigation;
 using System.Collections.ObjectModel;
@@ -18,6 +18,8 @@ public class ReportViewModel : BaseViewModel
     public ICommand NavigateToVoiceRecordCommand { get; set; }
 
     public ICommand NavigateToEmailCommand { get; set; }
+
+    public ICommand NavigateToDefectListCommand { get; set; }
 
     public ObjectInfo ObjectInfo
     {
@@ -55,6 +57,7 @@ public class ReportViewModel : BaseViewModel
         SubscribeToMessages();
         NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
         NavigateToEmailCommand = new Command(async ()=> await NavigateToEmailCommandAsync());
+        NavigateToDefectListCommand= new Command(async()=> await NavigateToDefectListCommandAsync());
     }
 
     private void SubscribeToMessages()
@@ -91,6 +94,12 @@ public class ReportViewModel : BaseViewModel
     private async Task NavigateToEmailCommandAsync()
     {
         await Shell.Current.GoToAsync("Write to Us!");
+        MessagingCenter.Send(this, "ObjectInfoMessage", _objectInfo);
+    }
+
+    private async Task NavigateToDefectListCommandAsync()
+    {
+        await Shell.Current.GoToAsync("Choose a Defect");
         MessagingCenter.Send(this, "ObjectInfoMessage", _objectInfo);
     }
 

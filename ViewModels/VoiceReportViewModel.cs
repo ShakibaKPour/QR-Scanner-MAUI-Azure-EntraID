@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Alerts;
 using RepRepair.Services.AlertService;
+using RepRepair.Models.DatabaseModels;
 
 namespace RepRepair.ViewModels;
 

@@ -2,9 +2,9 @@
 using RepRepair.Services.DB;
 using RepRepair.Services.Navigation;
 using System.Windows.Input;
-using RepRepair.Models;
 using RepRepair.Services.AlertService;
 using System.Diagnostics;
+using RepRepair.Models.DatabaseModels;
 
 namespace RepRepair.ViewModels;
 
