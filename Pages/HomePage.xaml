@@ -16,7 +16,7 @@
             <Label Text="Welcome to RepRepair!"
                    HorizontalOptions="Center"
                    FontSize="Large"/>
-            <cv:BarcodeImage WidthRequest="400" 
+            <!--<cv:BarcodeImage WidthRequest="400" 
                              HeightRequest="400" 
                              BarcodeHeight="400" 
                              BarcodeWidth="400"
@@ -24,7 +24,11 @@
                              BarcodeForeground="Purple" 
                              BarcodeMargin="5"
                              BarcodeFormat="QR_CODE" 
-                             Barcode="MockObjectQRCode"></cv:BarcodeImage>
+                             Barcode="MockObjectQRCode"></cv:BarcodeImage>-->
+            <Image Source="barcode_image.png" 
+                   WidthRequest="280"
+                   HeightRequest="280"
+                   Margin="5"></Image>
             <Button Text="Start Scanning"
                     HorizontalOptions="Fill"
                     Command="{Binding ScanCommand}"/>

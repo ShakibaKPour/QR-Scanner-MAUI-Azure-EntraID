@@ -8,6 +8,7 @@ using RepRepair.Services.VoiceRecording;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Alerts;
+using RepRepair.Services.AlertService;
 
 namespace RepRepair.ViewModels;
 
@@ -21,6 +22,7 @@ public class VoiceReportViewModel : BaseViewModel
     private ObjectInfo _objectInfo;
     private readonly IDatabaseService _databaseService;
     private readonly LanguageSettingsService _languageSettingsService;
+    private readonly IAlertService _alertService;
     public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
     {
         "en-US", "es-ES", "it-IT", "sv-SE", "fr-FR", "fa-IR", "de-DE", "da-DK"
@@ -122,6 +124,7 @@ public class VoiceReportViewModel : BaseViewModel
         _cognitiveServices = ServiceHelper.GetService<IAzureCognitiveService>();
         _voiceRecordingService = ServiceHelper.GetService<IVoiceRecordingService>();
         _databaseService = ServiceHelper.GetService<IDatabaseService>();
+        _alertService = ServiceHelper.GetService<IAlertService>();
         _objectInfo = new ObjectInfo();
         SubscribeToMessages();
     }
@@ -150,14 +153,18 @@ public class VoiceReportViewModel : BaseViewModel
         try
         {
             var transcription = await _cognitiveServices.TranscribeAudioAsync();
-            if (transcription != null)
+            if (!string.IsNullOrEmpty(transcription))
             {
                 TranscribedText = transcription;
                 IsTranscriptionVisible = true;
                 Translate(transcription);
             }
-            else TranscribedText = string.Empty;
-  
+            else
+            {
+                IsTranscriptionVisible = false;
+                await _alertService.ShowAlertAsync("Alert", "No Input. Please press the Record button and talk to the mic", "OK");
+            }
+
         }
         catch (Exception ex)
         {
@@ -173,6 +180,10 @@ public class VoiceReportViewModel : BaseViewModel
             var translate = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
             TranslatedText = translate;
             IsTranslationVisible = true;
+        }
+        else
+        {
+            IsTranslationVisible = false;
         }
         //else
         //{
@@ -208,7 +219,7 @@ public class VoiceReportViewModel : BaseViewModel
             if (success)
             {
                 var allVoiceMessages = await _databaseService.GetAllVoiceMessagesAsync();
-                await Shell.Current.GoToAsync("ThankYouPage");
+                await Shell.Current.GoToAsync("Thank You!");
             }
             ClearFields();
             // Updating of the relevant tables will happen automatically via another method (azure functions) that updates related tables => which are defectinfo and report info table

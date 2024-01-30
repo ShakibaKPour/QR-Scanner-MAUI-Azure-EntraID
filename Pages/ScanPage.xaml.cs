@@ -12,21 +12,13 @@ public partial class ScanPage : ContentPage
         BindingContext = _viewModel;
         cameraView.CamerasLoaded += OnCameraLoaded;
         cameraView.BarcodeDetected += OnBarcodeDetected;
-        cameraView.BarCodeOptions = new Camera.MAUI.ZXingHelper.BarcodeDecodeOptions
-        {
-            AutoRotate = true,
-            PossibleFormats = { ZXing.BarcodeFormat.QR_CODE },
-            ReadMultipleCodes = false,
-            TryHarder = true,
-            TryInverted = true
-        };
-        cameraView.BarCodeDetectionEnabled = true;
+        ConfigureCameraForScanning();
     }
 
     private void OnBarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
     {
             string qr = args.Result[0].ToString();
-            _viewModel.LoadInfo(qr);
+             _viewModel.LoadInfo(qr);
                MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await cameraView.StopCameraAsync();
@@ -39,6 +31,7 @@ public partial class ScanPage : ContentPage
             if (cameraView.NumCamerasDetected > 0)
             {
                 cameraView.Camera = cameraView.Cameras.First();
+                ConfigureCameraForScanning();
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
                     await cameraView.StartCameraAsync();
@@ -46,8 +39,33 @@ public partial class ScanPage : ContentPage
             }
     }
 
+    private void ConfigureCameraForScanning()
+    {
+        cameraView.BarCodeOptions = new Camera.MAUI.ZXingHelper.BarcodeDecodeOptions
+        {
+            AutoRotate = true,
+            PossibleFormats = { ZXing.BarcodeFormat.QR_CODE },
+            ReadMultipleCodes = false,
+            TryHarder = true,
+            TryInverted = true
+        };
+        cameraView.BarCodeDetectionEnabled = true;
+    }
+
+
     private void ScanAgain(object sender, EventArgs e)
     {
-        // clear the objectinfo properties, startup the camera and barcode detected
+        _viewModel.ResetScan();
+        RestartCamera();
+    }
+
+    public void RestartCamera()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await cameraView.StopCameraAsync();
+            ConfigureCameraForScanning();
+            await cameraView.StartCameraAsync();
+        });
     }
 }

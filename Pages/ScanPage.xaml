@@ -8,6 +8,11 @@
              xmlns:local="clr-namespace:RepRepair.ViewModels"
              x:DataType="viewmodels:ScanViewModel"
              Title="ScanPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"></toolkit:InvertedBoolConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ScrollView>
         <VerticalStackLayout
             Spacing="25"
@@ -19,18 +24,22 @@
                            HeightRequest="300" 
                            BarCodeDetectionEnabled="True"
                            CamerasLoaded="OnCameraLoaded"
-                           BarcodeDetected="OnBarcodeDetected">
+                           BarcodeDetected="OnBarcodeDetected"
+                           IsVisible="{Binding IsScanned, Converter={StaticResource InvertedBoolConverter}}"
+                           Margin="5">
             </cv:CameraView>
+            <Label Text="Scan Result:" IsVisible="{Binding IsScanned}" Padding="5, 15, 5, 3"></Label>
+            <Label Text="{Binding ObjectInfo.ObjectId, StringFormat='ID: {0}'}" IsVisible="{Binding IsScanned}" Padding="5, 3, 5, 3"></Label>
+            <Label Text="{Binding ObjectInfo.Name, StringFormat='Name: {0}'}" IsVisible="{Binding IsScanned}" Padding="5, 3, 5, 3"></Label>
+            <Label Text="{Binding ObjectInfo.Location, StringFormat='Location: {0}'}" IsVisible="{Binding IsScanned}" Padding="5, 3, 5, 15"></Label>
             <Button Text="Simulate camera scan" 
                     Command="{Binding SimulateScan}"></Button>
-            <Label Text="Scan Result:"></Label>
-            <Label Text="{Binding ObjectInfo.ObjectId, StringFormat='ID: {0}'}"></Label>
-            <Label Text="{Binding ObjectInfo.Name, StringFormat='Name: {0}'}"></Label>
-            <Label Text="{Binding ObjectInfo.Location, StringFormat='Location: {0}'}"></Label>
             <Button Text="Report" 
-                    Command="{Binding OnReport}"></Button>
+                    Command="{Binding OnReport}"
+                    IsVisible="{Binding IsScanned}"></Button>
             <Button Text="Scan again" 
-                    Clicked="ScanAgain"></Button>
+                    Clicked="ScanAgain"
+                    IsVisible="{Binding IsScanned}"></Button>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
