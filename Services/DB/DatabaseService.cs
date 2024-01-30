@@ -5,6 +5,8 @@ namespace RepRepair.Services.DB;
 public class DatabaseService : IDatabaseService
 {
     private List<VoiceMessageInfo> _voiceMessages = new List<VoiceMessageInfo>();
+    private ReportInfo _textReport = new ReportInfo();
+    private List<ReportInfo> _textReports = new List<ReportInfo>();
     public Task<bool> AddVoiceMessageInfoAsync(VoiceMessageInfo voiceMessageInfo)
     {
         _voiceMessages.Add(voiceMessageInfo);
@@ -29,5 +31,17 @@ public class DatabaseService : IDatabaseService
         });
         }
         return Task.FromResult<ObjectInfo>(null);
+    }
+
+    public Task<bool> AddTextReport(string textReport)
+    {
+
+        _textReport.EmailContent = textReport;
+        _textReport.ReportedDate = DateTime.Now;
+        _textReport.VoiceMessageId = null;
+        _textReport.TextContent = null;
+        _textReports.Add(_textReport);
+
+        return Task.FromResult(true);
     }
 }

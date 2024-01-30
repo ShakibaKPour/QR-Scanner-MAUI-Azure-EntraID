@@ -17,6 +17,8 @@ public class ReportViewModel : BaseViewModel
     };
     public ICommand NavigateToVoiceRecordCommand { get; set; }
 
+    public ICommand NavigateToEmailCommand { get; set; }
+
     public ObjectInfo ObjectInfo
     {
         get => _objectInfo;
@@ -52,6 +54,7 @@ public class ReportViewModel : BaseViewModel
         _objectInfo = new ObjectInfo();
         SubscribeToMessages();
         NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
+        NavigateToEmailCommand = new Command(async ()=> await NavigateToEmailCommandAsync());
     }
 
     private void SubscribeToMessages()
@@ -82,6 +85,12 @@ public class ReportViewModel : BaseViewModel
     private async Task NavigateToVoiceRecordCommandAsync()
     {
         await Shell.Current.GoToAsync("VoiceReportPage");
+        MessagingCenter.Send(this, "ObjectInfoMessage", _objectInfo);
+    }
+
+    private async Task NavigateToEmailCommandAsync()
+    {
+        await Shell.Current.GoToAsync("Write to Us!");
         MessagingCenter.Send(this, "ObjectInfoMessage", _objectInfo);
     }
 

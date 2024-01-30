@@ -17,6 +17,7 @@ namespace RepRepair
             InitializeComponent();
             Routing.RegisterRoute("VoiceReportPage", typeof(VoiceReportPage));
             Routing.RegisterRoute("Thank You!", typeof(ThankYouPage));
+            Routing.RegisterRoute("Write to Us!", typeof(WriteReportPage));
             BindingContext = this;
 
             MessagingCenter.Subscribe<ScanViewModel, bool>(this, "UpdateReportTabVisibility", (sender, args) =>
