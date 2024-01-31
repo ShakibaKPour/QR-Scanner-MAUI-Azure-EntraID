@@ -26,5 +26,10 @@ namespace RepRepair
                 IsReportVisible = args;
             });
         }
+
+        ~AppShell()
+        {
+            MessagingCenter.Unsubscribe<ScanViewModel, bool>(this, "UpdateReportTabVisibility");
+        }
     }
 }

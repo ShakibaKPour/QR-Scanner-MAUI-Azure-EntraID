@@ -17,7 +17,7 @@
                 Padding="10" 
                 Command="{Binding NavigateToVoiceRecordCommand}"></Button>
         <Button Text="Write to us"
-                Command="{Binding NavigateToEmailCommand}"></Button>
+                Command="{Binding NavigateToWriteCommand}"></Button>
         <Button Text=" Choose from a list"
                 Command="{Binding NavigateToDefectListCommand}"></Button>
     </VerticalStackLayout>

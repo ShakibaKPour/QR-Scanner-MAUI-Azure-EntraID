@@ -33,7 +33,7 @@
             <Label Text="{Binding ObjectInfo.Name, StringFormat='Name: {0}'}" IsVisible="{Binding IsScanned}" Padding="5, 3, 5, 3"></Label>
             <Label Text="{Binding ObjectInfo.Location, StringFormat='Location: {0}'}" IsVisible="{Binding IsScanned}" Padding="5, 3, 5, 15"></Label>
             <Button Text="Simulate camera scan" 
-                    Command="{Binding SimulateScan}"></Button>
+                    Command="{Binding SimulateScan}" Clicked="StopCamera"></Button>
             <Button Text="Report" 
                     Command="{Binding OnReport}"
                     IsVisible="{Binding IsScanned}"></Button>

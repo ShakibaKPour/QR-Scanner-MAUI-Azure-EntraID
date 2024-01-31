@@ -8,7 +8,9 @@
             x:DataType="viewmodels:WriteReportViewModel"
              Title="Write to Us!">
     <VerticalStackLayout>
-        <Editor Text="{Binding ReportText}" Placeholder="Write your report here..." HeightRequest="200" />
+        <Picker ItemsSource="{Binding AvailableLanguages}"
+             SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"></Picker>
+        <Editor Text="{Binding ReportText, Mode=TwoWay}" Placeholder="Write your report here..." HeightRequest="200" />
         <Button Text="Submit" Command="{Binding OnSubmit}" />
     </VerticalStackLayout>
 </ContentPage>

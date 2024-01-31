@@ -1,3 +1,4 @@
+using RepRepair.Services.VoiceRecording;
 using RepRepair.ViewModels;
 
 namespace RepRepair.Pages;
@@ -13,17 +14,6 @@ public partial class ScanPage : ContentPage
         cameraView.CamerasLoaded += OnCameraLoaded;
         cameraView.BarcodeDetected += OnBarcodeDetected;
         ConfigureCameraForScanning();
-    }
-
-    private void OnBarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
-    {
-            string qr = args.Result[0].ToString();
-             _viewModel.LoadInfo(qr);
-               MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await cameraView.StopCameraAsync();
-            });
-        
     }
 
     private void OnCameraLoaded(object sender, EventArgs e)
@@ -52,6 +42,16 @@ public partial class ScanPage : ContentPage
         cameraView.BarCodeDetectionEnabled = true;
     }
 
+    private void OnBarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
+    {
+        string qr = args.Result[0].ToString();
+        _viewModel.LoadInfo(qr);
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await cameraView.StopCameraAsync();
+        });
+
+    }
 
     private void ScanAgain(object sender, EventArgs e)
     {
@@ -66,6 +66,15 @@ public partial class ScanPage : ContentPage
             await cameraView.StopCameraAsync();
             ConfigureCameraForScanning();
             await cameraView.StartCameraAsync();
+        });
+    }
+
+    private void StopCamera(object sender, EventArgs e)
+    {
+        _viewModel.SimulateLoadInfoAsync();
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await cameraView.StopCameraAsync();
         });
     }
 }

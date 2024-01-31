@@ -51,7 +51,7 @@ public class VoiceReportViewModel : BaseViewModel
         set
         {
             _translatedText = value;
-            OnPropertyChanged($"{nameof(TranslatedText)}");
+            OnPropertyChanged(nameof(TranslatedText));
         }
     }
 
@@ -130,6 +130,11 @@ public class VoiceReportViewModel : BaseViewModel
         SubscribeToMessages();
     }
 
+    ~VoiceReportViewModel()
+    {
+        MessagingCenter.Unsubscribe<ReportViewModel, ObjectInfo>(this, "ObjectInfoMessage");
+    }
+
     private void UpdateObjectProperties(ObjectInfo objectInfo)
     {
         if (objectInfo != null)
@@ -146,7 +151,7 @@ public class VoiceReportViewModel : BaseViewModel
         MessagingCenter.Subscribe<ReportViewModel, ObjectInfo>(this, "ObjectInfoMessage", (sender, arg) =>
         {
             _objectInfo = arg;
-            OnPropertyChanged(nameof(ObjectInfo)); // Notify UI about the change
+            OnPropertyChanged(nameof(ObjectInfo)); 
         });
     }
     private async void OnRecord()
@@ -234,4 +239,5 @@ public class VoiceReportViewModel : BaseViewModel
         IsTranscriptionVisible = false;
         IsTranslationVisible=false;
     }
+
 }

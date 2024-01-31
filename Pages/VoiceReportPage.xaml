@@ -20,9 +20,9 @@
         <Label Text="{Binding ObjectInfo.Location}"></Label>
         <Button Text="Record" 
                 Command="{Binding RecordCommand}"/>
-        <Editor Text="{Binding TranscribedText}" 
+        <Editor Text="{Binding TranscribedText, Mode=TwoWay}" 
                 IsVisible="{Binding IsTranscriptionVisible}" />
-        <Editor Text="{Binding TranslatedText}" 
+        <Editor Text="{Binding TranslatedText, Mode=TwoWay}" 
                 IsVisible="{Binding IsTranslationVisible}"/>
         <Button Text="Delete" 
                 Command="{Binding DeleteRecordingCommand}" 

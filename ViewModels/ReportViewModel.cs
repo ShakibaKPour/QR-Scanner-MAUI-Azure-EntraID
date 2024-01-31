@@ -17,7 +17,7 @@ public class ReportViewModel : BaseViewModel
     };
     public ICommand NavigateToVoiceRecordCommand { get; set; }
 
-    public ICommand NavigateToEmailCommand { get; set; }
+    public ICommand NavigateToWriteCommand { get; set; }
 
     public ICommand NavigateToDefectListCommand { get; set; }
 
@@ -34,8 +34,6 @@ public class ReportViewModel : BaseViewModel
             }
         }
     }
-
-
     public string SelectedLanguage
     {
         get => _languageSettingsService.CurrentLanguage;
@@ -48,27 +46,15 @@ public class ReportViewModel : BaseViewModel
             }
         }
     }
-
-
     public ReportViewModel()
     {
         _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
         _objectInfo = new ObjectInfo();
         SubscribeToMessages();
         NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
-        NavigateToEmailCommand = new Command(async ()=> await NavigateToEmailCommandAsync());
+        NavigateToWriteCommand = new Command(async ()=> await NavigateToWriteCommandAsync());
         NavigateToDefectListCommand= new Command(async()=> await NavigateToDefectListCommandAsync());
     }
-
-    private void SubscribeToMessages()
-    {
-        MessagingCenter.Subscribe<ScanViewModel, ObjectInfo>(this, "ObjectInfoMessage", (sender, arg) =>
-        {
-            _objectInfo = arg;
-            OnPropertyChanged(nameof(ObjectInfo)); // Notify UI about the change
-        });
-    }
-
     private void UpdateObjectProperties(ObjectInfo objectInfo)
     {
         if (objectInfo != null)
@@ -79,7 +65,14 @@ public class ReportViewModel : BaseViewModel
             OnPropertyChanged(nameof(ObjectInfo.QRCode));
         }
     }
-
+    private void SubscribeToMessages()
+    {
+        MessagingCenter.Subscribe<ScanViewModel, ObjectInfo>(this, "ObjectInfoMessage", (sender, arg) =>
+        {
+            _objectInfo = arg;
+            OnPropertyChanged(nameof(ObjectInfo));
+        });
+    }
     ~ReportViewModel()
     {
         MessagingCenter.Unsubscribe<ScanViewModel, ObjectInfo>(this, "ObjectInfoMessage");
@@ -91,7 +84,7 @@ public class ReportViewModel : BaseViewModel
         MessagingCenter.Send(this, "ObjectInfoMessage", _objectInfo);
     }
 
-    private async Task NavigateToEmailCommandAsync()
+    private async Task NavigateToWriteCommandAsync()
     {
         await Shell.Current.GoToAsync("Write to Us!");
         MessagingCenter.Send(this, "ObjectInfoMessage", _objectInfo);

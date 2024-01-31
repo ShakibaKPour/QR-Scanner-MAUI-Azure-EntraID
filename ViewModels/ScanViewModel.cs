@@ -1,9 +1,7 @@
 ﻿using RepRepair.Extensions;
 using RepRepair.Services.DB;
-using RepRepair.Services.Navigation;
 using System.Windows.Input;
 using RepRepair.Services.AlertService;
-using System.Diagnostics;
 using RepRepair.Models.DatabaseModels;
 
 namespace RepRepair.ViewModels;
@@ -35,8 +33,12 @@ public class ScanViewModel : BaseViewModel
         get => _isScanned;
         set
         {
-            _isScanned= value;
-            OnPropertyChanged(nameof(IsScanned));
+            if (_isScanned != value)
+            {
+                _isScanned = value;
+                OnPropertyChanged(nameof(IsScanned));
+            }
+         
         }
     }
     public ScanViewModel()
@@ -46,6 +48,47 @@ public class ScanViewModel : BaseViewModel
         OnBarcodeDetected = new Command<string>(LoadInfo);
         SimulateScan = new Command(SimulateLoadInfoAsync);
         OnReport = new Command(async () => await OnReportAsync());
+    }
+    private void UpdateObjectProperties(ObjectInfo obj)
+    {
+        if (obj != null)
+        {
+            OnPropertyChanged(nameof(ObjectInfo.Name));
+            OnPropertyChanged(nameof(ObjectInfo.ObjectId));
+            OnPropertyChanged(nameof(ObjectInfo.Location));
+            OnPropertyChanged(nameof(ObjectInfo.QRCode));
+        }
+
+    }
+
+    public async void LoadInfo(string qrCode)
+    {
+        var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync(qrCode);
+        if (objectInfo != null)
+        {
+            ObjectInfo = objectInfo;
+        }
+        IsScanned = true;
+        MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
+        UpdateObjectProperties(objectInfo);
+    }
+    public async void SimulateLoadInfoAsync()
+    {
+        var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync("MockObjectQRCode");
+        if (objectInfo != null)
+        {
+            ObjectInfo = objectInfo;
+            IsScanned = true;
+            MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
+            UpdateObjectProperties(objectInfo);
+            
+        }
+        else
+        {
+            IsScanned = false;
+            MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
+            OnPropertyChanged(nameof(objectInfo));
+        }
     }
 
     private async Task OnReportAsync()
@@ -60,51 +103,16 @@ public class ScanViewModel : BaseViewModel
            await _alertService.ShowAlertAsync("Alert", "You should scan the machine first!", "OK");
         }
         return;
-
     }
-
-    private void UpdateObjectProperties(ObjectInfo obj)
-    {
-        if (obj != null)
-        {
-            OnPropertyChanged(nameof(ObjectInfo.Name));
-            OnPropertyChanged(nameof(ObjectInfo.ObjectId));
-            OnPropertyChanged(nameof(ObjectInfo.Location));
-            OnPropertyChanged(nameof(ObjectInfo.QRCode));
-        }
-
-    }
-    public async void SimulateLoadInfoAsync()
-    {
-        var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync("MockObjectQRCode");
-        if (objectInfo != null)
-        {
-            ObjectInfo = objectInfo;
-        }
-        IsScanned = true;
-        MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
-        UpdateObjectProperties(objectInfo);
-       
-    }
-
-
-    public async void LoadInfo(string qrCode)
-    {
-         var  objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync(qrCode);
-        if (objectInfo != null)
-        {
-            ObjectInfo = objectInfo;
-        }
-        IsScanned = true;
-        MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
-        UpdateObjectProperties(objectInfo);       
-    }
-
     public void ResetScan()
     {
-        ObjectInfo = null;
+        ObjectInfo = new ObjectInfo();
         IsScanned = false;
-        OnPropertyChanged(nameof(IsScanned));
-        MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
+        MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            OnPropertyChanged(nameof(ObjectInfo));
+            OnPropertyChanged(nameof(IsScanned));
+            MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
+        });
     }
 }

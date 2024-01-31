@@ -3,8 +3,10 @@ using RepRepair.Models.DatabaseModels;
 using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
+using RepRepair.Services.Language;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +20,11 @@ namespace RepRepair.ViewModels
         private ObjectInfo _objectInfo;
         private readonly IAlertService _alertService;
         private readonly IDatabaseService _databaseService;
+        private readonly LanguageSettingsService _languageSettingsService;
+        public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
+    {
+        "en-US", "es-ES", "it-IT", "sv-SE", "fr-FR", "fa-IR", "de-DE", "da-DK"
+    };
         public ICommand OnSubmit { get; set; }
 
         public string ReportText
@@ -30,10 +37,23 @@ namespace RepRepair.ViewModels
             get => _objectInfo;
             set => _objectInfo = value;
         }
+        public string SelectedLanguage
+        {
+            get => _languageSettingsService.CurrentLanguage;
+            set
+            {
+                if (_languageSettingsService.CurrentLanguage != value)
+                {
+                    _languageSettingsService.CurrentLanguage = value;
+                    OnPropertyChanged(nameof(SelectedLanguage));
+                }
+            }
+        }
         public WriteReportViewModel()
         {
             _alertService = ServiceHelper.GetService<IAlertService>();
             _databaseService = ServiceHelper.GetService<IDatabaseService>();
+            _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
             SubscribeToMessages();
             OnSubmit = new Command(SubmitEmail);
         }
