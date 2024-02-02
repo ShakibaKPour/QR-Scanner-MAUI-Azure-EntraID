@@ -1,13 +1,10 @@
 ﻿using RepRepair.Extensions;
 using RepRepair.Models;
+using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
-using System;
-using System.Collections.Generic;
+using RepRepair.Services.ScanningService;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RepRepair.ViewModels
@@ -15,13 +12,14 @@ namespace RepRepair.ViewModels
 
     public class DefectListViewModel : BaseViewModel
     {
-        private string _description;
-        private readonly IAlertService _alertService;
-        private readonly IDatabaseService _databaseService;
         public ObservableCollection<DefectItem> Defects { get; } = new ObservableCollection<DefectItem>();
         public DefectItem? SelectedDefect { get; set; }
-        
+        public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
         public ICommand SubmitDefectCommand { get; }
+        private readonly IScanningService _scanningService;
+        private readonly IAlertService _alertService;
+        private readonly IDatabaseService _databaseService;
+        private string _description;
         public string Description
         {
             get => _description;
@@ -30,6 +28,11 @@ namespace RepRepair.ViewModels
 
         public DefectListViewModel() 
         {
+            _scanningService= ServiceHelper.GetService<IScanningService>();
+            _scanningService.ScannedObjectChanged += (objectInfo) =>
+            {
+                OnPropertyChanged(nameof(ObjectInfo));
+            };
             _alertService = ServiceHelper.GetService<IAlertService>();
             _databaseService = ServiceHelper.GetService<IDatabaseService>();
             LoadDefects();
@@ -55,9 +58,18 @@ namespace RepRepair.ViewModels
             if (success)
                 {
                     await Shell.Current.GoToAsync("Thank You!");
+                    _scanningService.ResetScan();
+                    //ClearFields();
                 }
 
             }
         }
+
+        //private void ClearFields()
+        //{
+        //    SelectedDefect = null;
+        //    OnPropertyChanged(nameof(SelectedDefect));
+
+        //}
     }
 }

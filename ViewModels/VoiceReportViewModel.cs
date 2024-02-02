@@ -1,41 +1,34 @@
-﻿using CommunityToolkit.Maui.Core.Views;
-using RepRepair.Extensions;
-using RepRepair.Models;
+﻿using RepRepair.Extensions;
 using RepRepair.Services.Cognitive;
 using RepRepair.Services.DB;
 using RepRepair.Services.Language;
 using RepRepair.Services.VoiceRecording;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using CommunityToolkit.Maui.Alerts;
 using RepRepair.Services.AlertService;
 using RepRepair.Models.DatabaseModels;
+using RepRepair.Services.ScanningService;
 
 namespace RepRepair.ViewModels;
 
 public class VoiceReportViewModel : BaseViewModel
 {
-    private string _transcribedText;
-    private string _translatedText;
-    //private bool _isRecording;
-    private bool _isTranscriptionVisible;
-    private bool _isTranslationVisible;
-    private ObjectInfo _objectInfo;
-    private readonly IDatabaseService _databaseService;
-    private readonly LanguageSettingsService _languageSettingsService;
-    private readonly IAlertService _alertService;
+    public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
     public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
     {
         "en-US", "es-ES", "it-IT", "sv-SE", "fr-FR", "fa-IR", "de-DE", "da-DK"
     };
+    public ICommand RecordCommand { get; }
+    public ICommand DeleteRecordingCommand { get; }
+    public ICommand SubmitCommand { get; }
+    private readonly IScanningService _scanningService;   
+    private readonly IDatabaseService _databaseService;
+    private readonly IAlertService _alertService;
     private readonly IVoiceRecordingService _voiceRecordingService;
     private readonly IAzureCognitiveService _cognitiveServices;
     private readonly TranslatorService _translatorService;
-    public ICommand RecordCommand { get; }
-    //public ICommand StopCommand { get; }
-    public ICommand DeleteRecordingCommand { get; }
-    public ICommand SubmitCommand { get; }
-
+    private readonly LanguageSettingsService _languageSettingsService;
+    private string _transcribedText;
     public string TranscribedText
     {
         get => _transcribedText;
@@ -45,6 +38,7 @@ public class VoiceReportViewModel : BaseViewModel
             OnPropertyChanged(nameof(TranscribedText));
         }
     }
+    private string _translatedText;
     public string TranslatedText
     {
         get=> _translatedText;
@@ -55,16 +49,7 @@ public class VoiceReportViewModel : BaseViewModel
         }
     }
 
-    //public bool IsRecording
-    //{
-    //    get => _isRecording;
-    //    set
-    //    {
-    //        _isRecording = value;
-    //        OnPropertyChanged(nameof(IsRecording));
-    //    }
-    //}
-
+    private bool _isTranscriptionVisible;
     public bool IsTranscriptionVisible
     {
         get => _isTranscriptionVisible;
@@ -74,6 +59,7 @@ public class VoiceReportViewModel : BaseViewModel
             OnPropertyChanged(nameof(IsTranscriptionVisible));
         }
     }
+    private bool _isTranslationVisible;
     public bool IsTranslationVisible
     {
         get => _isTranslationVisible;
@@ -83,8 +69,6 @@ public class VoiceReportViewModel : BaseViewModel
             OnPropertyChanged(nameof(IsTranslationVisible));
         }
     }
-
-
     public string SelectedLanguage
     {
         get => _languageSettingsService.CurrentLanguage;
@@ -97,62 +81,22 @@ public class VoiceReportViewModel : BaseViewModel
             }
         }
     }
-
-    public ObjectInfo ObjectInfo
-    {
-        get => _objectInfo;
-        set
-        {
-            if (_objectInfo != value)
-            {
-                _objectInfo = value;
-                OnPropertyChanged(nameof(ObjectInfo));
-                UpdateObjectProperties(_objectInfo);
-            }
-        }
-    }
-
-
-
     public VoiceReportViewModel()
     {
+        _scanningService= ServiceHelper.GetService<IScanningService>();
+        _scanningService.ScannedObjectChanged += (objectInfo) =>
+        {
+            OnPropertyChanged(nameof(ObjectInfo));
+        };
         _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
-        RecordCommand = new Command(OnRecord);
         _translatorService = ServiceHelper.GetService<TranslatorService>();
-        //StopCommand = new Command(OnStop);
-        DeleteRecordingCommand = new Command(DeleteRecording);
-        SubmitCommand = new Command(Submit);
         _cognitiveServices = ServiceHelper.GetService<IAzureCognitiveService>();
         _voiceRecordingService = ServiceHelper.GetService<IVoiceRecordingService>();
         _databaseService = ServiceHelper.GetService<IDatabaseService>();
         _alertService = ServiceHelper.GetService<IAlertService>();
-        _objectInfo = new ObjectInfo();
-        SubscribeToMessages();
-    }
-
-    ~VoiceReportViewModel()
-    {
-        MessagingCenter.Unsubscribe<ReportViewModel, ObjectInfo>(this, "ObjectInfoMessage");
-    }
-
-    private void UpdateObjectProperties(ObjectInfo objectInfo)
-    {
-        if (objectInfo != null)
-        {
-            OnPropertyChanged(nameof(ObjectInfo.Name));
-            OnPropertyChanged(nameof(ObjectInfo.ObjectId));
-            OnPropertyChanged(nameof(ObjectInfo.Location));
-            OnPropertyChanged(nameof(ObjectInfo.QRCode));
-        }
-    }
-
-    private void SubscribeToMessages()
-    {
-        MessagingCenter.Subscribe<ReportViewModel, ObjectInfo>(this, "ObjectInfoMessage", (sender, arg) =>
-        {
-            _objectInfo = arg;
-            OnPropertyChanged(nameof(ObjectInfo)); 
-        });
+        RecordCommand = new Command(OnRecord);
+        DeleteRecordingCommand = new Command(DeleteRecording);
+        SubmitCommand = new Command(Submit);
     }
     private async void OnRecord()
     {
@@ -191,15 +135,6 @@ public class VoiceReportViewModel : BaseViewModel
         {
             IsTranslationVisible = false;
         }
-        //else
-        //{
-        //    Task.Run(async () =>
-        //    {
-        //        await Task.Delay(1000);
-        //        App.AlertSvc.ShowAlertAsync("Empty Input", "Press OnRedord and talk into your mic!", "OK");
-        //    });
-        //}
- 
     }
     private void DeleteRecording()
     {
@@ -212,7 +147,6 @@ public class VoiceReportViewModel : BaseViewModel
 
     private async void Submit()
     {
-        // Logic to submit the transcription and recording
         if (!string.IsNullOrEmpty(TranscribedText) && !string.IsNullOrEmpty(TranslatedText) && ObjectInfo != null)
         {
             var newVoiceMessageInfo = new VoiceMessageInfo
@@ -226,6 +160,7 @@ public class VoiceReportViewModel : BaseViewModel
             {
                 var allVoiceMessages = await _databaseService.GetAllVoiceMessagesAsync();
                 await Shell.Current.GoToAsync("Thank You!");
+                _scanningService.ResetScan();
             }
             ClearFields();
             // Updating of the relevant tables will happen automatically via another method (azure functions) that updates related tables => which are defectinfo and report info table
@@ -239,5 +174,4 @@ public class VoiceReportViewModel : BaseViewModel
         IsTranscriptionVisible = false;
         IsTranslationVisible=false;
     }
-
 }

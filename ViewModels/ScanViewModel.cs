@@ -1,118 +1,56 @@
 ﻿using RepRepair.Extensions;
-using RepRepair.Services.DB;
 using System.Windows.Input;
 using RepRepair.Services.AlertService;
 using RepRepair.Models.DatabaseModels;
+using RepRepair.Services.ScanningService;
 
 namespace RepRepair.ViewModels;
 
 public class ScanViewModel : BaseViewModel
 {
-    private readonly IDatabaseService _databaseService;
-    private readonly IAlertService _alertService;
-    private ObjectInfo objectInfo;
-    private bool _isScanned = false;
-    public ICommand OnBarcodeDetected { get; }
     public ICommand SimulateScan { get; }
     public ICommand OnReport { get; }
-    public ObjectInfo ObjectInfo
-    {
-        get => objectInfo;
-        set
-        {
-            if (objectInfo != value)
-            {
-                objectInfo= value;
-                OnPropertyChanged(nameof(ObjectInfo));
-                UpdateObjectProperties(objectInfo);
-            }
-        }
-    }
-    public bool IsScanned
-    {
-        get => _isScanned;
-        set
-        {
-            if (_isScanned != value)
-            {
-                _isScanned = value;
-                OnPropertyChanged(nameof(IsScanned));
-            }
-         
-        }
-    }
+    public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
+    private readonly IScanningService _scanningService;
+    private readonly IAlertService _alertService;
+    private bool _isScanned;
+    public bool IsScanned { get => _isScanned; }
+
     public ScanViewModel()
     {
-        _databaseService = ServiceHelper.GetService<IDatabaseService>();
         _alertService = ServiceHelper.GetService<IAlertService>();
-        OnBarcodeDetected = new Command<string>(LoadInfo);
-        SimulateScan = new Command(SimulateLoadInfoAsync);
+        _scanningService = ServiceHelper.GetService<IScanningService>();
+        _scanningService.ScannedObjectChanged += (objectInfo) =>
+        {
+            OnPropertyChanged(nameof(ObjectInfo));
+        };
+        _scanningService.ScanStateChanged += (isScanned) =>
+        {
+            _isScanned = isScanned;
+            OnPropertyChanged(nameof(IsScanned));
+        };
+        SimulateScan = new Command(async () => await ScanAsync("MockObjectQRCode"));
         OnReport = new Command(async () => await OnReportAsync());
-    }
-    private void UpdateObjectProperties(ObjectInfo obj)
-    {
-        if (obj != null)
-        {
-            OnPropertyChanged(nameof(ObjectInfo.Name));
-            OnPropertyChanged(nameof(ObjectInfo.ObjectId));
-            OnPropertyChanged(nameof(ObjectInfo.Location));
-            OnPropertyChanged(nameof(ObjectInfo.QRCode));
-        }
-
-    }
-
-    public async void LoadInfo(string qrCode)
-    {
-        var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync(qrCode);
-        if (objectInfo != null)
-        {
-            ObjectInfo = objectInfo;
-        }
-        IsScanned = true;
-        MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
-        UpdateObjectProperties(objectInfo);
-    }
-    public async void SimulateLoadInfoAsync()
-    {
-        var objectInfo = await _databaseService.GetObjectInfoByQRCodeAsync("MockObjectQRCode");
-        if (objectInfo != null)
-        {
-            ObjectInfo = objectInfo;
-            IsScanned = true;
-            MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
-            UpdateObjectProperties(objectInfo);
-            
-        }
-        else
-        {
-            IsScanned = false;
-            MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
-            OnPropertyChanged(nameof(objectInfo));
-        }
     }
 
     private async Task OnReportAsync()
     {
-        if(objectInfo != null)
+        if (_scanningService.IsScanned && _scanningService.CurrentScannedObject != null)
         {
             await Shell.Current.GoToAsync("//MainReportPage");
-            MessagingCenter.Send(this, "ObjectInfoMessage", objectInfo);
         }
         else
         {
-           await _alertService.ShowAlertAsync("Alert", "You should scan the machine first!", "OK");
+            await _alertService.ShowAlertAsync("Alert", "You should scan the machine first!", "OK");
         }
         return;
+
     }
-    public void ResetScan()
+
+    public async Task<ObjectInfo> ScanAsync(string qrCode)
     {
-        ObjectInfo = new ObjectInfo();
-        IsScanned = false;
-        MainThread.InvokeOnMainThreadAsync(() =>
-        {
-            OnPropertyChanged(nameof(ObjectInfo));
-            OnPropertyChanged(nameof(IsScanned));
-            MessagingCenter.Send(this, "UpdateReportTabVisibility", IsScanned);
-        });
+        return await _scanningService.ScanAsync(qrCode);
     }
+
+    public void ResetScan() => _scanningService?.ResetScan();
 }

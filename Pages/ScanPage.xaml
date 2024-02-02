@@ -32,6 +32,8 @@
             <Label Text="{Binding ObjectInfo.ObjectId, StringFormat='ID: {0}'}" IsVisible="{Binding IsScanned}" Padding="5, 3, 5, 3"></Label>
             <Label Text="{Binding ObjectInfo.Name, StringFormat='Name: {0}'}" IsVisible="{Binding IsScanned}" Padding="5, 3, 5, 3"></Label>
             <Label Text="{Binding ObjectInfo.Location, StringFormat='Location: {0}'}" IsVisible="{Binding IsScanned}" Padding="5, 3, 5, 15"></Label>
+            <Button Text="Start the Camera" Clicked="StartCamera" IsVisible="{Binding IsScanned, Converter={StaticResource InvertedBoolConverter}}">
+            </Button>
             <Button Text="Simulate camera scan" 
                     Command="{Binding SimulateScan}" Clicked="StopCamera"></Button>
             <Button Text="Report" 

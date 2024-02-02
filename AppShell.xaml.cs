@@ -5,13 +5,13 @@ namespace RepRepair
 {
     public partial class AppShell : Shell
     {
-        public bool IsReportVisible
-        {
-            get => (bool)GetValue(IsReportVisibleProperty);
-            set => SetValue(IsReportVisibleProperty, value);
-        }
+        //public bool IsReportVisible
+        //{
+        //    get => (bool)GetValue(IsReportVisibleProperty);
+        //    set => SetValue(IsReportVisibleProperty, value);
+        //}
 
-        public static readonly BindableProperty IsReportVisibleProperty= BindableProperty.Create(nameof(IsReportVisible), typeof(bool), typeof(AppShell), false);
+        //public static readonly BindableProperty IsReportVisibleProperty= BindableProperty.Create(nameof(IsReportVisible), typeof(bool), typeof(AppShell), false);
         public AppShell()
         {
             InitializeComponent();
@@ -20,16 +20,17 @@ namespace RepRepair
             Routing.RegisterRoute("Write to Us!", typeof(WriteReportPage));
             Routing.RegisterRoute("Choose a Defect", typeof(DefectListPage));
             BindingContext = this;
-
-            MessagingCenter.Subscribe<ScanViewModel, bool>(this, "UpdateReportTabVisibility", (sender, args) =>
-            {
-                IsReportVisible = args;
-            });
         }
 
-        ~AppShell()
-        {
-            MessagingCenter.Unsubscribe<ScanViewModel, bool>(this, "UpdateReportTabVisibility");
-        }
+        //    MessagingCenter.Subscribe<ScanViewModel, bool>(this, "UpdateReportTabVisibility", (sender, args) =>
+        //    {
+        //        IsReportVisible = args;
+        //    });
+        //}
+
+        //~AppShell()
+        //{
+        //    MessagingCenter.Unsubscribe<ScanViewModel, bool>(this, "UpdateReportTabVisibility");
+        //}
     }
 }

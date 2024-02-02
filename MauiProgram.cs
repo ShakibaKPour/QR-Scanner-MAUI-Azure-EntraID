@@ -12,6 +12,7 @@ using RepRepair.Extensions;
 using RepRepair.Services.Cognitive;
 using RepRepair.Services.Language;
 using RepRepair.Services.AlertService;
+using RepRepair.Services.ScanningService;
 
 namespace RepRepair
 {
@@ -35,6 +36,7 @@ namespace RepRepair
             builder.Services.AddSingleton<IAudioManager, AudioManager>();
             builder.Services.AddSingleton<IAzureCognitiveService, AzureCognitiveService>();
             builder.Services.AddSingleton<IAlertService, AlertService>();
+            builder.Services.AddSingleton<IScanningService, ScanningService>();
             builder.Services.AddSingleton<TranslatorService>();
             builder.Services.AddSingleton<LanguageSettingsService>();
             builder.Services.AddSingleton<HomeViewModel>();
@@ -45,6 +47,10 @@ namespace RepRepair
             builder.Services.AddSingleton<MainReportPage>();
             builder.Services.AddSingleton<VoiceReportViewModel>();
             builder.Services.AddSingleton<VoiceReportPage>();
+            builder.Services.AddSingleton<WriteReportPage>();
+            builder.Services.AddSingleton<WriteReportViewModel>();
+            builder.Services.AddSingleton<DefectListPage>();
+            builder.Services.AddSingleton<DefectListViewModel>();
             
 
 #if DEBUG

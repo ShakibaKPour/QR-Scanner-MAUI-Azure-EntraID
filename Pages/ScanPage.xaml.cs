@@ -1,3 +1,5 @@
+using RepRepair.Services.DB;
+using RepRepair.Services.ScanningService;
 using RepRepair.Services.VoiceRecording;
 using RepRepair.ViewModels;
 
@@ -5,10 +7,12 @@ namespace RepRepair.Pages;
 
 public partial class ScanPage : ContentPage
 {
-    private ScanViewModel _viewModel;
+    public ScanViewModel _viewModel;
+   // private IDatabaseService _databaseService;
 	public ScanPage()
 	{
 		InitializeComponent();
+       // var scanningService = new ScanningService(_databaseService);
 		_viewModel = new ScanViewModel();
         BindingContext = _viewModel;
         cameraView.CamerasLoaded += OnCameraLoaded;
@@ -42,11 +46,11 @@ public partial class ScanPage : ContentPage
         cameraView.BarCodeDetectionEnabled = true;
     }
 
-    private void OnBarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
+    private async void OnBarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
     {
         string qr = args.Result[0].ToString();
-        _viewModel.LoadInfo(qr);
-        MainThread.BeginInvokeOnMainThread(async () =>
+        await _viewModel.ScanAsync(qr);
+        await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             await cameraView.StopCameraAsync();
         });
@@ -69,12 +73,32 @@ public partial class ScanPage : ContentPage
         });
     }
 
-    private void StopCamera(object sender, EventArgs e)
+    private async void StopCamera(object sender, EventArgs e)
     {
-        _viewModel.SimulateLoadInfoAsync();
+        try
+        {
+            // _viewModel.SimulateLoadInfoAsync();
+            await _viewModel.ScanAsync("MockObjectQRCode");
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await cameraView.StartCameraAsync();
+                await cameraView.StopCameraAsync();
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error with stopping camera: {ex.Message}");
+        }
+
+    }
+
+    private void StartCamera(object sender, EventArgs e)
+    {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             await cameraView.StopCameraAsync();
+            ConfigureCameraForScanning();
+            await cameraView.StartCameraAsync();
         });
     }
 }

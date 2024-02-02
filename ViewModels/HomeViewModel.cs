@@ -8,13 +8,13 @@ namespace RepRepair.ViewModels;
 
 public partial class HomeViewModel : BaseViewModel
 {
-    private readonly LanguageSettingsService _languageSettingsService;
     public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
     {
         "en-US", "es-ES", "it-IT", "sv-SE", "fr-FR", "fa-IR", "de-DE", "da-DK"
     };
     public ICommand ScanCommand { get; set; }
 
+    private readonly LanguageSettingsService _languageSettingsService;
     public string SelectedLanguage
     {
         get => _languageSettingsService.CurrentLanguage;
