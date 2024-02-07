@@ -29,7 +29,7 @@ public class ScanViewModel : BaseViewModel
             _isScanned = isScanned;
             OnPropertyChanged(nameof(IsScanned));
         };
-        SimulateScan = new Command(async () => await ScanAsync("MockObjectQRCode"));
+        SimulateScan = new Command(async () => await ScanAsync("TestQR"));
         OnReport = new Command(async () => await OnReportAsync());
     }
 

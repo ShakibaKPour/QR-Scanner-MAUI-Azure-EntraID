@@ -1,9 +1,48 @@
-﻿using RepRepair.Models.DatabaseModels;
+﻿using Newtonsoft.Json;
+using RepRepair.Models.DatabaseModels;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace RepRepair.Services.DB;
 
 public class DatabaseService : IDatabaseService
 {
+    private readonly HttpClient _httpClient;
+    private readonly string _baseFunctionUrl = "http://localhost:7247/api/getobjectinfo/qrcode/"; // Azure function url
+
+    public DatabaseService()
+    {
+        _httpClient = new HttpClient();
+     
+    }
+
+    public async Task<ObjectInfo> GetObjectInfoByQRCodeAsync(string qrCode)
+    {
+        try
+        {
+            string encodedQRCode = Uri.EscapeDataString(qrCode);
+            var requestUrl = $"{_baseFunctionUrl}{encodedQRCode}";
+
+            var response = await _httpClient.GetAsync(requestUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var objectInfo = JsonConvert.DeserializeObject<ObjectInfo>(jsonResponse);
+                return objectInfo;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return new ObjectInfo();
+        }
+
+    }
     private List<VoiceMessageInfo> _voiceMessages = new List<VoiceMessageInfo>();
     private ReportInfo _textReport = new ReportInfo();
     private List<ReportInfo> _textReports = new List<ReportInfo>();
@@ -18,29 +57,27 @@ public class DatabaseService : IDatabaseService
         return Task.FromResult(_voiceMessages);
     }
 
-    public Task<ObjectInfo> GetObjectInfoByQRCodeAsync(string qrCode)
+    //public Task<ObjectInfo> GetObjectInfoByQRCodeAsync(string qrCode)
+    //{
+    //    if (qrCode == "MockObjectQRCode")
+    //    {
+    //        return Task.FromResult(new ObjectInfo
+    //        {
+    //            Name = "Mock Object",
+    //            Location = "ObjectLocation",
+    //            QRCode = "MockObjectQRCode"
+    //        });
+    //    }
+    //    return Task.FromResult<ObjectInfo>(null);
+    //}
+
+    public async Task<bool> InsertReportAsync(ReportInfo reportData)
     {
-        if (qrCode== "MockObjectQRCode")
-        {
-            return Task.FromResult(new ObjectInfo
-            {
-                Name = "Mock Object",
-                Location = "ObjectLocation",
-                ObjectId = 1,
-                QRCode = "MockObjectQRCode"
-        });
-        }
-        return Task.FromResult<ObjectInfo>(null);
-    }
+        var json = JsonConvert.SerializeObject(reportData);
+        var content= new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _httpClient.PostAsync(_baseFunctionUrl, content); //adjust the _baseFunctionUrl
 
-    public Task<bool> AddTextReport(string textReport)
-    {
+        return response.IsSuccessStatusCode;
 
-        _textReport.TextContent = textReport;
-        _textReport.ReportedDate = DateTime.Now;
-        _textReport.VoiceMessageId = null;
-        _textReports.Add(_textReport);
-
-        return Task.FromResult(true);
     }
 }

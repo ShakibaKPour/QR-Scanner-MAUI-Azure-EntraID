@@ -78,7 +78,7 @@ public partial class ScanPage : ContentPage
         try
         {
             // _viewModel.SimulateLoadInfoAsync();
-            await _viewModel.ScanAsync("MockObjectQRCode");
+            await _viewModel.ScanAsync("TestQR");
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 await cameraView.StartCameraAsync();

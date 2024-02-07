@@ -54,12 +54,21 @@ namespace RepRepair.ViewModels
             }
             else
             {
-               var success = await _databaseService.AddTextReport(Description);
-            if (success)
+                var newReportData = new ReportInfo
                 {
+                    SelectedLanguage = "English",
+                    OriginalFaultReport = Description,
+                    TranslatedFaultReport = null,
+                    TypeOfReport = "Defect List",
+                    QRCode = ObjectInfo.QRCode,
+                    //ObjectId = ObjectInfo.ObjectId,
+                    ReportedDate = DateTime.Now,
+                };
+                var success = await _databaseService.InsertReportAsync(newReportData);
+                if (success)
+                { 
                     await Shell.Current.GoToAsync("Thank You!");
                     _scanningService.ResetScan();
-                    //ClearFields();
                 }
 
             }

@@ -10,9 +10,9 @@
              Title="Home">
     <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="30">
-            <Picker ItemsSource="{Binding AvailableLanguages}"
+            <!--<Picker ItemsSource="{Binding AvailableLanguages}"
                     SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
-            </Picker>
+            </Picker>-->
             <Label Text="Welcome to RepRepair!"
                    HorizontalOptions="Center"
                    FontSize="Large"/>

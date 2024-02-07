@@ -11,7 +11,7 @@
         <Picker ItemsSource="{Binding AvailableLanguages}"
              SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"></Picker>
         <Label Text="Scan Result:" Padding="5, 15, 5, 3"></Label>
-        <Label Text="{Binding ObjectInfo.ObjectId, StringFormat='ID: {0}'}" Padding="5, 3, 5, 3"></Label>
+        <Label Text="{Binding ObjectInfo.QRCode, StringFormat='ID: {0}'}" Padding="5, 3, 5, 3"></Label>
         <Label Text="{Binding ObjectInfo.Name, StringFormat='Name: {0}'}" Padding="5, 3, 5, 3"></Label>
         <Label Text="{Binding ObjectInfo.Location, StringFormat='Location: {0}'}" Padding="5, 3, 5, 15"></Label>
         <Editor Text="{Binding ReportText, Mode=TwoWay}" Placeholder="Write your report here..." HeightRequest="200" />

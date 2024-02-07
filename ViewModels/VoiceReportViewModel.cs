@@ -149,16 +149,20 @@ public class VoiceReportViewModel : BaseViewModel
     {
         if (!string.IsNullOrEmpty(TranscribedText) && !string.IsNullOrEmpty(TranslatedText) && ObjectInfo != null)
         {
-            var newVoiceMessageInfo = new VoiceMessageInfo
+            var newReportData = new ReportInfo
             {
-                Language = _languageSettingsService.CurrentLanguage,
-                Transcription = TranscribedText,
-                Translation = TranslatedText,
+                SelectedLanguage = _languageSettingsService.CurrentLanguage,
+                OriginalFaultReport = TranscribedText,
+                TranslatedFaultReport = TranslatedText,
+                TypeOfReport = "Voice Message",
+                QRCode = ObjectInfo.QRCode,
+                //ObjectId = ObjectInfo.ObjectId,
+                ReportedDate = DateTime.Now,
             };
-           var success =  await _databaseService.AddVoiceMessageInfoAsync(newVoiceMessageInfo);
+           var success =  await _databaseService.InsertReportAsync(newReportData);
             if (success)
             {
-                var allVoiceMessages = await _databaseService.GetAllVoiceMessagesAsync();
+              //  var allVoiceMessages = await _databaseService.GetAllVoiceMessagesAsync();
                 await Shell.Current.GoToAsync("Thank You!");
                 _scanningService.ResetScan();
             }

@@ -57,7 +57,7 @@ public class ReportViewModel : BaseViewModel
         if (objectInfo != null)
         {
             OnPropertyChanged(nameof(ObjectInfo.Name));
-            OnPropertyChanged(nameof(ObjectInfo.ObjectId));
+            //OnPropertyChanged(nameof(ObjectInfo.ObjectId));
             OnPropertyChanged(nameof(ObjectInfo.Location));
             OnPropertyChanged(nameof(ObjectInfo.QRCode));
         }

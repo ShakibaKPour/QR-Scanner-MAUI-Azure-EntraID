@@ -60,13 +60,22 @@ namespace RepRepair.ViewModels
                 await _alertService.ShowAlertAsync("Alert", "No input", "OK");
                 return;
             }
-
-            var success = await _databaseService.AddTextReport(ReportText);
+            var newReportData = new ReportInfo
+            {
+                SelectedLanguage = _languageSettingsService.CurrentLanguage,
+                OriginalFaultReport = ReportText,
+                TranslatedFaultReport = null,
+                TypeOfReport = "Write Message",
+                QRCode = ObjectInfo.QRCode,
+                //ObjectId = ObjectInfo.ObjectId,
+                ReportedDate = DateTime.Now,
+            };
+            var success = await _databaseService.InsertReportAsync(newReportData);
             if (success)
             {
+                //  var allVoiceMessages = await _databaseService.GetAllVoiceMessagesAsync();
                 await Shell.Current.GoToAsync("Thank You!");
-                ClearFields();
-               _scanningService.ResetScan();
+                _scanningService.ResetScan();
             }
             else
             {
