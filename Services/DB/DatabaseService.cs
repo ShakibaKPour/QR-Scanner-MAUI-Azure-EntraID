@@ -9,6 +9,7 @@ public class DatabaseService : IDatabaseService
 {
     private readonly HttpClient _httpClient;
     private readonly string _baseFunctionUrl = "http://localhost:7247/api/getobjectinfo/qrcode/"; // Azure function url
+    private readonly string _baseFunctionUrlPost = "http://localhost:7247/api/InsertReportInfo";
 
     public DatabaseService()
     {
@@ -75,7 +76,7 @@ public class DatabaseService : IDatabaseService
     {
         var json = JsonConvert.SerializeObject(reportData);
         var content= new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(_baseFunctionUrl, content); //adjust the _baseFunctionUrl
+        var response = await _httpClient.PostAsync(_baseFunctionUrlPost, content); //adjust the _baseFunctionUrl
 
         return response.IsSuccessStatusCode;
 

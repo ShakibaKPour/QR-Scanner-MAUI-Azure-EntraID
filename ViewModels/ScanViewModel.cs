@@ -30,6 +30,7 @@ public class ScanViewModel : BaseViewModel
             OnPropertyChanged(nameof(IsScanned));
         };
         SimulateScan = new Command(async () => await ScanAsync("TestQR"));
+        //SimulateScan = new Command(async () => await ScanAsync("6F9619FF-8B86-D011-B42D-00C04FC964FF"));
         OnReport = new Command(async () => await OnReportAsync());
     }
 

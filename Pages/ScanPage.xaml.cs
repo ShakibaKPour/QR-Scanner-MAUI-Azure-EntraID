@@ -79,6 +79,7 @@ public partial class ScanPage : ContentPage
         {
             // _viewModel.SimulateLoadInfoAsync();
             await _viewModel.ScanAsync("TestQR");
+            //await _viewModel.ScanAsync("6F9619FF-8B86-D011-B42D-00C04FC964FF");
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 await cameraView.StartCameraAsync();
