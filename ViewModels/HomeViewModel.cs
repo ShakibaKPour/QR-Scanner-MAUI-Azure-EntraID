@@ -1,6 +1,5 @@
 ﻿using RepRepair.Extensions;
 using RepRepair.Services.Language;
-using RepRepair.Services.Navigation;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

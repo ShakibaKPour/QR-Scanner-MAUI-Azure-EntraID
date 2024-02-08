@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using RepRepair.Extensions;
 using RepRepair.Models.DatabaseModels;
+using RepRepair.Services.AlertService;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -8,7 +10,7 @@ namespace RepRepair.Services.DB;
 public class DatabaseService : IDatabaseService
 {
     private readonly HttpClient _httpClient;
-    private readonly string _baseFunctionUrl = "http://localhost:7247/api/getobjectinfo/qrcode/"; // Azure function url
+    private readonly string _baseFunctionUrlGet = "http://localhost:7247/api/getobjectinfo/qrcode/";
     private readonly string _baseFunctionUrlPost = "http://localhost:7247/api/InsertReportInfo";
 
     public DatabaseService()
@@ -22,7 +24,7 @@ public class DatabaseService : IDatabaseService
         try
         {
             string encodedQRCode = Uri.EscapeDataString(qrCode);
-            var requestUrl = $"{_baseFunctionUrl}{encodedQRCode}";
+            var requestUrl = $"{_baseFunctionUrlGet}{encodedQRCode}";
 
             var response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
@@ -44,39 +46,11 @@ public class DatabaseService : IDatabaseService
         }
 
     }
-    private List<VoiceMessageInfo> _voiceMessages = new List<VoiceMessageInfo>();
-    private ReportInfo _textReport = new ReportInfo();
-    private List<ReportInfo> _textReports = new List<ReportInfo>();
-    public Task<bool> AddVoiceMessageInfoAsync(VoiceMessageInfo voiceMessageInfo)
-    {
-        _voiceMessages.Add(voiceMessageInfo);
-        return Task.FromResult(true);
-    }
-
-    public Task<List<VoiceMessageInfo>> GetAllVoiceMessagesAsync()
-    {
-        return Task.FromResult(_voiceMessages);
-    }
-
-    //public Task<ObjectInfo> GetObjectInfoByQRCodeAsync(string qrCode)
-    //{
-    //    if (qrCode == "MockObjectQRCode")
-    //    {
-    //        return Task.FromResult(new ObjectInfo
-    //        {
-    //            Name = "Mock Object",
-    //            Location = "ObjectLocation",
-    //            QRCode = "MockObjectQRCode"
-    //        });
-    //    }
-    //    return Task.FromResult<ObjectInfo>(null);
-    //}
-
     public async Task<bool> InsertReportAsync(ReportInfo reportData)
     {
         var json = JsonConvert.SerializeObject(reportData);
         var content= new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(_baseFunctionUrlPost, content); //adjust the _baseFunctionUrl
+        var response = await _httpClient.PostAsync(_baseFunctionUrlPost, content); 
 
         return response.IsSuccessStatusCode;
 

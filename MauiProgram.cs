@@ -3,7 +3,6 @@ using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;
 using RepRepair.Services.DB;
-using RepRepair.Services.Navigation;
 using RepRepair.Services.VoiceRecording;
 using RepRepair.ViewModels;
 using ZXing.Net.Maui.Controls;

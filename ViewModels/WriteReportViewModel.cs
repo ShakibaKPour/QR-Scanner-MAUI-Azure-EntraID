@@ -68,12 +68,10 @@ namespace RepRepair.ViewModels
                 TypeOfReport = "Write Message",
                 //QRCode = ObjectInfo.QRCode,
                 ObjectId = ObjectInfo.ObjectId,
-               // ReportDate = DateTime.Now,
             };
             var success = await _databaseService.InsertReportAsync(newReportData);
             if (success)
             {
-                //  var allVoiceMessages = await _databaseService.GetAllVoiceMessagesAsync();
                 await Shell.Current.GoToAsync("Thank You!");
                 _scanningService.ResetScan();
                 ClearFields();
