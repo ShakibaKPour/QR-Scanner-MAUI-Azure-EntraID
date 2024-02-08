@@ -156,7 +156,7 @@ public class VoiceReportViewModel : BaseViewModel
                 TranslatedFaultReport = TranslatedText,
                 TypeOfReport = "Voice Message",
                // QRCode = ObjectInfo.QRCode,
-                //ObjectId = ObjectInfo.ObjectId,
+                ObjectId = ObjectInfo.ObjectId,
                 //ReportDate = DateTime.Now,
             };
            var success =  await _databaseService.InsertReportAsync(newReportData);

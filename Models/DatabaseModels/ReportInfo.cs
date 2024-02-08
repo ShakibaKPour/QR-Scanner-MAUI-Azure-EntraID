@@ -11,7 +11,8 @@
 public class ReportInfo 
 {
     public int ReportId { get; set; }
-    public string QRCode { get; set; }
+    public int ObjectId { get; set; }
+    //public string QRCode { get; set; }
     public string? OriginalFaultReport { get; set; }
     public string? TranslatedFaultReport { get; set; }
    // public DateTime ReportDate { get; set; }
