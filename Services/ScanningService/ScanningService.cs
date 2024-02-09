@@ -1,4 +1,5 @@
 ﻿using RepRepair.Models.DatabaseModels;
+using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,12 @@ namespace RepRepair.Services.ScanningService
         public class ScanningService : IScanningService
         {
             private readonly IDatabaseService _databaseService;
+        private readonly IAlertService _alertService;
 
-            public ScanningService(IDatabaseService databaseService)
+            public ScanningService(IDatabaseService databaseService, IAlertService alertService)
             {
                 _databaseService = databaseService;
+                _alertService = alertService;
                 
             }
 
@@ -34,7 +37,12 @@ namespace RepRepair.Services.ScanningService
                     ScannedObjectChanged?.Invoke(CurrentScannedObject);
                     ScanStateChanged?.Invoke(IsScanned);
                 }
-                return CurrentScannedObject;
+            else
+            {
+                await _alertService.ShowAlertAsync("Alert", "Scanned object does not exist in the database", "OK");
+                ResetScan();
+            }
+            return CurrentScannedObject;
             }
 
             public void ResetScan()

@@ -15,10 +15,11 @@ namespace RepRepair
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute("VoiceReportPage", typeof(VoiceReportPage));
-            Routing.RegisterRoute("Thank You!", typeof(ThankYouPage));
-            Routing.RegisterRoute("Write to Us!", typeof(WriteReportPage));
-            Routing.RegisterRoute("Choose a Defect", typeof(DefectListPage));
+            Routing.RegisterRoute(nameof(MainReportPage), typeof(MainReportPage));
+            Routing.RegisterRoute(nameof(VoiceReportPage), typeof(VoiceReportPage));
+            Routing.RegisterRoute(nameof(ThankYouPage), typeof(ThankYouPage));
+            Routing.RegisterRoute(nameof(WriteReportPage), typeof(WriteReportPage));
+            Routing.RegisterRoute(nameof(DefectListPage), typeof(DefectListPage));
             BindingContext = this;
         }
 

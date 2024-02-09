@@ -19,7 +19,7 @@ public class DatabaseService : IDatabaseService
      
     }
 
-    public async Task<ObjectInfo> GetObjectInfoByQRCodeAsync(string qrCode)
+    public async Task<ObjectInfo?> GetObjectInfoByQRCodeAsync(string qrCode)
     {
         try
         {
@@ -32,6 +32,10 @@ public class DatabaseService : IDatabaseService
                 string jsonResponse = await response.Content.ReadAsStringAsync();
                 var objectInfo = JsonConvert.DeserializeObject<ObjectInfo>(jsonResponse);
                 return objectInfo;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
             }
             else
             {

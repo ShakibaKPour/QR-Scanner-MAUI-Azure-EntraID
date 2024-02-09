@@ -1,5 +1,6 @@
 ﻿using RepRepair.Extensions;
 using RepRepair.Models.DatabaseModels;
+using RepRepair.Pages;
 using RepRepair.Services.Language;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -64,17 +65,17 @@ public class ReportViewModel : BaseViewModel
     }
     private async Task NavigateToVoiceRecordCommandAsync()
     {
-        await Shell.Current.GoToAsync("VoiceReportPage");
+        await Shell.Current.GoToAsync(nameof(VoiceReportPage));
     }
 
     private async Task NavigateToWriteCommandAsync()
     {
-        await Shell.Current.GoToAsync("Write to Us!");
+        await Shell.Current.GoToAsync(nameof(WriteReportPage));
     }
 
     private async Task NavigateToDefectListCommandAsync()
     {
-        await Shell.Current.GoToAsync("Choose a Defect");
+        await Shell.Current.GoToAsync(nameof(DefectListPage));
     }
 
 }

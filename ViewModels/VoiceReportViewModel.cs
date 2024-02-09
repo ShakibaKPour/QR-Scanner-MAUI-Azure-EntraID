@@ -8,6 +8,7 @@ using System.Windows.Input;
 using RepRepair.Services.AlertService;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.ScanningService;
+using RepRepair.Pages;
 
 namespace RepRepair.ViewModels;
 
@@ -161,7 +162,7 @@ public class VoiceReportViewModel : BaseViewModel
            var success =  await _databaseService.InsertReportAsync(newReportData);
             if (success)
             {
-                await Shell.Current.GoToAsync("Thank You!");
+                await Shell.Current.GoToAsync(nameof(ThankYouPage));
                 _scanningService.ResetScan();
             }
             ClearFields();

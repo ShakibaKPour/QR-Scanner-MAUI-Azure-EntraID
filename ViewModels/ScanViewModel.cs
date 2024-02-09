@@ -3,6 +3,7 @@ using System.Windows.Input;
 using RepRepair.Services.AlertService;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.ScanningService;
+using RepRepair.Pages;
 
 namespace RepRepair.ViewModels;
 
@@ -38,12 +39,17 @@ public class ScanViewModel : BaseViewModel
     {
         if (_scanningService.IsScanned && _scanningService.CurrentScannedObject != null)
         {
-            await Shell.Current.GoToAsync("//MainReportPage");
+            await Shell.Current.GoToAsync(nameof(MainReportPage));
         }
-        else
+        //else if(_scanningService.CurrentScannedObject == null)
+        //{
+        //    await _alertService.ShowAlertAsync("Alert", "Scanned object does not exist in the database", "OK");
+        //}
+        else if (!_scanningService.IsScanned)
         {
             await _alertService.ShowAlertAsync("Alert", "You should scan the machine first!", "OK");
         }
+
         return;
 
     }

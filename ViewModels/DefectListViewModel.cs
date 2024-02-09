@@ -1,6 +1,7 @@
 ﻿using RepRepair.Extensions;
 using RepRepair.Models;
 using RepRepair.Models.DatabaseModels;
+using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
 using RepRepair.Services.ScanningService;
@@ -67,7 +68,7 @@ namespace RepRepair.ViewModels
                 var success = await _databaseService.InsertReportAsync(newReportData);
                 if (success)
                 { 
-                    await Shell.Current.GoToAsync("Thank You!");
+                    await Shell.Current.GoToAsync(nameof(ThankYouPage));
                     _scanningService.ResetScan();
                 }
 

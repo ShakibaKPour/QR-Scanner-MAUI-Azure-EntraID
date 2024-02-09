@@ -7,11 +7,9 @@
     Title="RepRepair">
     <TabBar>
         <ShellContent Title="Home" Route="HomePage"  ContentTemplate="{DataTemplate pages:HomePage}" />
- 
+
         <ShellContent Title="Scan" Route="ScanPage" ContentTemplate="{DataTemplate pages:ScanPage}" />
 
-        <ShellContent Title="Report" Route="MainReportPage" ContentTemplate="{DataTemplate pages:MainReportPage}"/>
-        
     </TabBar>
 
 </Shell>
