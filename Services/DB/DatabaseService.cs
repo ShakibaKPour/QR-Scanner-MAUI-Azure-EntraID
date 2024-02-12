@@ -52,6 +52,7 @@ public class DatabaseService : IDatabaseService
     }
     public async Task<bool> InsertReportAsync(ReportInfo reportData)
     {
+        reportData.QRCode = Guid.Parse(reportData.QRCodeString);
         var json = JsonConvert.SerializeObject(reportData);
         var content= new StringContent(json, Encoding.UTF8, "application/json");
         var response = await _httpClient.PostAsync(_baseFunctionUrlPost, content); 

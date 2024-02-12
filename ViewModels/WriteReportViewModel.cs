@@ -74,8 +74,7 @@ namespace RepRepair.ViewModels
                 OriginalFaultReport = ReportText,
                 TranslatedFaultReport = translation,
                 TypeOfReport = "Write Message",
-                //QRCode = ObjectInfo.QRCode,
-                ObjectId = ObjectInfo.ObjectId,
+                QRCodeString = ObjectInfo.QRCode,
             };
             var success = await _databaseService.InsertReportAsync(newReportData);
             if (success)
