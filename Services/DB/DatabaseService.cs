@@ -2,6 +2,7 @@
 using RepRepair.Extensions;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.AlertService;
+using RepRepair.Services.Cognitive;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -12,10 +13,12 @@ public class DatabaseService : IDatabaseService
     private readonly HttpClient _httpClient;
     private readonly string _baseFunctionUrlGet = "http://localhost:7247/api/getobjectinfo/qrcode/";
     private readonly string _baseFunctionUrlPost = "http://localhost:7247/api/InsertReportInfo";
+    private readonly TranslatorService _translatorService;
 
     public DatabaseService()
     {
         _httpClient = new HttpClient();
+        _translatorService = ServiceHelper.GetService<TranslatorService>();
      
     }
 
@@ -52,12 +55,20 @@ public class DatabaseService : IDatabaseService
     }
     public async Task<bool> InsertReportAsync(ReportInfo reportData)
     {
-        reportData.QRCode = Guid.Parse(reportData.QRCodeString);
-        var json = JsonConvert.SerializeObject(reportData);
-        var content= new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(_baseFunctionUrlPost, content); 
+        if (reportData.SelectedLanguage == "sv-SE")
+        {
+            reportData.TranslatedFaultReport = null;
+        }
+        else
+        {
+            reportData.TranslatedFaultReport = await _translatorService.TranslateTextAsync(reportData.OriginalFaultReport, "sv", reportData.SelectedLanguage);
+        }
+            reportData.QRCode = Guid.Parse(reportData.QRCodeString);
+            var json = JsonConvert.SerializeObject(reportData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(_baseFunctionUrlPost, content);
 
-        return response.IsSuccessStatusCode;
+            return response.IsSuccessStatusCode;
 
     }
 }

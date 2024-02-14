@@ -82,7 +82,7 @@ public partial class ScanPage : ContentPage
             await _viewModel.ScanAsync("6F9619FF-8B86-D011-B42D-00C04FC964FF");
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                await cameraView.StartCameraAsync();
+                //await cameraView.StartCameraAsync();
                 await cameraView.StopCameraAsync();
             });
         }
@@ -97,7 +97,7 @@ public partial class ScanPage : ContentPage
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await cameraView.StopCameraAsync();
+            //await cameraView.StopCameraAsync();
             ConfigureCameraForScanning();
             await cameraView.StartCameraAsync();
         });

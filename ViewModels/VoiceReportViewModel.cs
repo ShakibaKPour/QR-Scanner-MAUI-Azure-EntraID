@@ -27,7 +27,7 @@ public class VoiceReportViewModel : BaseViewModel
     private readonly IAlertService _alertService;
     private readonly IVoiceRecordingService _voiceRecordingService;
     private readonly IAzureCognitiveService _cognitiveServices;
-    private readonly TranslatorService _translatorService;
+   // private readonly TranslatorService _translatorService;
     private readonly LanguageSettingsService _languageSettingsService;
     private string _transcribedText;
     public string TranscribedText
@@ -39,16 +39,16 @@ public class VoiceReportViewModel : BaseViewModel
             OnPropertyChanged(nameof(TranscribedText));
         }
     }
-    private string _translatedText;
-    public string TranslatedText
-    {
-        get=> _translatedText;
-        set
-        {
-            _translatedText = value;
-            OnPropertyChanged(nameof(TranslatedText));
-        }
-    }
+    //private string _translatedText;
+    //public string TranslatedText
+    //{
+    //    get=> _translatedText;
+    //    set
+    //    {
+    //        _translatedText = value;
+    //        OnPropertyChanged(nameof(TranslatedText));
+    //    }
+    //}
 
     private bool _isTranscriptionVisible;
     public bool IsTranscriptionVisible
@@ -60,16 +60,16 @@ public class VoiceReportViewModel : BaseViewModel
             OnPropertyChanged(nameof(IsTranscriptionVisible));
         }
     }
-    private bool _isTranslationVisible;
-    public bool IsTranslationVisible
-    {
-        get => _isTranslationVisible;
-        set
-        {
-            _isTranslationVisible = value;
-            OnPropertyChanged(nameof(IsTranslationVisible));
-        }
-    }
+    //private bool _isTranslationVisible;
+    //public bool IsTranslationVisible
+    //{
+    //    get => _isTranslationVisible;
+    //    set
+    //    {
+    //        _isTranslationVisible = value;
+    //        OnPropertyChanged(nameof(IsTranslationVisible));
+    //    }
+    //}
     public string SelectedLanguage
     {
         get => _languageSettingsService.CurrentLanguage;
@@ -90,7 +90,7 @@ public class VoiceReportViewModel : BaseViewModel
             OnPropertyChanged(nameof(ObjectInfo));
         };
         _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
-        _translatorService = ServiceHelper.GetService<TranslatorService>();
+       // _translatorService = ServiceHelper.GetService<TranslatorService>();
         _cognitiveServices = ServiceHelper.GetService<IAzureCognitiveService>();
         _voiceRecordingService = ServiceHelper.GetService<IVoiceRecordingService>();
         _databaseService = ServiceHelper.GetService<IDatabaseService>();
@@ -108,7 +108,7 @@ public class VoiceReportViewModel : BaseViewModel
             {
                 TranscribedText = transcription;
                 IsTranscriptionVisible = true;
-                Translate(transcription);
+               // Translate(transcription);
             }
             else
             {
@@ -123,38 +123,38 @@ public class VoiceReportViewModel : BaseViewModel
         }
 
     }
-    private async void Translate(string text)
-    {
-        if (!string.IsNullOrEmpty(text))
-        {
-            var textTobeTranslated = text;
-            var translate = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
-            TranslatedText = translate;
-            IsTranslationVisible = true;
-        }
-        else
-        {
-            IsTranslationVisible = false;
-        }
-    }
+    //private async void Translate(string text)
+    //{
+    //    if (!string.IsNullOrEmpty(text))
+    //    {
+    //        var textTobeTranslated = text;
+    //        var translate = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
+    //        TranslatedText = translate;
+    //        IsTranslationVisible = true;
+    //    }
+    //    else
+    //    {
+    //        IsTranslationVisible = false;
+    //    }
+    //}
     private void DeleteRecording()
     {
         TranscribedText = string.Empty;
-        TranslatedText = string.Empty;
-        IsTranslationVisible=false;
+       // TranslatedText = string.Empty;
+      //  IsTranslationVisible=false;
         IsTranscriptionVisible= false;
         //also deleting the cached??
     }
 
     private async void Submit()
     {
-        if (!string.IsNullOrEmpty(TranscribedText) && !string.IsNullOrEmpty(TranslatedText) && ObjectInfo != null)
+        if (!string.IsNullOrEmpty(TranscribedText) && /*!string.IsNullOrEmpty(TranslatedText) &&*/ ObjectInfo != null)
         {
             var newReportData = new ReportInfo
             {
                 SelectedLanguage = _languageSettingsService.CurrentLanguage,
                 OriginalFaultReport = TranscribedText,
-                TranslatedFaultReport = TranslatedText,
+                //TranslatedFaultReport = TranslatedText,
                 TypeOfReport = "Voice Message",
                QRCodeString = ObjectInfo.QRCode,
             };
@@ -171,8 +171,8 @@ public class VoiceReportViewModel : BaseViewModel
     private void ClearFields()
     {
         TranscribedText=string.Empty;
-        TranslatedText=string.Empty;
+       // TranslatedText=string.Empty;
         IsTranscriptionVisible = false;
-        IsTranslationVisible=false;
+       // IsTranslationVisible=false;
     }
 }

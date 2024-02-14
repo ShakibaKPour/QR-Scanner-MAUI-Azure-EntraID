@@ -24,7 +24,7 @@ namespace RepRepair.ViewModels
         private readonly IAlertService _alertService;
         private readonly IDatabaseService _databaseService;
         private readonly LanguageSettingsService _languageSettingsService;
-        private readonly TranslatorService _translatorService;
+        //private readonly TranslatorService _translatorService;
         private string _reportText;
         public string ReportText
         {
@@ -54,7 +54,7 @@ namespace RepRepair.ViewModels
             _alertService = ServiceHelper.GetService<IAlertService>();
             _databaseService = ServiceHelper.GetService<IDatabaseService>();
             _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
-            _translatorService = ServiceHelper.GetService<TranslatorService>();
+            //_translatorService = ServiceHelper.GetService<TranslatorService>();
             OnSubmit = new Command(async () => await SubmitTextReport());
         }
 
@@ -65,14 +65,14 @@ namespace RepRepair.ViewModels
                 await _alertService.ShowAlertAsync("Alert", "No input", "OK");
                 return;
             }
-                var textTobeTranslated = ReportText;
-                var translation = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
+                //var textTobeTranslated = ReportText;
+                //var translation = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
 
                 var newReportData = new ReportInfo
             {
                 SelectedLanguage = _languageSettingsService.CurrentLanguage,
                 OriginalFaultReport = ReportText,
-                TranslatedFaultReport = translation,
+                //TranslatedFaultReport = translation,
                 TypeOfReport = "Write Message",
                 QRCodeString = ObjectInfo.QRCode,
             };

@@ -22,8 +22,8 @@
                 Command="{Binding RecordCommand}"/>
         <Editor Text="{Binding TranscribedText, Mode=TwoWay}" 
                 IsVisible="{Binding IsTranscriptionVisible}" />
-        <Editor Text="{Binding TranslatedText, Mode=TwoWay}" 
-                IsVisible="{Binding IsTranslationVisible}"/>
+        <!--<Editor Text="{Binding TranslatedText, Mode=TwoWay}" 
+                IsVisible="{Binding IsTranslationVisible}"/>-->
         <Button Text="Delete" 
                 Command="{Binding DeleteRecordingCommand}" 
                 IsVisible="{Binding IsTranscriptionVisible}"/>
