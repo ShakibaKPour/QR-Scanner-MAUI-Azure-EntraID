@@ -1,3 +1,5 @@
+using RepRepair.Extensions;
+using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
 using RepRepair.Services.ScanningService;
 using RepRepair.Services.VoiceRecording;
@@ -8,29 +10,37 @@ namespace RepRepair.Pages;
 public partial class ScanPage : ContentPage
 {
     public ScanViewModel _viewModel;
+    private readonly IAlertService _alertService;
    // private IDatabaseService _databaseService;
 	public ScanPage()
 	{
 		InitializeComponent();
        // var scanningService = new ScanningService(_databaseService);
 		_viewModel = new ScanViewModel();
+        _alertService = ServiceHelper.GetService<IAlertService>();
         BindingContext = _viewModel;
         cameraView.CamerasLoaded += OnCameraLoaded;
-        cameraView.BarcodeDetected += OnBarcodeDetected;
         ConfigureCameraForScanning();
+        cameraView.BarcodeDetected += OnBarcodeDetected;
     }
 
     private void OnCameraLoaded(object sender, EventArgs e)
     {
-            if (cameraView.NumCamerasDetected > 0)
+        if (cameraView.NumCamerasDetected > 0)
+        {
+            // cameraView.Camera = cameraView.Cameras.First();
+            cameraView.Camera = cameraView.Cameras.FirstOrDefault();
+           // ConfigureCameraForScanning();
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
-                cameraView.Camera = cameraView.Cameras.First();
-                ConfigureCameraForScanning();
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    await cameraView.StartCameraAsync();
-                });
-            }
+                // await cameraView.StopCameraAsync();
+                await cameraView.StartCameraAsync();
+            });
+        }
+        else
+        {
+            throw new Exception("Camera not found");
+        }
     }
 
     private void ConfigureCameraForScanning()
@@ -48,6 +58,7 @@ public partial class ScanPage : ContentPage
 
     private async void OnBarcodeDetected(object sender, Camera.MAUI.ZXingHelper.BarcodeEventArgs args)
     {
+        ConfigureCameraForScanning();
         string qr = args.Result[0].ToString();
         await _viewModel.ScanAsync(qr);
         await MainThread.InvokeOnMainThreadAsync(async () =>
@@ -77,9 +88,6 @@ public partial class ScanPage : ContentPage
     {
         try
         {
-            // _viewModel.SimulateLoadInfoAsync();
-          // await _viewModel.ScanAsync("TestQR");
-            await _viewModel.ScanAsync("6F9619FF-8B86-D011-B42D-00C04FC964FF");
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 //await cameraView.StartCameraAsync();

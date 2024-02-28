@@ -2,6 +2,7 @@
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Pages;
 using RepRepair.Services.Language;
+using RepRepair.Services.ReportTypesService;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -9,15 +10,16 @@ namespace RepRepair.ViewModels;
 
 public class ReportViewModel : BaseViewModel
 {
-    public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
-    {
-        "en-US", "es-ES", "it-IT", "sv-SE", "fr-FR", "fa-IR", "de-DE", "da-DK"
-    };
     public ICommand NavigateToVoiceRecordCommand { get; set; }
 
     public ICommand NavigateToWriteCommand { get; set; }
 
     public ICommand NavigateToDefectListCommand { get; set; }
+
+    public List<ReportType> ReportTypes
+    {
+        get => _reportServiceType.CachedReportTypes;
+    }
 
     private ObjectInfo _objectInfo;
     public ObjectInfo ObjectInfo
@@ -33,22 +35,10 @@ public class ReportViewModel : BaseViewModel
             }
         }
     }
-    private readonly LanguageSettingsService _languageSettingsService;
-    public string SelectedLanguage
-    {
-        get => _languageSettingsService.CurrentLanguage;
-        set
-        {
-            if (_languageSettingsService.CurrentLanguage != value)
-            {
-                _languageSettingsService.CurrentLanguage = value;
-                OnPropertyChanged(nameof(SelectedLanguage));
-            }
-        }
-    }
+    private readonly ReportServiceType _reportServiceType;
     public ReportViewModel()
     {
-        _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
+        _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
         NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
         NavigateToWriteCommand = new Command(async ()=> await NavigateToWriteCommandAsync());
         NavigateToDefectListCommand= new Command(async()=> await NavigateToDefectListCommandAsync());
@@ -58,7 +48,6 @@ public class ReportViewModel : BaseViewModel
         if (objectInfo != null)
         {
             OnPropertyChanged(nameof(ObjectInfo.Name));
-            //OnPropertyChanged(nameof(ObjectInfo.ObjectId));
             OnPropertyChanged(nameof(ObjectInfo.Location));
             OnPropertyChanged(nameof(ObjectInfo.QRCode));
         }
@@ -70,6 +59,7 @@ public class ReportViewModel : BaseViewModel
 
     private async Task NavigateToWriteCommandAsync()
     {
+        //var reportType = ReportTypes.Where(r => r.TypeOfReport == "Voice Message").FirstOrDefault();
         await Shell.Current.GoToAsync(nameof(WriteReportPage));
     }
 

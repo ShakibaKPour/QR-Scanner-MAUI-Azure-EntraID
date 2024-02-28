@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
 using RepRepair.Extensions;
+using RepRepair.Models;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.Cognitive;
+using RepRepair.Services.Configuration;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -11,15 +14,60 @@ namespace RepRepair.Services.DB;
 public class DatabaseService : IDatabaseService
 {
     private readonly HttpClient _httpClient;
-    private readonly string _baseFunctionUrlGet = "http://localhost:7247/api/getobjectinfo/qrcode/";
-    private readonly string _baseFunctionUrlPost = "http://localhost:7247/api/InsertReportInfo";
+
+    private readonly string _baseFunctionUrlGet = "https://reprepair.azurewebsites.net/api/getobjectinfo/qrcode/";
+
+    private readonly string _baseFunctionUrlPost = "https://reprepair.azurewebsites.net/api/InsertReportInfo?code=0WnwDDQvRERDVleGQpwqQlAkYaeAQ5Nx7O0NCGGXFbD-AzFuE8t5zg==";
+
+    private readonly string _baseFunctionUrlGetLanguages = "https://reprepair.azurewebsites.net/api/GetAvailableLanguagesInputBinding?code=4_iT1wdTbRJd29zlmYxIbEIIgYZaB00tXt78by2Ff3QjAzFuJZSYYA==";
+
+    private readonly string _baseFunctionUrlGetReportTypes = "https://reprepair.azurewebsites.net/api/GetReportTypes?code=CRzo1OhhrWjDM5vhVMRTI8T4ZieB4CGrw7jDu57rVxKDAzFuftu_9g==";
+
+
+    public AppConfig AppConfig
+    {
+        get => _configurationService.AppConfig;
+    }
+        
+    private readonly ConfigurationService _configurationService;
+
     private readonly TranslatorService _translatorService;
 
     public DatabaseService()
     {
         _httpClient = new HttpClient();
         _translatorService = ServiceHelper.GetService<TranslatorService>();
-     
+        _configurationService = ServiceHelper.GetService<ConfigurationService>();     
+    }
+
+    public async Task<List<Languages>> GetAvailableLanguagesAsync()
+    {
+        try
+        {
+            var requestUrl = $"{_baseFunctionUrlGetLanguages}";
+            //var requestUrl = $"{AppConfig.getLanguagesUrl}";
+            var response = await _httpClient.GetAsync(requestUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var languages = JsonConvert.DeserializeObject<List<Languages>>(jsonResponse);
+                return languages;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return new List<Languages>();
+        }
     }
 
     public async Task<ObjectInfo?> GetObjectInfoByQRCodeAsync(string qrCode)
@@ -28,7 +76,6 @@ public class DatabaseService : IDatabaseService
         {
             string encodedQRCode = Uri.EscapeDataString(qrCode);
             var requestUrl = $"{_baseFunctionUrlGet}{encodedQRCode}";
-
             var response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {
@@ -53,19 +100,49 @@ public class DatabaseService : IDatabaseService
         }
 
     }
-    public async Task<bool> InsertReportAsync(ReportInfo reportData)
+
+    public async Task<List<ReportType>?> GetReportTypesAsync()
     {
-        if (reportData.SelectedLanguage == "sv-SE")
+        try
+        {
+            var requestUrl = $"{_baseFunctionUrlGetReportTypes}";
+            var response = await _httpClient.GetAsync(requestUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var reportTypes = JsonConvert.DeserializeObject<List<ReportType>>(jsonResponse);
+                return reportTypes;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return new List<ReportType>();
+        }
+    }
+
+    public async Task<bool> InsertReportAsync(ReportInfo reportData, Languages selectedLanguage)
+    {
+        if (selectedLanguage.Language == "sv-SE")
         {
             reportData.TranslatedFaultReport = null;
         }
         else
         {
-            reportData.TranslatedFaultReport = await _translatorService.TranslateTextAsync(reportData.OriginalFaultReport, "sv", reportData.SelectedLanguage);
+            reportData.TranslatedFaultReport = await _translatorService.TranslateTextAsync(reportData.OriginalFaultReport, "sv-SE", selectedLanguage.Language);
         }
             reportData.QRCode = Guid.Parse(reportData.QRCodeString);
-            var json = JsonConvert.SerializeObject(reportData);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var content = JsonContent.Create(reportData);
             var response = await _httpClient.PostAsync(_baseFunctionUrlPost, content);
 
             return response.IsSuccessStatusCode;

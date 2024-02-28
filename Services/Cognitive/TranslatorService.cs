@@ -5,9 +5,12 @@ namespace RepRepair.Services.Cognitive
 {
     public class TranslatorService
     {
-        static string translateKey = Environment.GetEnvironmentVariable("TRANSLATE_KEY");
-        static string translateRegion = Environment.GetEnvironmentVariable("TRANSLATE_REGION");
-        static string translateEndpoint = Environment.GetEnvironmentVariable("TRANSLATE_ENDPOINT");
+        //static string translateKey = Environment.GetEnvironmentVariable("TRANSLATE_KEY");
+        //static string translateRegion = Environment.GetEnvironmentVariable("TRANSLATE_REGION");
+        //static string translateEndpoint = Environment.GetEnvironmentVariable("TRANSLATE_ENDPOINT");
+        static string translateKey = " ";
+        static string translateRegion = "swedencentral";
+        static string translateEndpoint = "https://api.cognitive.microsofttranslator.com";
         public TranslatorService()
         {
 
@@ -27,7 +30,6 @@ namespace RepRepair.Services.Cognitive
                 request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
                 request.Headers.Add("Ocp-Apim-Subscription-Key", translateKey);
                 request.Headers.Add("Ocp-Apim-Subscription-Region", translateRegion);
-
                 HttpResponseMessage response = await client.SendAsync(request).ConfigureAwait(false);
                 string result = await response.Content.ReadAsStringAsync();
                 try

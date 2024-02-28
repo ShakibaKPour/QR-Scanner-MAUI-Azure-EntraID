@@ -1,4 +1,5 @@
 ﻿using RepRepair.Extensions;
+using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.Language;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -7,14 +8,10 @@ namespace RepRepair.ViewModels;
 
 public partial class HomeViewModel : BaseViewModel
 {
-    public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
-    {
-        "en-US", "es-ES", "it-IT", "sv-SE", "fr-FR", "fa-IR", "de-DE", "da-DK"
-    };
     public ICommand ScanCommand { get; set; }
 
     private readonly LanguageSettingsService _languageSettingsService;
-    public string SelectedLanguage
+    public Languages SelectedLanguage
     {
         get => _languageSettingsService.CurrentLanguage;
         set

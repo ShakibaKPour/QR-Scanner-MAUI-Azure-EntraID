@@ -1,4 +1,5 @@
-﻿using RepRepair.Models.DatabaseModels;
+﻿using RepRepair.Extensions;
+using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
 using System;
@@ -12,12 +13,12 @@ namespace RepRepair.Services.ScanningService
         public class ScanningService : IScanningService
         {
             private readonly IDatabaseService _databaseService;
-        private readonly IAlertService _alertService;
+            private readonly IAlertService _alertService;
 
-            public ScanningService(IDatabaseService databaseService, IAlertService alertService)
+            public ScanningService()
             {
-                _databaseService = databaseService;
-                _alertService = alertService;
+                _databaseService = ServiceHelper.GetService<IDatabaseService>();
+                _alertService = ServiceHelper.GetService<IAlertService>();
                 
             }
 

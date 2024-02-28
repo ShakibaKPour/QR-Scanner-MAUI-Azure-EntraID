@@ -12,8 +12,10 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout Padding="20">
+        <Button Text="Go back" Command="{Binding OnGoBack}"></Button>
         <Picker ItemsSource="{Binding AvailableLanguages}"
-                    SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
+                ItemDisplayBinding="{Binding Language}"
+                SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
         </Picker>
         <Label Text="{Binding ObjectInfo.QRCode}"></Label>
         <Label Text="{Binding ObjectInfo.Name}"></Label>

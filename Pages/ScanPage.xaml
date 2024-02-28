@@ -23,7 +23,7 @@
                            WidthRequest="300" 
                            HeightRequest="300" 
                            BarCodeDetectionEnabled="True"
-                           CamerasLoaded="OnCameraLoaded"
+                            CamerasLoaded="OnCameraLoaded"
                            BarcodeDetected="OnBarcodeDetected"
                            IsVisible="{Binding IsScanned, Converter={StaticResource InvertedBoolConverter}}"
                            Margin="5">

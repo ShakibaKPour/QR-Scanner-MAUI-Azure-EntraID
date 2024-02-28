@@ -6,6 +6,6 @@ public class ReportInfo
     public Guid QRCode { get; set; }
     public string? OriginalFaultReport { get; set; }
     public string? TranslatedFaultReport { get; set; }
-    public string? SelectedLanguage { get; set; }
-    public string? TypeOfReport { get; set; } //or public list<TypeOfReport> typeOfReport {get; set} = new();
+    public Guid? SelectedLanguage { get; set; }
+    public Guid? TypeOfReport { get; set; } //or public list<TypeOfReport> typeOfReport {get; set} = new();
 }

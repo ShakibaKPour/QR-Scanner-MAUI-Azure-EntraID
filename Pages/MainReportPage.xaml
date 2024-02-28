@@ -15,10 +15,15 @@
             HorizontalOptions="Center" />
         <Button Text="Record a voice message" 
                 Padding="10" 
+                Margin="10"
                 Command="{Binding NavigateToVoiceRecordCommand}"></Button>
         <Button Text="Write to us"
+                 Padding="10" 
+                Margin="10"
                 Command="{Binding NavigateToWriteCommand}"></Button>
         <Button Text=" Choose from a list"
+                 Padding="10" 
+                 Margin="10"
                 Command="{Binding NavigateToDefectListCommand}"></Button>
     </VerticalStackLayout>
 </ContentPage>

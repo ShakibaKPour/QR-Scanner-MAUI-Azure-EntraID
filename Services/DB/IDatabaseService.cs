@@ -5,5 +5,8 @@ namespace RepRepair.Services.DB;
 public interface IDatabaseService
 {
     Task<ObjectInfo?> GetObjectInfoByQRCodeAsync(string qrCode);
-    Task<bool> InsertReportAsync(ReportInfo reportData);
+    Task<bool> InsertReportAsync(ReportInfo reportData, Languages selectedLanguage);
+
+    Task<List<Languages>> GetAvailableLanguagesAsync();
+    Task<List<ReportType>?> GetReportTypesAsync();
 }

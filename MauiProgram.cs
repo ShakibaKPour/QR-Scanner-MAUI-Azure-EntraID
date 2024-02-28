@@ -12,6 +12,8 @@ using RepRepair.Services.Cognitive;
 using RepRepair.Services.Language;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.ScanningService;
+using RepRepair.Services.ReportTypesService;
+using RepRepair.Services.Configuration;
 
 namespace RepRepair
 {
@@ -36,21 +38,23 @@ namespace RepRepair
             builder.Services.AddSingleton<IAzureCognitiveService, AzureCognitiveService>();
             builder.Services.AddSingleton<IAlertService, AlertService>();
             builder.Services.AddSingleton<IScanningService, ScanningService>();
+            builder.Services.AddSingleton<ReportServiceType>();
             builder.Services.AddSingleton<TranslatorService>();
             builder.Services.AddSingleton<LanguageSettingsService>();
-            builder.Services.AddSingleton<HomeViewModel>();
-            builder.Services.AddSingleton<HomePage>();
-            builder.Services.AddSingleton<ScanViewModel>();
-            builder.Services.AddSingleton<ScanPage>();
-            builder.Services.AddSingleton<ReportViewModel>();
-            builder.Services.AddSingleton<MainReportPage>();
-            builder.Services.AddSingleton<VoiceReportViewModel>();
-            builder.Services.AddSingleton<VoiceReportPage>();
-            builder.Services.AddSingleton<WriteReportPage>();
-            builder.Services.AddSingleton<WriteReportViewModel>();
-            builder.Services.AddSingleton<DefectListPage>();
-            builder.Services.AddSingleton<DefectListViewModel>();
-            
+            builder.Services.AddSingleton<ConfigurationService>();
+            builder.Services.AddTransient<HomeViewModel>();
+            builder.Services.AddTransient<HomePage>();
+            builder.Services.AddTransient<ScanViewModel>();
+            builder.Services.AddTransient<ScanPage>();
+            builder.Services.AddTransient<ReportViewModel>();
+            builder.Services.AddTransient<MainReportPage>();
+            builder.Services.AddTransient<VoiceReportViewModel>();
+            builder.Services.AddTransient<VoiceReportPage>();
+            builder.Services.AddTransient<WriteReportPage>();
+            builder.Services.AddTransient<WriteReportViewModel>();
+            builder.Services.AddTransient<DefectListPage>();
+            builder.Services.AddTransient<DefectListViewModel>();
+
 
 #if DEBUG
             builder.Logging.AddDebug();

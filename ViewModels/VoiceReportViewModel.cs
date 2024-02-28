@@ -9,19 +9,22 @@ using RepRepair.Services.AlertService;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.ScanningService;
 using RepRepair.Pages;
+using RepRepair.Services.ReportTypesService;
 
 namespace RepRepair.ViewModels;
 
 public class VoiceReportViewModel : BaseViewModel
 {
     public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
-    public ObservableCollection<string> AvailableLanguages { get; } = new ObservableCollection<string>
+    public ObservableCollection<Languages> AvailableLanguages
     {
-        "en-US", "es-ES", "it-IT", "sv-SE", "fr-FR", "fa-IR", "de-DE", "da-DK"
-    };
+        get => _languageSettingsService.AvailableLanguages;
+    }
+    public List<ReportType> ReportTypes { get => _reportServiceType.CachedReportTypes; }
     public ICommand RecordCommand { get; }
     public ICommand DeleteRecordingCommand { get; }
     public ICommand SubmitCommand { get; }
+    public ICommand OnGoBack { get; set; }
     private readonly IScanningService _scanningService;   
     private readonly IDatabaseService _databaseService;
     private readonly IAlertService _alertService;
@@ -29,6 +32,7 @@ public class VoiceReportViewModel : BaseViewModel
     private readonly IAzureCognitiveService _cognitiveServices;
    // private readonly TranslatorService _translatorService;
     private readonly LanguageSettingsService _languageSettingsService;
+    private readonly ReportServiceType _reportServiceType;
     private string _transcribedText;
     public string TranscribedText
     {
@@ -70,7 +74,8 @@ public class VoiceReportViewModel : BaseViewModel
     //        OnPropertyChanged(nameof(IsTranslationVisible));
     //    }
     //}
-    public string SelectedLanguage
+
+    public Languages SelectedLanguage
     {
         get => _languageSettingsService.CurrentLanguage;
         set
@@ -90,6 +95,7 @@ public class VoiceReportViewModel : BaseViewModel
             OnPropertyChanged(nameof(ObjectInfo));
         };
         _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
+        _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
        // _translatorService = ServiceHelper.GetService<TranslatorService>();
         _cognitiveServices = ServiceHelper.GetService<IAzureCognitiveService>();
         _voiceRecordingService = ServiceHelper.GetService<IVoiceRecordingService>();
@@ -98,6 +104,21 @@ public class VoiceReportViewModel : BaseViewModel
         RecordCommand = new Command(OnRecord);
         DeleteRecordingCommand = new Command(DeleteRecording);
         SubmitCommand = new Command(Submit);
+        OnGoBack = new Command(async () => await NavigateBackAsync());
+        ValidateIsScanned();
+    }
+    private async void ValidateIsScanned()
+    {
+        if (ObjectInfo == null)
+        {
+            await _alertService.ShowAlertAsync("Alert", "Start by scanning the QR code", "OK");
+            await Shell.Current.GoToAsync("///ScanPage");
+        }
+    }
+
+    private async Task NavigateBackAsync()
+    {
+        await Shell.Current.GoToAsync("..");
     }
     private async void OnRecord()
     {
@@ -150,15 +171,16 @@ public class VoiceReportViewModel : BaseViewModel
     {
         if (!string.IsNullOrEmpty(TranscribedText) && /*!string.IsNullOrEmpty(TranslatedText) &&*/ ObjectInfo != null)
         {
+            var reportType = ReportTypes.Where(r => r.TypeOfReport == "Voice Message").FirstOrDefault();
             var newReportData = new ReportInfo
             {
-                SelectedLanguage = _languageSettingsService.CurrentLanguage,
+                SelectedLanguage = _languageSettingsService.CurrentLanguage.ID,
                 OriginalFaultReport = TranscribedText,
                 //TranslatedFaultReport = TranslatedText,
-                TypeOfReport = "Voice Message",
+                TypeOfReport = reportType.ID,
                QRCodeString = ObjectInfo.QRCode,
             };
-           var success =  await _databaseService.InsertReportAsync(newReportData);
+           var success =  await _databaseService.InsertReportAsync(newReportData, SelectedLanguage);
             if (success)
             {
                 await Shell.Current.GoToAsync(nameof(ThankYouPage));

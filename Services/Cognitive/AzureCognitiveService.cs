@@ -1,6 +1,7 @@
 ﻿using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using RepRepair.Extensions;
+using RepRepair.Services.Configuration;
 using RepRepair.Services.Language;
 using System.Text;
 
@@ -10,12 +11,16 @@ namespace RepRepair.Services.Cognitive
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUri = "https://the-azure-function-app.azurewebsites.net/";
-        static string speechKey = Environment.GetEnvironmentVariable("SPEECH_KEY");
-        static string speechRegion = Environment.GetEnvironmentVariable("SPEECH_REGION");
+        static string speechKey = " ";
+        static string speechRegion = "swedencentral";
+        //static string speechKey = Environment.GetEnvironmentVariable("SPEECH_KEY");
+        //static string speechRegion = Environment.GetEnvironmentVariable("SPEECH_REGION");
         private readonly LanguageSettingsService _languageSettingsService;
+        private readonly ConfigurationService _configurationService;
         public AzureCognitiveService()
         {
             _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
+            _configurationService = ServiceHelper.GetService<ConfigurationService>();
         }
 
 
@@ -27,7 +32,7 @@ namespace RepRepair.Services.Cognitive
             try
             {
                 var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
-                speechConfig.SpeechRecognitionLanguage = _languageSettingsService.CurrentLanguage;
+                speechConfig.SpeechRecognitionLanguage = _languageSettingsService.CurrentLanguage.Language;
                 speechConfig.SetProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, "300");
                 using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
 
