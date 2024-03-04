@@ -1,5 +1,8 @@
-﻿using RepRepair.Extensions;
+﻿using Microsoft.Identity.Client;
+using RepRepair.Extensions;
+using RepRepair.Pages;
 using RepRepair.Services.AlertService;
+using RepRepair.Services.Auth;
 using RepRepair.Services.Configuration;
 using RepRepair.Services.DB;
 using RepRepair.Services.Language;
@@ -9,6 +12,7 @@ namespace RepRepair
 {
     public partial class App : Application
     {
+        public static AuthenticationService _authenticationService {  get; private set; }
         private readonly LanguageSettingsService _languageSettingsService;
         private readonly ReportServiceType _reportServiceType;
         private readonly ConfigurationService _configurationService;
@@ -16,14 +20,36 @@ namespace RepRepair
         public App()
         {
             InitializeComponent();
+            _authenticationService = new AuthenticationService();
+            CheckSignInStatus();
             AlertSvc = ServiceHelper.GetService<IAlertService>();
-            _configurationService = ServiceHelper.GetService<ConfigurationService>();
+            // _configurationService = ServiceHelper.GetService<ConfigurationService>();
             //InitializeAppConfig();
             _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
             _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
             InitializeGlobalLanguagesAsync();
             InitializeGlobalReportTypesAsync();
             MainPage = new AppShell();
+        }
+
+        private async void CheckSignInStatus()
+        {
+            try
+            {
+                var authResult = await _authenticationService.AcquireTokenSilentAsync();
+            }
+            catch (MsalUiRequiredException)
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    MainPage = new NavigationPage(new SignInPage());
+                });
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         //private async void InitializeAppConfig()

@@ -8,7 +8,7 @@ namespace RepRepair.Services.Cognitive
         //static string translateKey = Environment.GetEnvironmentVariable("TRANSLATE_KEY");
         //static string translateRegion = Environment.GetEnvironmentVariable("TRANSLATE_REGION");
         //static string translateEndpoint = Environment.GetEnvironmentVariable("TRANSLATE_ENDPOINT");
-        static string translateKey = " ";
+        static string translateKey = "fb58a08c2f454884bc7b434f40794193";
         static string translateRegion = "swedencentral";
         static string translateEndpoint = "https://api.cognitive.microsofttranslator.com";
         public TranslatorService()

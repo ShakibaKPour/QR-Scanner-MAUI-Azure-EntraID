@@ -29,6 +29,9 @@
                    WidthRequest="280"
                    HeightRequest="280"
                    Margin="5"></Image>
+            <Button Text="Log in"
+                    HorizontalOptions="Fill"
+                    Command="{Binding AuthenticateCommand}"></Button>
             <Button Text="Start Scanning"
                     HorizontalOptions="Fill"
                     Command="{Binding ScanCommand}"/>

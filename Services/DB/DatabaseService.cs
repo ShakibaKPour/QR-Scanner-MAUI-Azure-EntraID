@@ -5,9 +5,12 @@ using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.Cognitive;
 using RepRepair.Services.Configuration;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json.Serialization;
+using RepRepair.Services.Auth;
 
 namespace RepRepair.Services.DB;
 
@@ -28,6 +31,8 @@ public class DatabaseService : IDatabaseService
     {
         get => _configurationService.AppConfig;
     }
+
+    private readonly AuthenticationService _authenticationServices;
         
     private readonly ConfigurationService _configurationService;
 
@@ -35,6 +40,7 @@ public class DatabaseService : IDatabaseService
 
     public DatabaseService()
     {
+        _authenticationServices = ServiceHelper.GetService<AuthenticationService>();
         _httpClient = new HttpClient();
         _translatorService = ServiceHelper.GetService<TranslatorService>();
         _configurationService = ServiceHelper.GetService<ConfigurationService>();     
@@ -74,6 +80,11 @@ public class DatabaseService : IDatabaseService
     {
         try
         {
+            var tokenResult = await _authenticationServices.AcquireTokenSilentAsync();
+            var accessToken = tokenResult.AccessToken;
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+
             string encodedQRCode = Uri.EscapeDataString(qrCode);
             var requestUrl = $"{_baseFunctionUrlGet}{encodedQRCode}";
             var response = await _httpClient.GetAsync(requestUrl);

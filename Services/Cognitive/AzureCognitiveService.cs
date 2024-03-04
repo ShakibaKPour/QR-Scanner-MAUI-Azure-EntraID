@@ -11,7 +11,7 @@ namespace RepRepair.Services.Cognitive
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUri = "https://the-azure-function-app.azurewebsites.net/";
-        static string speechKey = " ";
+        static string speechKey = "e1e2299f4ccd49e3b2c3859420c5ae25";
         static string speechRegion = "swedencentral";
         //static string speechKey = Environment.GetEnvironmentVariable("SPEECH_KEY");
         //static string speechRegion = Environment.GetEnvironmentVariable("SPEECH_REGION");

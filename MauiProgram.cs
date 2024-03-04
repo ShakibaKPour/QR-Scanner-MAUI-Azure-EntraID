@@ -14,6 +14,9 @@ using RepRepair.Services.AlertService;
 using RepRepair.Services.ScanningService;
 using RepRepair.Services.ReportTypesService;
 using RepRepair.Services.Configuration;
+using RepRepair.Services.Auth;
+using Microsoft.Maui.LifecycleEvents;
+using Microsoft.Identity.Client;
 
 namespace RepRepair
 {
@@ -27,11 +30,24 @@ namespace RepRepair
                 .UseMauiCameraView()
                 .UseMauiCommunityToolkit()
                 .UseBarcodeReader()
-                .ConfigureFonts(fonts =>
+                .ConfigureLifecycleEvents(events =>
                 {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+#if ANDROID
+                    events.AddAndroid(platform =>
+                    {
+                        platform.OnActivityResult((activity, rc, result, data) =>
+                        {
+                            AuthenticationContinuationHelper.SetAuthenticationContinuationEventArgs(rc, result, data);
+                        });
+                    });
+#endif
+                })
+        .ConfigureFonts(fonts =>
+        {
+            fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+            fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+        });
+
             builder.Services.AddSingleton<IDatabaseService, DatabaseService>();
             builder.Services.AddSingleton<IVoiceRecordingService,VoiceRedordingService>();
             builder.Services.AddSingleton<IAudioManager, AudioManager>();
@@ -42,6 +58,7 @@ namespace RepRepair
             builder.Services.AddSingleton<TranslatorService>();
             builder.Services.AddSingleton<LanguageSettingsService>();
             builder.Services.AddSingleton<ConfigurationService>();
+            builder.Services.AddSingleton<AuthenticationService>();
             builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<ScanViewModel>();
