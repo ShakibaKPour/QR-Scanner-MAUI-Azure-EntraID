@@ -17,6 +17,7 @@ namespace RepRepair
             InitializeComponent();
             //Routing.RegisterRoute(nameof(ScanPage), typeof(ScanPage));
             //Routing.RegisterRoute(nameof(MainReportPage), typeof(MainReportPage));
+            Routing.RegisterRoute(nameof(SignInPage), typeof(SignInPage));
             Routing.RegisterRoute(nameof(VoiceReportPage), typeof(VoiceReportPage));
             Routing.RegisterRoute(nameof(ThankYouPage), typeof(ThankYouPage));
             Routing.RegisterRoute(nameof(WriteReportPage), typeof(WriteReportPage));

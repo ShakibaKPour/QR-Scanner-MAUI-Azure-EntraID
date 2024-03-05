@@ -50,6 +50,10 @@ public class DatabaseService : IDatabaseService
     {
         try
         {
+            var tokenResult = await _authenticationServices.AcquireTokenSilentAsync();
+            Console.WriteLine(tokenResult.ToString());
+            var accessToken = tokenResult.AccessToken;
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var requestUrl = $"{_baseFunctionUrlGetLanguages}";
             //var requestUrl = $"{AppConfig.getLanguagesUrl}";
             var response = await _httpClient.GetAsync(requestUrl);
@@ -116,6 +120,11 @@ public class DatabaseService : IDatabaseService
     {
         try
         {
+            var tokenResult = await _authenticationServices.AcquireTokenSilentAsync();
+            Console.WriteLine(tokenResult.ToString());
+            var accessToken = tokenResult.AccessToken;
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
             var requestUrl = $"{_baseFunctionUrlGetReportTypes}";
             var response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
@@ -143,6 +152,11 @@ public class DatabaseService : IDatabaseService
 
     public async Task<bool> InsertReportAsync(ReportInfo reportData, Languages selectedLanguage)
     {
+        var tokenResult = await _authenticationServices.AcquireTokenSilentAsync();
+        Console.WriteLine(tokenResult.ToString());
+        var accessToken = tokenResult.AccessToken;
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
         if (selectedLanguage.Language == "sv-SE")
         {
             reportData.TranslatedFaultReport = null;

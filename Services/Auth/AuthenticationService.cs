@@ -11,7 +11,7 @@ namespace RepRepair.Services.Auth
     public class AuthenticationService
     {
         private IPublicClientApplication _publicClientApplication;
-        private string[] _scopes = { "User.Read" };
+        private string[] _scopes = { "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/User.Read" };
         public AuthenticationService()
         {
             //            _publicClientApplication = PublicClientApplicationBuilder.Create("dff3c905-f0d7-4071-99cf-9cb059eb6fcd")
@@ -66,7 +66,7 @@ namespace RepRepair.Services.Auth
             return await _publicClientApplication.AcquireTokenInteractive(_scopes).ExecuteAsync();
         }
 
-        private async Task SignOutAsync()
+        public async Task SignOutAsync()
         {
             var accounts = await _publicClientApplication.GetAccountsAsync();
             foreach (var account in accounts)

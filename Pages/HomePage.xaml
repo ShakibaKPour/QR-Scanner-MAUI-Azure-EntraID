@@ -29,9 +29,10 @@
                    WidthRequest="280"
                    HeightRequest="280"
                    Margin="5"></Image>
-            <Button Text="Log in"
+            <Label Text="{Binding _username}"></Label>
+            <Button Text="Sign Out"
                     HorizontalOptions="Fill"
-                    Command="{Binding AuthenticateCommand}"></Button>
+                    Command="{Binding SignOutCommand}"></Button>
             <Button Text="Start Scanning"
                     HorizontalOptions="Fill"
                     Command="{Binding ScanCommand}"/>

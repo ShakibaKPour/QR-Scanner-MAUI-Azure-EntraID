@@ -11,6 +11,7 @@ namespace RepRepair.ViewModels
     public class SignInViewModel : BaseViewModel // Implement INotifyPropertyChanged in BaseViewModel
     {
         public ICommand SignInCommand { get; }
+        
 
         public SignInViewModel()
         {
@@ -36,5 +37,7 @@ namespace RepRepair.ViewModels
                 // Optionally display an error message to the user
             }
         }
+
+
     }
 }
