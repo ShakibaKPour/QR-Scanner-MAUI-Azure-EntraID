@@ -27,7 +27,6 @@ namespace RepRepair.ViewModels
                 if (authResult != null)
                 {
                     // Navigate to the main page after successful sign-in
-                    // Adjust navigation based on your app structure
                     await Shell.Current.GoToAsync("///HomePage");
                 }
             }
