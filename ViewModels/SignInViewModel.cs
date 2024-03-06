@@ -1,4 +1,5 @@
 ﻿using Microsoft.Identity.Client;
+using RepRepair.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace RepRepair.ViewModels
                 {
                     // Navigate to the main page after successful sign-in
                     // Adjust navigation based on your app structure
-                    await Shell.Current.GoToAsync("//HomePage");
+                    await Shell.Current.GoToAsync("///HomePage");
                 }
             }
             catch (MsalClientException ex)

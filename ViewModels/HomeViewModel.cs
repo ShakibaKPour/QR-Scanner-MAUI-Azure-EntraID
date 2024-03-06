@@ -15,7 +15,10 @@ public partial class HomeViewModel : BaseViewModel
 
     public AuthenticationService _authenticationService { get; set; }
 
-    public string _username => _authenticationService.AcquireTokenSilentAsync().Result.Account.Username;
+    //public string _username
+    //{
+    //    get => _authenticationService.AcquireTokenSilentAsync().Result.Account.Username;
+    //}
 
     private readonly LanguageSettingsService _languageSettingsService;
     public Languages SelectedLanguage

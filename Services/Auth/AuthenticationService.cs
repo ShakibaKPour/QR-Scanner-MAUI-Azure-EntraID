@@ -1,10 +1,6 @@
 ﻿using Microsoft.Identity.Client;
 using RepRepair.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RepRepair.Pages;
 
 namespace RepRepair.Services.Auth
 {
@@ -14,13 +10,6 @@ namespace RepRepair.Services.Auth
         private string[] _scopes = { "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/User.Read" };
         public AuthenticationService()
         {
-            //            _publicClientApplication = PublicClientApplicationBuilder.Create("dff3c905-f0d7-4071-99cf-9cb059eb6fcd")
-            //            .WithRedirectUri("https://login.microsoftonline.com/common/oauth2/nativeclient")
-            //#if ANDROID
-            //                .WithParentActivityOrWindow(() => Platform.CurrentActivity) // For Android
-            //#endif
-            //            .WithAuthority("https://login.microsoftonline.com/d39cc9fd-5c77-4f88-bc2c-0cc3b4d52366")
-            //            .Build();
 
             if (this._publicClientApplication == null)
             {
@@ -52,13 +41,11 @@ namespace RepRepair.Services.Auth
             }
         }
         
-
         public async Task<AuthenticationResult> AcquireTokenSilentAsync()
         {
             var accounts = await _publicClientApplication.GetAccountsAsync();
             return await _publicClientApplication.AcquireTokenSilent(_scopes, accounts.FirstOrDefault())
                 .ExecuteAsync();
-
         }
 
         public async Task<AuthenticationResult> SignInAsync()
@@ -73,6 +60,7 @@ namespace RepRepair.Services.Auth
             {
                 await _publicClientApplication.RemoveAsync(account);
             }
+            await Shell.Current.GoToAsync(nameof(SignInPage));
         }
     }
 }

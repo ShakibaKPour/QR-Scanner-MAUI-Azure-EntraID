@@ -29,7 +29,7 @@
                    WidthRequest="280"
                    HeightRequest="280"
                    Margin="5"></Image>
-            <Label Text="{Binding _username}"></Label>
+            <!--<Label Text="{Binding _username}"></Label>-->
             <Button Text="Sign Out"
                     HorizontalOptions="Fill"
                     Command="{Binding SignOutCommand}"></Button>
