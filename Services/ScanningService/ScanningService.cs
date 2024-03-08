@@ -25,10 +25,12 @@ namespace RepRepair.Services.ScanningService
             public event Action<ObjectInfo> ScannedObjectChanged;
             public event Action<bool> ScanStateChanged;
 
-            public ObjectInfo CurrentScannedObject { get; private set; }
+            public ObjectInfo? CurrentScannedObject { get; private set; }
             public bool IsScanned { get; private set; }
 
-            public async Task<ObjectInfo> ScanAsync(string qrCode)
+            public async Task<ObjectInfo?> ScanAsync(string qrCode)
+            {
+            try
             {
                 var scannedObject = await _databaseService.GetObjectInfoByQRCodeAsync(qrCode);
                 if (scannedObject != null)
@@ -37,28 +39,43 @@ namespace RepRepair.Services.ScanningService
                     IsScanned = true;
                     ScannedObjectChanged?.Invoke(CurrentScannedObject);
                     ScanStateChanged?.Invoke(IsScanned);
+                    return CurrentScannedObject;
                 }
-            else
+                else
+                {
+                    _alertService.ShowAlert("Alert", "Scanned object does not exist in the database");
+                    return null;
+                    // Decide what should be done here and what is actually returned from here
+                    //_alertService.ShowConfirmation("Alert", "Scanned object does not exist in the database: Do you want to try again?", 
+                    //    RetryScanning,"Yes", "No");
+                }
+
+            }catch (Exception ex)
             {
-                await _alertService.ShowAlertAsync("Alert", "Scanned object does not exist in the database", "OK");
-                ResetScan();
+                _alertService.ShowAlert("Alert", $"Something went wrong {ex.Message}");
+                return null;
             }
-            return CurrentScannedObject;
             }
 
-            public void ResetScan()
+        private async void RetryScanning(bool answer)
+        {
+            if (answer) ResetScan();
+            else await Shell.Current.GoToAsync("///HomePage");
+        }
+
+        public void ResetScan()
             {
-                if(CurrentScannedObject != null)
-                {
+                //if(CurrentScannedObject != null)
+                //{
                     CurrentScannedObject = null;
                     IsScanned = false;
                     ScannedObjectChanged?.Invoke(CurrentScannedObject);
                     ScanStateChanged?.Invoke(IsScanned);
-            }
-            else
-            {
-                Console.WriteLine("currentscannedobject is null");
-            }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("currentscannedobject is null");
+            //}
             
         }
         

@@ -124,6 +124,9 @@ public class VoiceReportViewModel : BaseViewModel
     {
         try
         {
+            //var granted = await Permissions.RequestAsync<Permissions.Microphone>();
+            //if(granted == PermissionStatus.Granted)
+            //{
             var transcription = await _cognitiveServices.TranscribeAudioAsync();
             if (!string.IsNullOrEmpty(transcription))
             {
@@ -136,6 +139,12 @@ public class VoiceReportViewModel : BaseViewModel
                 IsTranscriptionVisible = false;
                 await _alertService.ShowAlertAsync("Alert", "No Input. Please press the Record button and talk to the mic", "OK");
             }
+
+            //}else if (granted == PermissionStatus.Denied)
+            //{
+            //    _alertService.ShowAlert("Alert", "Allow the microphone to proceed");
+            //}
+
 
         }
         catch (Exception ex)

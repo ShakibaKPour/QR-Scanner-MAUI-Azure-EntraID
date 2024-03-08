@@ -11,7 +11,7 @@ namespace RepRepair.Services.ScanningService
     {
         event Action<ObjectInfo> ScannedObjectChanged;
         event Action<bool> ScanStateChanged;
-        Task<ObjectInfo> ScanAsync(string qrCode);
+        Task<ObjectInfo?> ScanAsync(string qrCode);
         void ResetScan();
         ObjectInfo CurrentScannedObject { get; }
         bool IsScanned { get; }

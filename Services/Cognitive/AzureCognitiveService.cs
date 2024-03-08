@@ -1,6 +1,7 @@
 ﻿using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using RepRepair.Extensions;
+using RepRepair.Services.AlertService;
 using RepRepair.Services.Configuration;
 using RepRepair.Services.Language;
 using System.Text;
@@ -15,12 +16,14 @@ namespace RepRepair.Services.Cognitive
         static string speechRegion = "swedencentral";
         //static string speechKey = Environment.GetEnvironmentVariable("SPEECH_KEY");
         //static string speechRegion = Environment.GetEnvironmentVariable("SPEECH_REGION");
+        private readonly IAlertService _alertService;
         private readonly LanguageSettingsService _languageSettingsService;
         private readonly ConfigurationService _configurationService;
         public AzureCognitiveService()
         {
             _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
             _configurationService = ServiceHelper.GetService<ConfigurationService>();
+            _alertService = ServiceHelper.GetService<IAlertService>();
         }
 
 
@@ -34,14 +37,23 @@ namespace RepRepair.Services.Cognitive
                 var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
                 speechConfig.SpeechRecognitionLanguage = _languageSettingsService.CurrentLanguage.Language;
                 speechConfig.SetProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, "300");
-                using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
 
-                using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
+                var granted = await Permissions.RequestAsync<Permissions.Microphone>();
+                if (granted == PermissionStatus.Granted)
+                {
+                    using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
 
-                var stopRecognition = new TaskCompletionSource<int>();
+                    using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
 
-                var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
-                return speechRecognitionResult.Text;
+                    var stopRecognition = new TaskCompletionSource<int>();
+
+                    var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
+                    return speechRecognitionResult.Text;
+                } else
+                {
+                    _alertService.ShowAlert("Alert", "Allow the microphone to proceed");
+                }
+            }
 
                 //speechRecognizer.Recognized += (s, e) =>
                 //{
@@ -73,7 +85,7 @@ namespace RepRepair.Services.Cognitive
                 //await speechRecognizer.StopContinuousRecognitionAsync();
                 //return textResult.ToString();
 
-            }
+            
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);

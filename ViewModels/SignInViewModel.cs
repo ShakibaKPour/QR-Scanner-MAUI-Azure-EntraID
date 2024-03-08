@@ -1,4 +1,5 @@
 ﻿using Microsoft.Identity.Client;
+using Microsoft.Maui.Controls;
 using RepRepair.Pages;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,9 @@ namespace RepRepair.ViewModels
                 var authResult = await App._authenticationService.SignInAsync();
                 if (authResult != null)
                 {
-                    // Navigate to the main page after successful sign-in
-                    await Shell.Current.GoToAsync("///HomePage");
+                    // I get nullexception here because the Shell.Current is null, and that is because the 
+                    //Shell is not yet set in the constructor
+                    await Shell.Current.GoToAsync("//HomePage");
                 }
             }
             catch (MsalClientException ex)

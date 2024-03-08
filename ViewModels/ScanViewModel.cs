@@ -53,7 +53,7 @@ public class ScanViewModel : BaseViewModel
 
     }
 
-    public async Task<ObjectInfo> ScanAsync(string qrCode)
+    public async Task<ObjectInfo?> ScanAsync(string qrCode)
     {
         return await _scanningService.ScanAsync(qrCode);
     }
