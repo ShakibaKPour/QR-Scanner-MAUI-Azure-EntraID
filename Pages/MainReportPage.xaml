@@ -6,9 +6,6 @@
              x:DataType="viewmodels:ReportViewModel"
              Title="MainReportPage">
     <VerticalStackLayout>
-        <!--<Picker ItemsSource="{Binding AvailableLanguages}"
-                    SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
-        </Picker>-->
         <Label 
             Text="Choose an alternative"
             VerticalOptions="Center" 

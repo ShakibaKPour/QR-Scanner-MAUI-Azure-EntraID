@@ -42,6 +42,7 @@ namespace RepRepair
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
+                    //Shell.Current.GoToAsync(nameof(SignInPage));
                     MainPage = new NavigationPage(new SignInPage());
                 });
 

@@ -1,7 +1,6 @@
 ﻿using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.DB;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace RepRepair.Services.Language
 {
@@ -9,7 +8,6 @@ namespace RepRepair.Services.Language
     {
         private const string DefaultLanguageId = "dfd8bfab-6cee-4cc1-9a53-9ebc5740050f"; // Default GUID as a string
         private const string LanguageKey = "SelectedLanguage";
-        //public ObservableCollection<Languages> AvailableLanguages { get; } = new ObservableCollection<Languages>();
         public ObservableCollection<Languages> AvailableLanguages { get; } = new ObservableCollection<Languages>();
         private Languages _currentLanguage;
         public Languages CurrentLanguage

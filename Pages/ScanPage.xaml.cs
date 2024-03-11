@@ -1,8 +1,5 @@
 using RepRepair.Extensions;
 using RepRepair.Services.AlertService;
-using RepRepair.Services.DB;
-using RepRepair.Services.ScanningService;
-using RepRepair.Services.VoiceRecording;
 using RepRepair.ViewModels;
 
 namespace RepRepair.Pages;
@@ -11,11 +8,9 @@ public partial class ScanPage : ContentPage
 {
     public ScanViewModel _viewModel;
     private readonly IAlertService _alertService;
-   // private IDatabaseService _databaseService;
 	public ScanPage()
 	{
 		InitializeComponent();
-       // var scanningService = new ScanningService(_databaseService);
 		_viewModel = new ScanViewModel();
         _alertService = ServiceHelper.GetService<IAlertService>();
         BindingContext = _viewModel;
@@ -28,12 +23,9 @@ public partial class ScanPage : ContentPage
     {
         if (cameraView.NumCamerasDetected > 0)
         {
-            // cameraView.Camera = cameraView.Cameras.First();
             cameraView.Camera = cameraView.Cameras.FirstOrDefault();
-           // ConfigureCameraForScanning();
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                // await cameraView.StopCameraAsync();
                 await cameraView.StartCameraAsync();
             });
         }
@@ -90,7 +82,6 @@ public partial class ScanPage : ContentPage
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                //await cameraView.StartCameraAsync();
                 await cameraView.StopCameraAsync();
             });
         }
@@ -105,7 +96,6 @@ public partial class ScanPage : ContentPage
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            //await cameraView.StopCameraAsync();
             ConfigureCameraForScanning();
             await cameraView.StartCameraAsync();
         });

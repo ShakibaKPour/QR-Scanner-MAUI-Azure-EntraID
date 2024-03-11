@@ -1,9 +1,9 @@
 ﻿using Microsoft.Identity.Client;
 using RepRepair.Extensions;
 using RepRepair.Models.DatabaseModels;
+using RepRepair.Pages;
 using RepRepair.Services.Auth;
 using RepRepair.Services.Language;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace RepRepair.ViewModels;
@@ -53,7 +53,7 @@ public partial class HomeViewModel : BaseViewModel
         {
             // Handle exceptions from MSAL
             Console.WriteLine(ex.Message);
-            // Optionally display an error message to the user
+            // TODO: display an error message to the user
         }
     }
 

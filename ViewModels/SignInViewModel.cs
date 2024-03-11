@@ -1,11 +1,6 @@
 ﻿using Microsoft.Identity.Client;
 using Microsoft.Maui.Controls;
 using RepRepair.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RepRepair.ViewModels

@@ -116,12 +116,5 @@ namespace RepRepair.ViewModels
 
             }
         }
-
-        //private void ClearFields()
-        //{
-        //    SelectedDefect = null;
-        //    OnPropertyChanged(nameof(SelectedDefect));
-
-        //}
     }
 }

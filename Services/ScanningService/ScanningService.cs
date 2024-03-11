@@ -2,15 +2,10 @@
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RepRepair.Services.ScanningService
 {
-        public class ScanningService : IScanningService
+    public class ScanningService : IScanningService
         {
             private readonly IDatabaseService _databaseService;
             private readonly IAlertService _alertService;

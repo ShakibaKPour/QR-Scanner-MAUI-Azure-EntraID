@@ -10,9 +10,6 @@
              Title="Home">
     <ScrollView>
         <VerticalStackLayout Spacing="25" Padding="30">
-            <!--<Picker ItemsSource="{Binding AvailableLanguages}"
-                    SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
-            </Picker>-->
             <Label Text="Welcome to RepRepair!"
                    HorizontalOptions="Center"
                    FontSize="Large"/>
@@ -24,7 +21,7 @@
                              BarcodeForeground="Purple" 
                              BarcodeMargin="5"
                              BarcodeFormat="QR_CODE" 
-                             Barcode="6f9619ff-8b86-d011-b42d-00c04fc964ff"></cv:BarcodeImage>-->
+                             Barcode="be3bb9a3-c9f8-437f-a129-9e88736c4d71"></cv:BarcodeImage>-->
             <Image Source="barcode_image.png" 
                    WidthRequest="280"
                    HeightRequest="280"

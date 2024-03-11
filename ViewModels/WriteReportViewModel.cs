@@ -2,14 +2,12 @@
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Pages;
 using RepRepair.Services.AlertService;
-using RepRepair.Services.Cognitive;
 using RepRepair.Services.DB;
 using RepRepair.Services.Language;
 using RepRepair.Services.ReportTypesService;
 using RepRepair.Services.ScanningService;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace RepRepair.ViewModels
 {

@@ -1,9 +1,7 @@
 ﻿using RepRepair.Extensions;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Pages;
-using RepRepair.Services.Language;
 using RepRepair.Services.ReportTypesService;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace RepRepair.ViewModels;
@@ -59,7 +57,6 @@ public class ReportViewModel : BaseViewModel
 
     private async Task NavigateToWriteCommandAsync()
     {
-        //var reportType = ReportTypes.Where(r => r.TypeOfReport == "Voice Message").FirstOrDefault();
         await Shell.Current.GoToAsync(nameof(WriteReportPage));
     }
 

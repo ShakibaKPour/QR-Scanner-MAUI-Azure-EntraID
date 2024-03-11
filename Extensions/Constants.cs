@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RepRepair.Extensions
+﻿namespace RepRepair.Extensions
 {
     public static class Constants
     {
@@ -25,6 +19,6 @@ namespace RepRepair.Extensions
         {
             "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/user_impersonation",
             "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/User.Read"
-      };
+        };
     }
 }

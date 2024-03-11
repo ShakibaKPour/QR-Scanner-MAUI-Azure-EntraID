@@ -2,14 +2,10 @@
 using RepRepair.Extensions;
 using RepRepair.Models;
 using RepRepair.Models.DatabaseModels;
-using RepRepair.Services.AlertService;
 using RepRepair.Services.Cognitive;
 using RepRepair.Services.Configuration;
 using System.Net.Http.Headers;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json.Serialization;
 using RepRepair.Services.Auth;
 
 namespace RepRepair.Services.DB;

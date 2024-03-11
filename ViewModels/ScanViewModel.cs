@@ -3,7 +3,6 @@ using System.Windows.Input;
 using RepRepair.Services.AlertService;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.ScanningService;
-using RepRepair.Pages;
 
 namespace RepRepair.ViewModels;
 
