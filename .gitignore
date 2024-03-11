@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /Extensions/Constants.cs
 /Models/HelpingModels/AppConfiguration.cs
+/Extensions/Constants.cs

@@ -15,6 +15,7 @@ public class AzureCognitiveService : IAzureCognitiveService
         _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
         _alertService = ServiceHelper.GetService<IAlertService>();
     }
+          
 
 
     public async Task<string> TranscribeAudioAsync()
