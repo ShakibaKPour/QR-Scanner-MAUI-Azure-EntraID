@@ -7,7 +7,8 @@
              Title="Choose a Defect">
 
     <StackLayout Padding="20">
-        <Picker ItemsSource="{Binding Defects}"
+        <Picker Title="Choose an alternative" 
+            ItemsSource="{Binding Defects}"
                 ItemDisplayBinding="{Binding Description}"
                 SelectedItem="{Binding SelectedDefect, Mode=TwoWay}">
         </Picker>

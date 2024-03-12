@@ -3,7 +3,6 @@ using RepRepair.Extensions;
 using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.Auth;
-using RepRepair.Services.Configuration;
 using RepRepair.Services.DB;
 using RepRepair.Services.Language;
 using RepRepair.Services.ReportTypesService;
@@ -15,7 +14,6 @@ namespace RepRepair
         public static AuthenticationService _authenticationService {  get; private set; }
         private readonly LanguageSettingsService _languageSettingsService;
         private readonly ReportServiceType _reportServiceType;
-        private readonly ConfigurationService _configurationService;
         public static IAlertService AlertSvc;
         public App()
         {
@@ -23,15 +21,12 @@ namespace RepRepair
             _authenticationService = new AuthenticationService();
             CheckSignInStatus();
             AlertSvc = ServiceHelper.GetService<IAlertService>();
-            // _configurationService = ServiceHelper.GetService<ConfigurationService>();
-            //InitializeAppConfig();
             _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
             _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
             InitializeGlobalLanguagesAsync();
             InitializeGlobalReportTypesAsync();
             MainPage = new AppShell();
         }
-
         private async void CheckSignInStatus()
         {
             try
@@ -52,11 +47,6 @@ namespace RepRepair
                 Console.WriteLine(ex.ToString());
             }
         }
-
-        //private async void InitializeAppConfig()
-        //{
-        //    await _configurationService.GetAppConfiguration();
-        //}
 
         private async void InitializeGlobalLanguagesAsync()
         {

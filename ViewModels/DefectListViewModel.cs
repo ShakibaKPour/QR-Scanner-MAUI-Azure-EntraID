@@ -1,14 +1,11 @@
 ﻿using RepRepair.Extensions;
-using RepRepair.Models;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
-using RepRepair.Services.DefectListService;
 using RepRepair.Services.Language;
 using RepRepair.Services.ReportTypesService;
 using RepRepair.Services.ScanningService;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace RepRepair.ViewModels
@@ -16,9 +13,7 @@ namespace RepRepair.ViewModels
 
     public class DefectListViewModel : BaseViewModel
     {
-        public List<DefectList> Defects { get => _defectlistFetcher.CachedList; }
         public List<ReportType> ReportTypes { get => _reportServiceType.CachedReportTypes; }
-       
         public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
         public ICommand SubmitDefectCommand { get; }
         private readonly IScanningService _scanningService;
@@ -26,13 +21,16 @@ namespace RepRepair.ViewModels
         private readonly IDatabaseService _databaseService;
         private readonly LanguageSettingsService _languageSettingsService;
         private readonly ReportServiceType _reportServiceType;
-        private readonly DefectListFetchService _defectlistFetcher;
-        //private string _description;
-        //public string Description
-        //{
-        //    get => _description;
-        //    set => _description = value;
-        //}
+        private List<DefectList> _defects;
+        public List<DefectList> Defects
+        {
+            get { return _defects; }
+            set 
+            {
+                _defects = value;
+                OnPropertyChanged(nameof(Defects));
+            }
+        }
 
         private DefectList? _selectedDefect;
         public DefectList SelectedDefect
@@ -44,8 +42,6 @@ namespace RepRepair.ViewModels
                 OnPropertyChanged(nameof(SelectedDefect));
             }
         }
-
-
         public Languages SelectedLanguage
         {
             get => _languageSettingsService.CurrentLanguage;
@@ -69,12 +65,22 @@ namespace RepRepair.ViewModels
                 OnPropertyChanged(nameof(ObjectInfo));
             };
             _alertService = ServiceHelper.GetService<IAlertService>();
-            _defectlistFetcher = ServiceHelper.GetService<DefectListFetchService>();
             _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
             _databaseService = ServiceHelper.GetService<IDatabaseService>();
+            LoadDefectList();
             SubmitDefectCommand = new Command(SubmitDefect);
             ValidateIsScanned();
         }
+
+        private async Task LoadDefectList()
+        {
+            var list = await _databaseService.GetDefectListAsync();
+            Defects = list;
+
+
+           
+        }
+
         private async void ValidateIsScanned()
         {
             if (ObjectInfo == null)
