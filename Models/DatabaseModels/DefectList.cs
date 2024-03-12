@@ -1,7 +1,10 @@
 ﻿namespace RepRepair.Models.DatabaseModels;
 
-public  class DefectList
+namespace RepRepair.Models.DatabaseModels
 {
-    public Guid ID { get; set; }
-    public string Description { get; set; }
+    public  class DefectList
+    {
+        public Guid ID { get; set; }
+        public string Description { get; set; }
+    }
 }

@@ -149,6 +149,37 @@ public class DatabaseService : IDatabaseService
         }
     }
 
+    public async Task<List<DefectList>> GetDefectListAsync()
+    {
+        try
+        {
+            var tokenResult = await _authenticationServices.AcquireTokenSilentAsync();
+            var accessToken = tokenResult.AccessToken;
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var requestUrl = $"{_baseFunctionUrlGetDefectList}";
+            var response = await _httpClient.GetAsync(requestUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var defectList = JsonConvert.DeserializeObject<List<DefectList>>(jsonResponse);
+                return defectList;
+            }
+            else if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new List<DefectList>();
+            }
+            else
+            {
+                return new List<DefectList>();
+            }
+        }catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return new List<DefectList>();
+        }
+    }
+
     public async Task<List<ReportType>?> GetReportTypesAsync()
     {
         try
