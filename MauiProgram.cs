@@ -16,6 +16,7 @@ using RepRepair.Services.ReportTypesService;
 using RepRepair.Services.Configuration;
 using RepRepair.Services.Auth;
 using Microsoft.Maui.LifecycleEvents;
+using Microsoft.Identity.Client;
 
 namespace RepRepair
 {
