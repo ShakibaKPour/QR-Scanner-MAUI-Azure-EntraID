@@ -17,6 +17,7 @@ using RepRepair.Services.Configuration;
 using RepRepair.Services.Auth;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Identity.Client;
+using RepRepair.Services.DefectListService;
 
 namespace RepRepair
 {
@@ -59,6 +60,7 @@ namespace RepRepair
             builder.Services.AddSingleton<LanguageSettingsService>();
             builder.Services.AddSingleton<ConfigurationService>();
             builder.Services.AddSingleton<AuthenticationService>();
+            builder.Services.AddSingleton<DefectListFetchService>();
             builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<ScanViewModel>();

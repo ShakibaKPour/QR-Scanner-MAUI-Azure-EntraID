@@ -4,6 +4,7 @@ using RepRepair.Models.DatabaseModels;
 using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
+using RepRepair.Services.DefectListService;
 using RepRepair.Services.Language;
 using RepRepair.Services.ReportTypesService;
 using RepRepair.Services.ScanningService;
@@ -15,7 +16,7 @@ namespace RepRepair.ViewModels
 
     public class DefectListViewModel : BaseViewModel
     {
-        public ObservableCollection<DefectItem> Defects { get; } = new ObservableCollection<DefectItem>();
+        public List<DefectList> Defects { get => _defectlistFetcher.CachedList; }
         public List<ReportType> ReportTypes { get => _reportServiceType.CachedReportTypes; }
        
         public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
@@ -25,15 +26,16 @@ namespace RepRepair.ViewModels
         private readonly IDatabaseService _databaseService;
         private readonly LanguageSettingsService _languageSettingsService;
         private readonly ReportServiceType _reportServiceType;
-        private string _description;
-        public string Description
-        {
-            get => _description;
-            set => _description = value;
-        }
+        private readonly DefectListFetchService _defectlistFetcher;
+        //private string _description;
+        //public string Description
+        //{
+        //    get => _description;
+        //    set => _description = value;
+        //}
 
-        private DefectItem? _selectedDefect;
-        public DefectItem SelectedDefect
+        private DefectList? _selectedDefect;
+        public DefectList SelectedDefect
         {
             get => _selectedDefect;
             set
@@ -67,9 +69,9 @@ namespace RepRepair.ViewModels
                 OnPropertyChanged(nameof(ObjectInfo));
             };
             _alertService = ServiceHelper.GetService<IAlertService>();
+            _defectlistFetcher = ServiceHelper.GetService<DefectListFetchService>();
             _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
             _databaseService = ServiceHelper.GetService<IDatabaseService>();
-            LoadDefects();
             SubmitDefectCommand = new Command(SubmitDefect);
             ValidateIsScanned();
         }
@@ -80,11 +82,6 @@ namespace RepRepair.ViewModels
                 await _alertService.ShowAlertAsync("Alert", "Start by scanning the QR code", "OK");
                 await Shell.Current.GoToAsync("///ScanPage");
             }
-        }
-        private void LoadDefects()
-        {
-            Defects.Add(new DefectItem { Description = "problem1" });
-            Defects.Add(new DefectItem { Description = "problem2" });
         }
 
         private async void SubmitDefect(object obj)

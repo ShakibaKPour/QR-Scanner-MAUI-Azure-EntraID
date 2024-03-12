@@ -9,4 +9,6 @@ public interface IDatabaseService
 
     Task<List<Languages>> GetAvailableLanguagesAsync();
     Task<List<ReportType>?> GetReportTypesAsync();
+
+    Task<List<DefectList>> GetDefectListAsync();
 }

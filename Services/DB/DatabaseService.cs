@@ -22,6 +22,8 @@ public class DatabaseService : IDatabaseService
 
     private readonly string _baseFunctionUrlGetReportTypes = "https://reprepair.azurewebsites.net/api/GetReportTypes?code=CRzo1OhhrWjDM5vhVMRTI8T4ZieB4CGrw7jDu57rVxKDAzFuftu_9g==";
 
+    private readonly string _baseFunctionUrlGetDefectList = "https://reprepair.azurewebsites.net/api/GetDefectList?";
+
 
     public AppConfig AppConfig
     {
@@ -110,6 +112,37 @@ public class DatabaseService : IDatabaseService
             return new ObjectInfo();
         }
 
+    }
+
+    public async Task<List<DefectList>> GetDefectListAsync()
+    {
+        try
+        {
+            var tokenResult = await _authenticationServices.AcquireTokenSilentAsync();
+            var accessToken = tokenResult.AccessToken;
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var requestUrl = $"{_baseFunctionUrlGetDefectList}";
+            var response = await _httpClient.GetAsync(requestUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var defectList = JsonConvert.DeserializeObject<List<DefectList>>(jsonResponse);
+                return defectList;
+            }
+            else if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new List<DefectList>();
+            }
+            else
+            {
+                return new List<DefectList>();
+            }
+        }catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return new List<DefectList>();
+        }
     }
 
     public async Task<List<ReportType>?> GetReportTypesAsync()
