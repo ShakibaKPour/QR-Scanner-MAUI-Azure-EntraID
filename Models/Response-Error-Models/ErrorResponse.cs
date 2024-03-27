@@ -1,14 +1,12 @@
-﻿namespace RepRepair.Models
+﻿namespace RepRepair.Models;
+
+public class ErrorResponse
 {
-    public class ErrorResponse
-    {
-        public ErrorDetails Error { get; set; }
-    }
+    public ErrorDetails Error { get; set; }
+}
 
-    public class ErrorDetails
-    {
-        public string Code { get; set; }
-        public string Message { get; set; }
-    }
-
+public class ErrorDetails
+{
+    public string Code { get; set; }
+    public string Message { get; set; }
 }

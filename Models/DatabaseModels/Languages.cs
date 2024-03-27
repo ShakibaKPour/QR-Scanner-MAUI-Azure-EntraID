@@ -1,9 +1,8 @@
-﻿namespace RepRepair.Models.DatabaseModels
-{
-    public class Languages
-    {
-        public Guid ID { get; set; }
+﻿namespace RepRepair.Models.DatabaseModels;
 
-        public string Language { get; set; }
-    }
+public class Languages
+{
+    public Guid ID { get; set; }
+
+    public string Language { get; set; }
 }

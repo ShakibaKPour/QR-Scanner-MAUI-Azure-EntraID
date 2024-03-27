@@ -11,4 +11,5 @@ public interface IDatabaseService
     Task<List<ReportType>?> GetReportTypesAsync();
 
     Task<List<DefectList>> GetDefectListAsync();
+
 }

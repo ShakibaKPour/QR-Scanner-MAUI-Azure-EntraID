@@ -6,6 +6,7 @@
     xmlns:pages="clr-namespace:RepRepair.Pages"
     Title="RepRepair">
     <TabBar>
+        <!--<ShellContent Title="MainPage" Route="MainPage" ContentTemplate="{DataTemplate pages:MainPage}"></ShellContent>-->
         <ShellContent Title="Home" Route="HomePage" ContentTemplate="{DataTemplate pages:HomePage}" />
         <ShellContent Title="Scan" Route="ScanPage" ContentTemplate="{DataTemplate pages:ScanPage}" />
         <ShellContent Title="MainReportPage" Route="MainReportPage" ContentTemplate="{DataTemplate pages:MainReportPage}"/>

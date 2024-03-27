@@ -16,11 +16,11 @@ public class DatabaseService : IDatabaseService
 
     private readonly string _baseFunctionUrlGet = "https://reprepair.azurewebsites.net/api/getobjectinfo/qrcode/";
 
-    private readonly string _baseFunctionUrlPost = "https://reprepair.azurewebsites.net/api/InsertReportInfo?code=0WnwDDQvRERDVleGQpwqQlAkYaeAQ5Nx7O0NCGGXFbD-AzFuE8t5zg==";
+    private readonly string _baseFunctionUrlPost = "https://reprepair.azurewebsites.net/api/InsertToReportAndLinkTables?";
 
-    private readonly string _baseFunctionUrlGetLanguages = "https://reprepair.azurewebsites.net/api/GetAvailableLanguagesInputBinding?code=4_iT1wdTbRJd29zlmYxIbEIIgYZaB00tXt78by2Ff3QjAzFuJZSYYA==";
+    private readonly string _baseFunctionUrlGetLanguages = "https://reprepair.azurewebsites.net/api/GetAvailableLanguages?";
 
-    private readonly string _baseFunctionUrlGetReportTypes = "https://reprepair.azurewebsites.net/api/GetReportTypes?code=CRzo1OhhrWjDM5vhVMRTI8T4ZieB4CGrw7jDu57rVxKDAzFuftu_9g==";
+    private readonly string _baseFunctionUrlGetReportTypes = "https://reprepair.azurewebsites.net/api/GetReportTypes?";
 
     private readonly string _baseFunctionUrlGetDefectList = "https://reprepair.azurewebsites.net/api/GetDefectList?";
 
@@ -188,12 +188,13 @@ public class DatabaseService : IDatabaseService
 
         if (selectedLanguage.Language == "sv-SE")
         {
-            reportData.TranslatedFaultReport = null;
+            reportData.TranslatedFaultReport = reportData.OriginalFaultReport;
         }
         else
         {
             reportData.TranslatedFaultReport = await _translatorService.TranslateTextAsync(reportData.OriginalFaultReport, "sv-SE", selectedLanguage.Language);
         }
+
             reportData.QRCode = Guid.Parse(reportData.QRCodeString);
 
             var content = JsonContent.Create(reportData);
@@ -202,4 +203,5 @@ public class DatabaseService : IDatabaseService
             return response.IsSuccessStatusCode;
 
     }
+
 }

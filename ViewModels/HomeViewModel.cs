@@ -1,8 +1,5 @@
 ﻿using Microsoft.Identity.Client;
-using RepRepair.Extensions;
 using RepRepair.Models.DatabaseModels;
-using RepRepair.Pages;
-using RepRepair.Services.Auth;
 using RepRepair.Services.Language;
 using System.Windows.Input;
 
@@ -13,7 +10,7 @@ public partial class HomeViewModel : BaseViewModel
     public ICommand ScanCommand { get; set; }
     public ICommand SignOutCommand { get; }
 
-    public AuthenticationService _authenticationService { get; set; }
+   // public AuthenticationService _authenticationService { get; set; }
 
     //public string _username
     //{
@@ -36,8 +33,8 @@ public partial class HomeViewModel : BaseViewModel
 
     public HomeViewModel()
     {
-        _authenticationService = ServiceHelper.GetService<AuthenticationService>();
-        _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
+        //_authenticationService = ServiceHelper.GetService<AuthenticationService>();
+        //_languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
         ScanCommand = new Command(async () => await OnScanAsync());
         SignOutCommand = new Command(async () => await SignOutAsync());
     }

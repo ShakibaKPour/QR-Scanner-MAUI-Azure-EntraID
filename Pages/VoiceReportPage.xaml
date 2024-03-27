@@ -11,26 +11,40 @@
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"></toolkit:InvertedBoolConverter>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <StackLayout Padding="20">
+    <StackLayout Padding="20" Margin="10">
         <Button Text="Go back" Command="{Binding OnGoBack}"></Button>
         <Picker ItemsSource="{Binding AvailableLanguages}"
                 ItemDisplayBinding="{Binding Language}"
-                SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
+                SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}" 
+                 Margin="10">
         </Picker>
-        <Label Text="{Binding ObjectInfo.QRCode}"></Label>
-        <Label Text="{Binding ObjectInfo.Name}"></Label>
-        <Label Text="{Binding ObjectInfo.Location}"></Label>
+        <Label Text="{Binding ObjectInfo.QRCode}"
+                Padding="5"
+               Margin="10,5,10,5"></Label>
+        <Label Text="{Binding ObjectInfo.Name}"
+               Padding="5"
+               Margin="10,5,10,5"></Label>
+        <Label Text="{Binding ObjectInfo.Location}"
+               Padding="5"
+               Margin="10,5,10,5"></Label>
         <Button Text="Record" 
-                Command="{Binding RecordCommand}"/>
+                Command="{Binding RecordCommand}"
+                Padding="5"
+                Margin="10"/>
         <Editor Text="{Binding TranscribedText, Mode=TwoWay}" 
-                IsVisible="{Binding IsTranscriptionVisible}" />
+                IsVisible="{Binding IsTranscriptionVisible}" 
+                Margin="10"/>
         <!--<Editor Text="{Binding TranslatedText, Mode=TwoWay}" 
                 IsVisible="{Binding IsTranslationVisible}"/>-->
         <Button Text="Delete" 
                 Command="{Binding DeleteRecordingCommand}" 
-                IsVisible="{Binding IsTranscriptionVisible}"/>
+                IsVisible="{Binding IsTranscriptionVisible}"
+                Padding="5"
+Margin="10"/>
         <Button Text="Submit"
                 Command="{Binding SubmitCommand}"
-                IsVisible="{Binding IsTranscriptionVisible}"/>
+                IsVisible="{Binding IsTranscriptionVisible}"
+                Padding="5"
+                Margin="10"/>
     </StackLayout>
 </ContentPage>

@@ -7,7 +7,9 @@ namespace RepRepair.Services.Auth
     public class AuthenticationService
     {
         private IPublicClientApplication _publicClientApplication;
-        private string[] _scopes = { "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/User.Read" };
+        private string[] _scopes = Constants.Scopes;
+        //private string[] _scopes = { "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/User.Read",
+        //    "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/WriteToDatabase" };
         public AuthenticationService()
         {
 

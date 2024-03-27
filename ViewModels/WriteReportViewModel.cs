@@ -86,11 +86,11 @@ namespace RepRepair.ViewModels
         }
 
 
-        //private async Task<List<Languages>> GetAvilableLanguages()
-        //{
-        //    var languages = await _databaseService.GetAvailableLanguagesAsync();
-        //    return languages;
-        //}
+        private async Task<List<Languages>> GetAvilableLanguages()
+        {
+            var languages = await _databaseService.GetAvailableLanguagesAsync();
+            return languages;
+        }
 
         private async Task SubmitTextReport()
         {
