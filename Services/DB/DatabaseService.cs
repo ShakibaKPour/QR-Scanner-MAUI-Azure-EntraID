@@ -1,25 +1,22 @@
 ﻿using Newtonsoft.Json;
 using RepRepair.Extensions;
-using RepRepair.Models;
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.Cognitive;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using RepRepair.Services.Auth;
 using RepRepair.Services.AlertService;
+using RepRepair.Models.HelpingModels;
 
 namespace RepRepair.Services.DB;
 
 public class DatabaseService : IDatabaseService
 {
     private readonly HttpClient _httpClient;
-
-    private readonly IAuthenticationService _authenticationServices;
-
-    private readonly IAlertService _alertService;
-
     private readonly TranslatorService _translatorService;
     private readonly AppConfiguration _config;
+    private readonly IAuthenticationService _authenticationServices;
+    private readonly IAlertService _alertService;
 
     public DatabaseService()
     {
@@ -71,7 +68,7 @@ public class DatabaseService : IDatabaseService
         try
         {
             await SetAuthenticationHeaderAsync();
-            var requestUrl = _config.BaseFunctionUrlGetLanguages;//$"{_baseFunctionUrlGetLanguages}";
+            var requestUrl = _config.BaseFunctionUrlGetLanguages;
             var response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {
@@ -129,7 +126,7 @@ public class DatabaseService : IDatabaseService
         try
         {
             await SetAuthenticationHeaderAsync();
-            var requestUrl = _config.BaseFunctionUrlGetDefectList; //$"{_baseFunctionUrlGetDefectList}";
+            var requestUrl = _config.BaseFunctionUrlGetDefectList;
             var response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {
@@ -156,7 +153,7 @@ public class DatabaseService : IDatabaseService
         try
         {
             await SetAuthenticationHeaderAsync();
-            var requestUrl = _config.BaseFunctionUrlGetReportTypes;//$"{_baseFunctionUrlGetReportTypes}";
+            var requestUrl = _config.BaseFunctionUrlGetReportTypes;
             var response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {

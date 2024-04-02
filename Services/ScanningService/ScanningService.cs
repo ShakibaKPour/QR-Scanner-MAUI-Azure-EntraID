@@ -60,17 +60,10 @@ namespace RepRepair.Services.ScanningService
 
         public void ResetScan()
             {
-                //if(CurrentScannedObject != null)
-                //{
                     CurrentScannedObject = null;
                     IsScanned = false;
                     ScannedObjectChanged?.Invoke(CurrentScannedObject);
                     ScanStateChanged?.Invoke(IsScanned);
-            //}
-            //else
-            //{
-            //    Console.WriteLine("currentscannedobject is null");
-            //}
             
         }
         

@@ -1,18 +1,11 @@
 ﻿using Newtonsoft.Json;
+using RepRepair.Extensions;
 using System.Text;
 
 namespace RepRepair.Services.Cognitive;
 
 public class TranslatorService
 {
-    static string translateKey = "fb58a08c2f454884bc7b434f40794193";
-    static string translateRegion = "swedencentral";
-    static string translateEndpoint = "https://api.cognitive.microsofttranslator.com";
-    public TranslatorService()
-    {
-
-    }
-
     public async Task<string> TranslateTextAsync(string textToTranslate, string targetLanguage, string selectedLanguage)
     {
         string route = $"/translate?api-version=3.0&from={selectedLanguage}&to={targetLanguage}";
@@ -23,10 +16,10 @@ public class TranslatorService
         using (var request = new HttpRequestMessage())
         {
             request.Method = HttpMethod.Post;
-            request.RequestUri = new Uri(translateEndpoint + route);
+            request.RequestUri = new Uri(Constants.translateEndpoint + route);
             request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            request.Headers.Add("Ocp-Apim-Subscription-Key", translateKey);
-            request.Headers.Add("Ocp-Apim-Subscription-Region", translateRegion);
+            request.Headers.Add("Ocp-Apim-Subscription-Key", Constants.translateKey);
+            request.Headers.Add("Ocp-Apim-Subscription-Region", Constants.translateRegion);
             HttpResponseMessage response = await client.SendAsync(request).ConfigureAwait(false);
             string result = await response.Content.ReadAsStringAsync();
             try

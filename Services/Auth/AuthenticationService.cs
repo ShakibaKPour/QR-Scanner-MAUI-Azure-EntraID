@@ -63,11 +63,8 @@ namespace RepRepair.Services.Auth
 
             Device.BeginInvokeOnMainThread(() =>
             {
-                // Assuming you want to completely reset the navigation and UI state,
-                // not just navigate to the SignInPage within the current Shell.
-                Application.Current.MainPage = new NavigationPage(new SignInPage());
+                  Application.Current.MainPage = new NavigationPage(new SignInPage());
             });
-            // await Shell.Current.GoToAsync(nameof(SignInPage));
         }
     }
 }
