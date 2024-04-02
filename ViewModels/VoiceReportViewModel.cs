@@ -170,6 +170,12 @@ public class VoiceReportViewModel : BaseViewModel
         await _languageSettingsService.RefreshAvailableLanguages();
         await _reportServiceType.RefreshReportTypes();
     }
+
+    public async Task RefreshCommandExecuted()
+    {
+        await _languageSettingsService.RefreshAvailableLanguages(ServiceHelper.GetService<IDatabaseService>());
+        await _reportServiceType.RefreshReportTypes();
+    }
 }
 
 

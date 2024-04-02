@@ -153,19 +153,14 @@ public class DatabaseService : IDatabaseService
     {
         try
         {
-            var tokenResult = await _authenticationServices.AcquireTokenSilentAsync();
-            var accessToken = tokenResult.AccessToken;
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            var requestUrl = $"{_baseFunctionUrlGetDefectList}";
+            await SetAuthenticationHeaderAsync();
+            var requestUrl = _config.BaseFunctionUrlGetDefectList; //$"{_baseFunctionUrlGetDefectList}";
             var response = await _httpClient.GetAsync(requestUrl);
             if (response.IsSuccessStatusCode)
             {
-                string jsonResponse = await response.Content.ReadAsStringAsync();
-                var defectList = JsonConvert.DeserializeObject<List<DefectList>>(jsonResponse);
-                return defectList;
+                return await DeserializeResponseContent<List<DefectList>>(response);
             }
-            else if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return new List<DefectList>();
             }
@@ -173,7 +168,8 @@ public class DatabaseService : IDatabaseService
             {
                 return new List<DefectList>();
             }
-        }catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
             return new List<DefectList>();
