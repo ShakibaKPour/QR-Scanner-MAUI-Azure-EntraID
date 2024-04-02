@@ -12,7 +12,7 @@
         <Picker ItemsSource="{Binding AvailableLanguages}"
                 ItemDisplayBinding="{Binding Language}"
                 SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"></Picker>
-        <Button Text="Reload Languages" Command="{Binding OnRefresh}"></Button>
+        <Button Text="Refresh" Command="{Binding OnRefresh}"></Button>
         <Label Text="Scan Result:" Padding="5, 15, 5, 3"></Label>
         <Label Text="{Binding ObjectInfo.QRCode, StringFormat='ID: {0}'}" Padding="5, 3, 5, 3"></Label>
         <Label Text="{Binding ObjectInfo.Name, StringFormat='Name: {0}'}" Padding="5, 3, 5, 3"></Label>

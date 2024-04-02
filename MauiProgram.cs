@@ -17,6 +17,7 @@ using RepRepair.Services.Configuration;
 using RepRepair.Services.Auth;
 using Microsoft.Maui.LifecycleEvents;
 using Microsoft.Identity.Client;
+using RepRepair.Models;
 
 namespace RepRepair
 {
@@ -49,6 +50,7 @@ namespace RepRepair
         });
 
             builder.Services.AddSingleton<IDatabaseService, DatabaseService>();
+            builder.Services.AddSingleton<AppConfiguration>();
             builder.Services.AddSingleton<IVoiceRecordingService,VoiceRedordingService>();
             builder.Services.AddSingleton<IAudioManager, AudioManager>();
             builder.Services.AddSingleton<IAzureCognitiveService, AzureCognitiveService>();
@@ -58,7 +60,8 @@ namespace RepRepair
             builder.Services.AddSingleton<TranslatorService>();
             builder.Services.AddSingleton<LanguageSettingsService>();
             builder.Services.AddSingleton<ConfigurationService>();
-            builder.Services.AddSingleton<AuthenticationService>();
+            builder.Services.AddSingleton< IAuthenticationService,AuthenticationService>();
+            builder.Services.AddSingleton<EventAggregator>();
             builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<ScanViewModel>();
@@ -71,6 +74,8 @@ namespace RepRepair
             builder.Services.AddTransient<WriteReportViewModel>();
             builder.Services.AddTransient<DefectListPage>();
             builder.Services.AddTransient<DefectListViewModel>();
+            builder.Services.AddSingleton<SignInPage>();
+            builder.Services.AddSingleton<SignInViewModel>();
 
 
 #if DEBUG

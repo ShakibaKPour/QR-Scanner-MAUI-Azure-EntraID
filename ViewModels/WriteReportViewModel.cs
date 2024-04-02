@@ -83,6 +83,7 @@ namespace RepRepair.ViewModels
         public async Task RefreshLanguagesCommandExecuted()
         {
             await _languageSettingsService.RefreshAvailableLanguages(ServiceHelper.GetService<IDatabaseService>());
+            await _reportServiceType.RefreshReportTypes();
         }
 
 
@@ -103,6 +104,11 @@ namespace RepRepair.ViewModels
             //var translation = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
 
             var reportType = ReportTypes.Where(r => r.TypeOfReport == "Write Message").FirstOrDefault();
+            if (reportType == null)
+            {
+                await _reportServiceType.RefreshReportTypes();
+                reportType = ReportTypes.Where(r => r.TypeOfReport == "Defect List").FirstOrDefault();
+            }
 
             var newReportData = new ReportInfo
             {

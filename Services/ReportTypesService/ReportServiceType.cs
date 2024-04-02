@@ -34,5 +34,18 @@ namespace RepRepair.Services.ReportTypesService
             return new List<ReportType>();
         }
 
+        public async Task RefreshReportTypes()
+        {
+            var reportTypes = await _databaseService.GetReportTypesAsync();
+            if (reportTypes != null)
+            {
+                CachedReportTypes.Clear();
+                foreach(var reportType in reportTypes)
+                {
+                    CachedReportTypes?.Add(reportType);
+                }
+            }
+        }
+
     }
 }

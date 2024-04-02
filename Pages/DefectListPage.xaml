@@ -12,6 +12,7 @@
                 ItemDisplayBinding="{Binding Description}"
                 SelectedItem="{Binding SelectedDefect, Mode=TwoWay}">
         </Picker>
+        <Button Text="Refresh" Command="{Binding OnRefresh}"></Button>
         <Button Text="Submit" Command="{Binding SubmitDefectCommand}" />
     </StackLayout>
 

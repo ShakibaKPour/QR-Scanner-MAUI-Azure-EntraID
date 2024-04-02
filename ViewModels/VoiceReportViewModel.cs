@@ -24,6 +24,7 @@ public class VoiceReportViewModel : BaseViewModel
     public ICommand RecordCommand { get; }
     public ICommand DeleteRecordingCommand { get; }
     public ICommand SubmitCommand { get; }
+    public ICommand OnRefresh { get; set; }
     public ICommand OnGoBack { get; set; }
     private readonly IScanningService _scanningService;   
     private readonly IDatabaseService _databaseService;
@@ -105,6 +106,7 @@ public class VoiceReportViewModel : BaseViewModel
         DeleteRecordingCommand = new Command(DeleteRecording);
         SubmitCommand = new Command(Submit);
         OnGoBack = new Command(async () => await NavigateBackAsync());
+        OnRefresh = new Command(async () => await RefreshCommandExecuted());
         ValidateIsScanned();
     }
     private async void ValidateIsScanned()
@@ -181,6 +183,11 @@ public class VoiceReportViewModel : BaseViewModel
         if (!string.IsNullOrEmpty(TranscribedText) && /*!string.IsNullOrEmpty(TranslatedText) &&*/ ObjectInfo != null)
         {
             var reportType = ReportTypes.Where(r => r.TypeOfReport == "Voice Message").FirstOrDefault();
+            if (reportType == null)
+            {
+                await _reportServiceType.RefreshReportTypes();
+                reportType = ReportTypes.Where(r => r.TypeOfReport == "Defect List").FirstOrDefault();
+            }
             var newReportData = new ReportInfo
             {
                 SelectedLanguage = _languageSettingsService.CurrentLanguage.ID,
@@ -205,5 +212,11 @@ public class VoiceReportViewModel : BaseViewModel
        // TranslatedText=string.Empty;
         IsTranscriptionVisible = false;
        // IsTranslationVisible=false;
+    }
+
+    public async Task RefreshCommandExecuted()
+    {
+        await _languageSettingsService.RefreshAvailableLanguages(ServiceHelper.GetService<IDatabaseService>());
+        await _reportServiceType.RefreshReportTypes();
     }
 }

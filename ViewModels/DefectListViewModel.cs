@@ -16,6 +16,7 @@ namespace RepRepair.ViewModels
         public List<ReportType> ReportTypes { get => _reportServiceType.CachedReportTypes; }
         public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
         public ICommand SubmitDefectCommand { get; }
+        public ICommand OnRefresh { get; set; }
         private readonly IScanningService _scanningService;
         private readonly IAlertService _alertService;
         private readonly IDatabaseService _databaseService;
@@ -68,8 +69,15 @@ namespace RepRepair.ViewModels
             _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
             _databaseService = ServiceHelper.GetService<IDatabaseService>();
             LoadDefectList();
+            OnRefresh = new Command(async () => await RefreshCommandExecuted());
             SubmitDefectCommand = new Command(SubmitDefect);
             ValidateIsScanned();
+        }
+        public async Task RefreshCommandExecuted()
+        {
+            await _languageSettingsService.RefreshAvailableLanguages(ServiceHelper.GetService<IDatabaseService>());
+            await _reportServiceType.RefreshReportTypes();
+            await LoadDefectList();
         }
 
         private async Task LoadDefectList()
@@ -101,6 +109,13 @@ namespace RepRepair.ViewModels
             else
             {
                 var reportType = ReportTypes.Where(r => r.TypeOfReport == "Defect List").FirstOrDefault();
+
+                if (reportType == null)
+                {
+                    await _reportServiceType.RefreshReportTypes();
+                    reportType = ReportTypes.Where(r => r.TypeOfReport == "Defect List").FirstOrDefault();
+                }
+
                 var newReportData = new ReportInfo
                 {
                     SelectedLanguage = _languageSettingsService.CurrentLanguage.ID,
