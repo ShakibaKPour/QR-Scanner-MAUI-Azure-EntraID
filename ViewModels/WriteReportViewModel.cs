@@ -13,31 +13,35 @@ namespace RepRepair.ViewModels
 {
     public class WriteReportViewModel : BaseViewModel
     {
-        public ICommand OnSubmit { get; set; }
-        public ICommand OnRefresh { get; set; }
-        public ICommand OnGoBack { get; set; }
-        public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
         private readonly IScanningService _scanningService;
         private readonly IAlertService _alertService;
         private readonly IDatabaseService _databaseService;
         private readonly LanguageSettingsService _languageSettingsService;
         private readonly ReportServiceType _reportServiceType;
-        //private readonly TranslatorService _translatorService;
-        private string _reportText;
+
+        public ICommand OnSubmit { get; private set; }
+        public ICommand OnRefresh { get; private set; }
+        public ICommand OnGoBack { get; private set; }
+
+        private string _reportText = string.Empty;
         public string ReportText
         {
             get => _reportText;
             set
             {
-                _reportText = value;
-                OnPropertyChanged(nameof(ReportText));
+                if (_reportText != value)
+                {
+                    _reportText = value;
+                    OnPropertyChanged(nameof(ReportText));
+                }
             }
         }
-        public List<ReportType> ReportTypes { get => _reportServiceType.CachedReportTypes; }
-        public ObservableCollection<Languages> AvailableLanguages 
-        {
-            get => _languageSettingsService.AvailableLanguages;
-        }
+
+        public ObjectInfo ObjectInfo => _scanningService.CurrentScannedObject;
+
+        public List<ReportType> ReportTypes => _reportServiceType.CachedReportTypes;
+
+        public ObservableCollection<Languages> AvailableLanguages => _languageSettingsService.AvailableLanguages;
 
         public Languages SelectedLanguage
         {
@@ -59,19 +63,27 @@ namespace RepRepair.ViewModels
             _databaseService = ServiceHelper.GetService<IDatabaseService>();
             _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
             _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
-            //_translatorService = ServiceHelper.GetService<TranslatorService>();
-            OnSubmit = new Command(async () => await SubmitTextReport());
-            OnRefresh = new Command(async ()=>await RefreshLanguagesCommandExecuted());
-            OnGoBack = new Command(async () => await NavigateBackAsync());
+
+            InitializeCommands();
             ValidateIsScanned();
         }
 
-        private async void ValidateIsScanned()
+        private void InitializeCommands()
         {
-            if(ObjectInfo == null)
+            OnSubmit = new Command(async () => await ExecuteWithTryCatch(SubmitTextReport));
+            OnRefresh = new Command(async () => await ExecuteWithTryCatch(RefreshLanguagesCommandExecuted));
+            OnGoBack = new Command(async () => await ExecuteWithTryCatch(NavigateBackAsync));
+        }
+
+        private async Task ExecuteWithTryCatch(Func<Task> action)
+        {
+            try
             {
-                await _alertService.ShowAlertAsync("Alert", "Start by scanning the QR code", "OK");
-                await Shell.Current.GoToAsync("///ScanPage");
+                await action();
+            }
+            catch (Exception ex)
+            {
+                await _alertService.ShowAlertAsync("Error", $"An error occurred: {ex.Message}", "OK");
             }
         }
 
@@ -80,44 +92,35 @@ namespace RepRepair.ViewModels
             await Shell.Current.GoToAsync("..");
         }
 
-        public async Task RefreshLanguagesCommandExecuted()
+        private async Task RefreshLanguagesCommandExecuted()
         {
-            await _languageSettingsService.RefreshAvailableLanguages(ServiceHelper.GetService<IDatabaseService>());
+            await _languageSettingsService.RefreshAvailableLanguages(_databaseService);
             await _reportServiceType.RefreshReportTypes();
-        }
-
-
-        private async Task<List<Languages>> GetAvilableLanguages()
-        {
-            var languages = await _databaseService.GetAvailableLanguagesAsync();
-            return languages;
         }
 
         private async Task SubmitTextReport()
         {
             if (string.IsNullOrEmpty(ReportText))
             {
-                await _alertService.ShowAlertAsync("Alert", "No input", "OK");
+                await _alertService.ShowAlertAsync("Alert", "Please enter a report text.", "OK");
                 return;
             }
-            //var textTobeTranslated = ReportText;
-            //var translation = await _translatorService.TranslateTextAsync(textTobeTranslated, "sv", SelectedLanguage);
 
-            var reportType = ReportTypes.Where(r => r.TypeOfReport == "Write Message").FirstOrDefault();
+            var reportType = ReportTypes.FirstOrDefault(r => r.TypeOfReport == "Write Message");
             if (reportType == null)
             {
                 await _reportServiceType.RefreshReportTypes();
-                reportType = ReportTypes.Where(r => r.TypeOfReport == "Defect List").FirstOrDefault();
+                reportType = ReportTypes.Where(r => r.TypeOfReport == "Write Message").FirstOrDefault();
             }
 
             var newReportData = new ReportInfo
             {
                 SelectedLanguage = _languageSettingsService.CurrentLanguage.ID,
                 OriginalFaultReport = ReportText,
-                //TranslatedFaultReport = translation,
                 TypeOfReport = reportType?.ID,
                 QRCodeString = ObjectInfo.QRCode,
             };
+
             var success = await _databaseService.InsertReportAsync(newReportData, SelectedLanguage);
             if (success)
             {
@@ -127,15 +130,22 @@ namespace RepRepair.ViewModels
             }
             else
             {
-                await _alertService.ShowAlertAsync("Error", "Could not submit", "OK");
+                await _alertService.ShowAlertAsync("Error", "Submission failed. Please try again.", "OK");
             }
         }
 
         private void ClearFields()
         {
             ReportText = string.Empty;
-            OnPropertyChanged(nameof(ReportText));
         }
 
+        private async void ValidateIsScanned()
+        {
+            if (ObjectInfo == null)
+            {
+                await _alertService.ShowAlertAsync("Alert", "Start by scanning the QR code", "OK");
+                await Shell.Current.GoToAsync("///ScanPage");
+            }
+        }
     }
 }

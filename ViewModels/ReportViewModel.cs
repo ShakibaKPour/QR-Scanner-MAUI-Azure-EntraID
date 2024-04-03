@@ -8,61 +8,51 @@ namespace RepRepair.ViewModels;
 
 public class ReportViewModel : BaseViewModel
 {
-    public ICommand NavigateToVoiceRecordCommand { get; set; }
+        private readonly ReportServiceType _reportServiceType;
 
-    public ICommand NavigateToWriteCommand { get; set; }
+        public ICommand NavigateToVoiceRecordCommand { get; private set; }
+        public ICommand NavigateToWriteCommand { get; private set; }
+        public ICommand NavigateToDefectListCommand { get; private set; }
 
-    public ICommand NavigateToDefectListCommand { get; set; }
+        public List<ReportType> ReportTypes => _reportServiceType.CachedReportTypes;
 
-    public List<ReportType> ReportTypes
-    {
-        get => _reportServiceType.CachedReportTypes;
-    }
-
-    private ObjectInfo _objectInfo;
-    public ObjectInfo ObjectInfo
-    {
-        get => _objectInfo;
-        set
+        private ObjectInfo _objectInfo;
+        public ObjectInfo ObjectInfo
         {
-            if (_objectInfo != value)
+            get => _objectInfo;
+            set
             {
-                _objectInfo = value;
-                OnPropertyChanged(nameof(ObjectInfo));
-                UpdateObjectProperties(_objectInfo);
+                if (_objectInfo != value)
+                {
+                    _objectInfo = value;
+                    OnPropertyChanged(nameof(ObjectInfo));
+                    UpdateObjectProperties();
+                }
             }
         }
-    }
-    private readonly ReportServiceType _reportServiceType;
-    public ReportViewModel()
-    {
-        _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
-        NavigateToVoiceRecordCommand = new Command(async () => await NavigateToVoiceRecordCommandAsync());
-        NavigateToWriteCommand = new Command(async ()=> await NavigateToWriteCommandAsync());
-        NavigateToDefectListCommand= new Command(async()=> await NavigateToDefectListCommandAsync());
-    }
-    private void UpdateObjectProperties(ObjectInfo objectInfo)
-    {
-        if (objectInfo != null)
+
+        public ReportViewModel()
+        {
+            _reportServiceType = ServiceHelper.GetService<ReportServiceType>() ?? throw new InvalidOperationException("ReportServiceType service not available");
+            InitializeCommands();
+        }
+
+        private void InitializeCommands()
+        {
+            NavigateToVoiceRecordCommand = new Command(async () => await NavigateToAsync(nameof(VoiceReportPage)));
+            NavigateToWriteCommand = new Command(async () => await NavigateToAsync(nameof(WriteReportPage)));
+            NavigateToDefectListCommand = new Command(async () => await NavigateToAsync(nameof(DefectListPage)));
+        }
+
+        private async Task NavigateToAsync(string route)
+        {
+            await Shell.Current.GoToAsync(route);
+        }
+
+        private void UpdateObjectProperties()
         {
             OnPropertyChanged(nameof(ObjectInfo.Name));
             OnPropertyChanged(nameof(ObjectInfo.Location));
             OnPropertyChanged(nameof(ObjectInfo.QRCode));
         }
     }
-    private async Task NavigateToVoiceRecordCommandAsync()
-    {
-        await Shell.Current.GoToAsync(nameof(VoiceReportPage));
-    }
-
-    private async Task NavigateToWriteCommandAsync()
-    {
-        await Shell.Current.GoToAsync(nameof(WriteReportPage));
-    }
-
-    private async Task NavigateToDefectListCommandAsync()
-    {
-        await Shell.Current.GoToAsync(nameof(DefectListPage));
-    }
-
-}

@@ -6,6 +6,7 @@ namespace RepRepair.Pages;
 
 public partial class ScanPage : ContentPage
 {
+    // TODO : handle all possible null exceptions, including cameraview  
     public ScanViewModel _viewModel;
     private readonly IAlertService _alertService;
 	public ScanPage()

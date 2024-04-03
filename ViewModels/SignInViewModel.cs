@@ -1,49 +1,74 @@
 ﻿using Microsoft.Identity.Client;
 using RepRepair.Extensions;
-using RepRepair.Models;
-using RepRepair.Pages;
+using RepRepair.Services.AlertService;
 using System.Windows.Input;
 
-namespace RepRepair.ViewModels
+namespace RepRepair.ViewModels;
+
+public class SignInViewModel : BaseViewModel
 {
-    public class SignInViewModel : BaseViewModel // Implement INotifyPropertyChanged in BaseViewModel
+    private readonly IAlertService _alertService;
+
+    public ICommand SignInCommand { get; private set; }
+
+    public SignInViewModel()
     {
-        public ICommand SignInCommand { get; }
-        //public static _authenticationService _authenticationService { get; private set; }
-        //private readonly EventAggregator _eventAggregator;
+        _alertService = ServiceHelper.GetService<IAlertService>();
 
-        public SignInViewModel()
-        {
-            //_authenticationService = ServiceHelper.GetService<_authenticationService>();
-            SignInCommand = new Command(async () => await SignInAsync());
-           // _eventAggregator= ServiceHelper.GetService<EventAggregator>();
-        }
+        SignInCommand = new Command(async () => await SignInAsync());
+    }
 
-        private async Task SignInAsync()
+    private async Task SignInAsync()
+    {
+        try
         {
-            try
+            //Todo: try to inject the authenticationservice directly and see if it solves the problem with the token on windows machine
+            var authResult = await App._authenticationService.SignInAsync();
+            if (authResult != null)
             {
-                var authResult =  await App._authenticationService.SignInAsync();
-                if (authResult != null)
-                {
-                    //_eventAggregator.Publish<App>(new App());
-                    //Notify the app that sign -in was successful
-                    MessagingCenter.Send<App>(Application.Current as App, "SignInSuccessful");
-                    // App.StoreAuthenticationResult(authResult);
-                }
+                MessagingCenter.Send(Application.Current as App, "SignInSuccessful");
             }
-            catch (MsalClientException ex)
+            else
             {
-                Console.WriteLine(ex.Message);
-                // Handle specific sign-in exceptions here (e.g., show an error message)
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred during sign-in: {ex.Message}");
-                // Handle general exceptions here (e.g., show an error message)
+                await _alertService.ShowAlertAsync("Sign In Failed", "Authentication result was not obtained.", "OK");
             }
         }
-
-
+        catch (MsalClientException ex)
+        {
+            await _alertService.ShowAlertAsync("Sign In Error", $"MSAL client error occurred: {ex.Message}", "OK");
+        }
+        catch (Exception ex)
+        {
+            await _alertService.ShowAlertAsync("Sign In Error", $"An unexpected error occurred during sign-in: {ex.Message}", "OK");
+        }
     }
 }
+
+
+    //public ICommand SignInCommand { get; }
+
+    //public SignInViewModel()
+    //{
+    //    SignInCommand = new Command(async () => await SignInAsync());
+    //}
+
+    //private async Task SignInAsync()
+    //{
+    //    try
+    //    {
+    //        var authResult =  await App._authenticationService.SignInAsync();
+    //        if (authResult != null)
+    //        {
+    //            MessagingCenter.Send<App>(Application.Current as App, "SignInSuccessful");
+    //        }
+    //    }
+    //    catch (MsalClientException ex)
+    //    {
+    //        Console.WriteLine(ex.Message);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine($"An unexpected error occurred during sign-in: {ex.Message}");
+    //    }
+    //}
+
