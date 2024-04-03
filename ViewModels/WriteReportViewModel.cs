@@ -3,7 +3,6 @@ using RepRepair.Models.DatabaseModels;
 using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
-using RepRepair.Services.Language;
 using RepRepair.Services.ReportTypesService;
 using RepRepair.Services.ScanningService;
 using System.Collections.ObjectModel;
@@ -94,7 +93,7 @@ namespace RepRepair.ViewModels
 
         private async Task RefreshLanguagesCommandExecuted()
         {
-            await _languageSettingsService.RefreshAvailableLanguages(_databaseService);
+            await _languageSettingsService.RefreshAvailableLanguages();
             await _reportServiceType.RefreshReportTypes();
         }
 

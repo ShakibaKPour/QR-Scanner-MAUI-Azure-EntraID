@@ -3,7 +3,6 @@ using RepRepair.Models.DatabaseModels;
 using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.DB;
-using RepRepair.Services.Language;
 using RepRepair.Services.ReportTypesService;
 using RepRepair.Services.ScanningService;
 using System.Windows.Input;
@@ -113,7 +112,7 @@ public class DefectListViewModel : BaseViewModel
     {
         try
         {
-            await _languageSettingsService.RefreshAvailableLanguages(_databaseService);
+            await _languageSettingsService.RefreshAvailableLanguages();
             await _reportServiceType.RefreshReportTypes();
             await LoadDefectListAsync();
         }

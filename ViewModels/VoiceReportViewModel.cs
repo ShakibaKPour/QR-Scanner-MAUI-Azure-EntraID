@@ -1,7 +1,6 @@
 ﻿using RepRepair.Extensions;
 using RepRepair.Services.Cognitive;
 using RepRepair.Services.DB;
-using RepRepair.Services.Language;
 using RepRepair.Services.VoiceRecording;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -168,7 +167,7 @@ public class VoiceReportViewModel : BaseViewModel
 
     public async Task RefreshCommandExecuted()
     {
-        await _languageSettingsService.RefreshAvailableLanguages(_databaseService);
+        await _languageSettingsService.RefreshAvailableLanguages();
         await _reportServiceType.RefreshReportTypes();
     }
 }

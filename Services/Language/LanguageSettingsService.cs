@@ -1,83 +1,84 @@
 ﻿using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.DB;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Maui.Storage;
+using RepRepair.Extensions; // Assuming Preferences comes from Microsoft.Maui.Storage
 
-namespace RepRepair.Services.Language
+public class LanguageSettingsService
 {
-    public class LanguageSettingsService
+    private const string DefaultLanguageId = "dfd8bfab-6cee-4cc1-9a53-9ebc5740050f"; // Default GUID as a string
+    private const string LanguageKey = "SelectedLanguage";
+    private readonly IDatabaseService _databaseService;
+
+    public ObservableCollection<Languages> AvailableLanguages { get; } = new ObservableCollection<Languages>();
+
+    private Languages _currentLanguage;
+    public Languages CurrentLanguage
     {
-        private const string DefaultLanguageId = "dfd8bfab-6cee-4cc1-9a53-9ebc5740050f"; // Default GUID as a string
-        private const string LanguageKey = "SelectedLanguage";
-        public ObservableCollection<Languages> AvailableLanguages { get; } = new ObservableCollection<Languages>();
-        private Languages _currentLanguage;
-        public Languages CurrentLanguage
+        get
         {
-            get
+            // If _currentLanguage is null, try to load from preferences
+            if (_currentLanguage == null)
             {
-                // If _currentLanguage is null, try to load from preferences
-                if (_currentLanguage == null)
+                var languageIdString = Preferences.Get(LanguageKey, DefaultLanguageId);
+                if (Guid.TryParse(languageIdString, out Guid languageId))
                 {
-                    var languageIdString = Preferences.Get(LanguageKey, DefaultLanguageId);
-                    if (Guid.TryParse(languageIdString, out Guid languageId))
-                    {
-                        // Set from available languages, if possible
-                        _currentLanguage = AvailableLanguages.FirstOrDefault(lang => lang.ID == languageId);
-                    }
+                    // Set from available languages, if possible
+                    _currentLanguage = AvailableLanguages.FirstOrDefault(lang => lang.ID == languageId);
                 }
-                return _currentLanguage;
-            }
-            set
-            {
-                _currentLanguage = value;
-                // Store the language ID in preferences
-                Preferences.Set(LanguageKey, value?.ID.ToString() ?? DefaultLanguageId);
-            }
-        }
 
-        public async Task FetchAndUpdateAvailableLanguages(IDatabaseService databaseService)
-        {
-            var languages = await databaseService.GetAvailableLanguagesAsync();
-            if (languages != null)
-            {
-                AvailableLanguages.Clear();
-                foreach (var language in languages)
+                // If still null, set to a default value to avoid null reference exceptions
+                if (_currentLanguage == null && AvailableLanguages.Count > 0)
                 {
-                    AvailableLanguages.Add(language);
-                    Console.WriteLine(language.Language);
+                    _currentLanguage = AvailableLanguages[0];
                 }
-                // Update CurrentLanguage based on the newly fetched languages and the ID stored in preferences
-                _currentLanguage = AvailableLanguages.FirstOrDefault(lang => lang.ID.ToString() == Preferences.Get(LanguageKey, DefaultLanguageId));
             }
+            return _currentLanguage ??= new Languages { ID = Guid.Parse(DefaultLanguageId), Language = "Default" }; // Fallback default
         }
-
-        public async Task RefreshAvailableLanguages(IDatabaseService databaseService)
+        set
         {
-            var languages = await databaseService.GetAvailableLanguagesAsync();
-            if (languages != null)
-            {
-                AvailableLanguages.Clear();
-                foreach (var language in languages)
-                {
-                    AvailableLanguages.Add(language);
-                }
-            }
+            _currentLanguage = value ?? throw new ArgumentNullException(nameof(value), "CurrentLanguage cannot be set to null.");
+            // Store the language ID in preferences
+            Preferences.Set(LanguageKey, _currentLanguage.ID.ToString());
         }
     }
+
+    public LanguageSettingsService()
+    {
+        _databaseService = ServiceHelper.GetService<IDatabaseService>();
+    }
+
+    public async Task FetchAndUpdateAvailableLanguages()
+    {
+        try
+        {
+            var languages = await _databaseService.GetAvailableLanguagesAsync();
+            if (languages != null)
+            {
+                AvailableLanguages.Clear();
+                foreach (var language in languages)
+                {
+                    AvailableLanguages.Add(language);
+                }
+                // Ensure CurrentLanguage is updated correctly
+                CurrentLanguage = AvailableLanguages.FirstOrDefault(lang => lang.ID.ToString() == Preferences.Get(LanguageKey, DefaultLanguageId)) ?? CurrentLanguage;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to fetch or update available languages: {ex.Message}");
+            // Consider logging the error or notifying the user through a UI mechanism
+        }
+    }
+
+    public async Task RefreshAvailableLanguages()
+    {
+        await FetchAndUpdateAvailableLanguages(); // Reuse the logic in FetchAndUpdateAvailableLanguages
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -98,31 +99,61 @@ namespace RepRepair.Services.Language
 //{
 //    public class LanguageSettingsService
 //    {
-//        private const string DefaultLanguage = "en-US";
+//        private const string DefaultLanguageId = "dfd8bfab-6cee-4cc1-9a53-9ebc5740050f"; // Default GUID as a string
 //        private const string LanguageKey = "SelectedLanguage";
 //        public ObservableCollection<Languages> AvailableLanguages { get; } = new ObservableCollection<Languages>();
-
-//        public string CurrentLanguage
+//        private Languages _currentLanguage;
+//        public Languages CurrentLanguage
 //        {
-//            get => Preferences.Get(LanguageKey, DefaultLanguage);
-//            set => Preferences.Set(LanguageKey, value);
+//            get
+//            {
+//                // If _currentLanguage is null, try to load from preferences
+//                if (_currentLanguage == null)
+//                {
+//                    var languageIdString = Preferences.Get(LanguageKey, DefaultLanguageId);
+//                    if (Guid.TryParse(languageIdString, out Guid languageId))
+//                    {
+//                        // Set from available languages, if possible
+//                        _currentLanguage = AvailableLanguages.FirstOrDefault(lang => lang.ID == languageId);
+//                    }
+//                }
+//                return _currentLanguage;
+//            }
+//            set
+//            {
+//                _currentLanguage = value;
+//                // Store the language ID in preferences
+//                Preferences.Set(LanguageKey, value?.ID.ToString() ?? DefaultLanguageId);
+//            }
 //        }
 
 //        public async Task FetchAndUpdateAvailableLanguages(IDatabaseService databaseService)
 //        {
 //            var languages = await databaseService.GetAvailableLanguagesAsync();
-
 //            if (languages != null)
 //            {
 //                AvailableLanguages.Clear();
 //                foreach (var language in languages)
 //                {
 //                    AvailableLanguages.Add(language);
-//                    Console.Write($"Language {language}");
+//                    Console.WriteLine(language.Language);
 //                }
-
+//                // Update CurrentLanguage based on the newly fetched languages and the ID stored in preferences
+//                _currentLanguage = AvailableLanguages.FirstOrDefault(lang => lang.ID.ToString() == Preferences.Get(LanguageKey, DefaultLanguageId));
 //            }
 //        }
 
+//        public async Task RefreshAvailableLanguages(IDatabaseService databaseService)
+//        {
+//            var languages = await databaseService.GetAvailableLanguagesAsync();
+//            if (languages != null)
+//            {
+//                AvailableLanguages.Clear();
+//                foreach (var language in languages)
+//                {
+//                    AvailableLanguages.Add(language);
+//                }
+//            }
+//        }
 //    }
 //}

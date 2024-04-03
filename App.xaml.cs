@@ -4,7 +4,6 @@ using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.Auth;
 using RepRepair.Services.DB;
-using RepRepair.Services.Language;
 using RepRepair.Services.ReportTypesService;
 
 namespace RepRepair
@@ -54,7 +53,7 @@ namespace RepRepair
 
         private async void InitializeGlobalLanguagesAsync()
         {
-            await _languageSettingsService.FetchAndUpdateAvailableLanguages(ServiceHelper.GetService<IDatabaseService>());
+            await _languageSettingsService.FetchAndUpdateAvailableLanguages();
         }
 
         private async void InitializeGlobalReportTypesAsync()

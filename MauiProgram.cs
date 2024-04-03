@@ -9,7 +9,6 @@ using ZXing.Net.Maui.Controls;
 using RepRepair.Pages;
 using RepRepair.Extensions;
 using RepRepair.Services.Cognitive;
-using RepRepair.Services.Language;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.ScanningService;
 using RepRepair.Services.ReportTypesService;

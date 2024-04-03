@@ -2,7 +2,6 @@
 using Microsoft.CognitiveServices.Speech.Audio;
 using RepRepair.Extensions;
 using RepRepair.Services.AlertService;
-using RepRepair.Services.Language;
 using System.Text;
 
 namespace RepRepair.Services.Cognitive;
