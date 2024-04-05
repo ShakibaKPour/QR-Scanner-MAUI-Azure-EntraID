@@ -1,3 +1,4 @@
+using Camera.MAUI;
 using RepRepair.Extensions;
 using RepRepair.Services.AlertService;
 using RepRepair.ViewModels;
@@ -18,16 +19,16 @@ public partial class ScanPage : ContentPage
 
         BindingContext = _viewModel;
 
-        if (cameraView != null)
-        {
+        //if (cameraView != null)
+        //{
             cameraView.CamerasLoaded += OnCameraLoaded;
             ConfigureCameraForScanning();
             cameraView.BarcodeDetected += OnBarcodeDetected;
-        }
-        else
-        {
-            AlertCameraNotSupported();
-        }
+        //}
+        //else
+        //{
+        //    AlertCameraNotSupported();
+        //}
     }
 
     private async void AlertCameraNotSupported()

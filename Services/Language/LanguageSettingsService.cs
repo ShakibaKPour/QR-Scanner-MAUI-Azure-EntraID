@@ -5,13 +5,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Maui.Storage;
-using RepRepair.Extensions; // Assuming Preferences comes from Microsoft.Maui.Storage
+using RepRepair.Extensions;
+using RepRepair.Services.AlertService;
 
 public class LanguageSettingsService
 {
     private const string DefaultLanguageId = "dfd8bfab-6cee-4cc1-9a53-9ebc5740050f"; // Default GUID as a string
     private const string LanguageKey = "SelectedLanguage";
     private readonly IDatabaseService _databaseService;
+    private readonly IAlertService _alertService;
 
     public ObservableCollection<Languages> AvailableLanguages { get; } = new ObservableCollection<Languages>();
 
@@ -36,19 +38,23 @@ public class LanguageSettingsService
                     _currentLanguage = AvailableLanguages[0];
                 }
             }
-            return _currentLanguage ??= new Languages { ID = Guid.Parse(DefaultLanguageId), Language = "Default" }; // Fallback default
+            return _currentLanguage ??= new Languages { ID = Guid.Parse(DefaultLanguageId), Language = "en-US" }; // Fallback default
         }
         set
         {
-            _currentLanguage = value ?? throw new ArgumentNullException(nameof(value), "CurrentLanguage cannot be set to null.");
+            _currentLanguage = value;
             // Store the language ID in preferences
-            Preferences.Set(LanguageKey, _currentLanguage.ID.ToString());
+            if (value != null)
+            {
+                 Preferences.Set(LanguageKey, _currentLanguage.ID.ToString());
+            }
         }
     }
 
     public LanguageSettingsService()
     {
         _databaseService = ServiceHelper.GetService<IDatabaseService>();
+        _alertService= ServiceHelper.GetService<IAlertService>();
     }
 
     public async Task FetchAndUpdateAvailableLanguages()
@@ -70,25 +76,25 @@ public class LanguageSettingsService
         catch (Exception ex)
         {
             Console.WriteLine($"Failed to fetch or update available languages: {ex.Message}");
-            // Consider logging the error or notifying the user through a UI mechanism
+            _alertService.ShowAlert("Error", "Failed to fetch or update available languages. Please refresh!");
+            
         }
     }
 
     public async Task RefreshAvailableLanguages()
     {
-        await FetchAndUpdateAvailableLanguages(); // Reuse the logic in FetchAndUpdateAvailableLanguages
+        var languages = await _databaseService.GetAvailableLanguagesAsync();
+        if (languages != null)
+        {
+            AvailableLanguages.Clear();
+            foreach (var language in languages)
+            {
+                AvailableLanguages.Add(language);
+            }
+        }
+       // await FetchAndUpdateAvailableLanguages(); // Reuse the logic in FetchAndUpdateAvailableLanguages
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 //using RepRepair.Models.DatabaseModels;

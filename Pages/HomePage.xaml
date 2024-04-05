@@ -8,8 +8,8 @@
              x:DataType="viewmodels:HomeViewModel"
              x:Class="RepRepair.Pages.HomePage"
              Title="Home">
-    <ScrollView>
-        <VerticalStackLayout Spacing="25" Padding="30">
+
+    <VerticalStackLayout Spacing="25" Padding="30">
             <Label Text="Welcome to RepRepair!"
                    HorizontalOptions="Center"
                    FontSize="Large"/>
@@ -22,17 +22,15 @@
                              BarcodeMargin="5"
                              BarcodeFormat="QR_CODE" 
                              Barcode="6f9619ff-8b86-d011-b42d-00c04fc964ff"></cv:BarcodeImage>-->
-            <Image Source="barcode_image.png" 
+        <Image Source="barcode_image.png" 
                    WidthRequest="280"
                    HeightRequest="280"
                    Margin="5"></Image>
-            <!--<Label Text="{Binding _username}"></Label>-->
-            <Button Text="Sign Out"
+        <Button Text="Sign Out"
                     HorizontalOptions="Fill"
                     Command="{Binding SignOutCommand}"></Button>
             <Button Text="Start Scanning"
                     HorizontalOptions="Fill"
                     Command="{Binding ScanCommand}"/>
         </VerticalStackLayout>
-    </ScrollView>
 </ContentPage>

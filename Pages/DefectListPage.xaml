@@ -2,11 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RepRepair.Pages.DefectListPage"
+             xmlns:helpers="clr-namespace:RepRepair.Models.HelpingModels"
              xmlns:viewmodels="clr-namespace:RepRepair.ViewModels"
              x:DataType="viewmodels:DefectListViewModel"
              Title="Choose a Defect">
 
-    <StackLayout Padding="20">
+    <!--<StackLayout Padding="20">
         <Picker Title="Choose an alternative" 
             ItemsSource="{Binding Defects}"
                 ItemDisplayBinding="{Binding Description}"
@@ -14,6 +15,61 @@
         </Picker>
         <Button Text="Refresh" Command="{Binding OnRefresh}"></Button>
         <Button Text="Submit" Command="{Binding SubmitDefectCommand}" />
-    </StackLayout>
+    </StackLayout>-->
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- For the Refresh button -->
+            <RowDefinition Height="*"/>
+            <!-- For the Picker and potentially other content -->
+            <RowDefinition Height="Auto"/>
+            <!-- For the Submit button -->
+        </Grid.RowDefinitions>
+
+        <!-- Refresh Button at Top Left -->
+        <!--<Button Grid.Row="0"
+            Text="Refresh"
+            Command="{Binding OnRefresh}"
+            HorizontalOptions="Start"
+            VerticalOptions="Start"
+            WidthRequest="100"
+            HeightRequest="40"
+            BackgroundColor="#E0E0E0"
+            FontFamily="OpenSansRegular"
+            FontSize="Small"/>-->
+
+        <Button Grid.Row="0" 
+            Command="{Binding OnRefresh}"
+            HorizontalOptions="Start"
+            VerticalOptions="Start"
+            WidthRequest="40"
+            HeightRequest="40"
+            BackgroundColor="Transparent"
+            Padding="0">
+            <Button.ImageSource>
+                <FontImageSource FontFamily="{StaticResource MaterialFontFamily}" 
+                             Glyph="&#xe5d5;" 
+                             Size="24" />
+            </Button.ImageSource>
+        </Button>
+
+        <!-- Picker in the Middle -->
+        <Picker Grid.Row="1" 
+            Title="Choose an alternative" 
+            ItemsSource="{Binding Defects}"
+            ItemDisplayBinding="{Binding Description}"
+            SelectedItem="{Binding SelectedDefect, Mode=TwoWay}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"/>
+
+        <!-- Submit Button at the Bottom -->
+        <Button Grid.Row="2"
+            Text="Submit"
+            Command="{Binding SubmitDefectCommand}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="End"
+            Margin="0,10,0,0"/>
+    </Grid>
+
 
 </ContentPage>

@@ -17,7 +17,7 @@ public static class Constants
     /// </summary>
     public static string[] Scopes = new[]
     {
-        "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/user_impersonation",
+       // "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/user_impersonation",
         "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/User.Read",
         "api://dff3c905-f0d7-4071-99cf-9cb059eb6fcd/WriteToDatabase"
     };
