@@ -5,22 +5,29 @@
              xmlns:viewmodels="clr-namespace:RepRepair.ViewModels"
              x:DataType="viewmodels:ReportViewModel"
              Title="MainReportPage">
-    <VerticalStackLayout>
-        <Label 
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0"
             Text="Choose an alternative"
             VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Button Text="Record a voice message" 
+            HorizontalOptions="Center" 
+            />
+        <Button Grid.Row="1" Text="Record a voice message" 
                 Padding="10" 
                 Margin="10"
                 Command="{Binding NavigateToVoiceRecordCommand}"></Button>
-        <Button Text="Write to us"
+        <Button Grid.Row="2" Text="Write to us"
                  Padding="10" 
                 Margin="10"
                 Command="{Binding NavigateToWriteCommand}"></Button>
-        <Button Text=" Choose from a list"
-                 Padding="10" 
+            <Button Grid.Row="3" Text=" Choose from a list"
+                 Padding="10,10, 10, 20" 
                  Margin="10"
                 Command="{Binding NavigateToDefectListCommand}"></Button>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>
