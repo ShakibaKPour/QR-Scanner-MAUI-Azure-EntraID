@@ -21,8 +21,8 @@ public partial class ScanPage : ContentPage
 
         BindingContext = _viewModel;
 
-        //if (cameraView != null)
-        //{
+        if (cameraView != null)
+        {
             cameraView.CamerasLoaded += OnCameraLoaded;
             ConfigureCameraForScanning();
             cameraView.BarcodeDetected += OnBarcodeDetected;
