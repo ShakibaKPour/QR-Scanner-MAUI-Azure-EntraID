@@ -38,7 +38,6 @@ public class ScanningService : IScanningService
                 await _alertService.ShowAlertAsync("Alert", "Scanned object does not exist in the database.");
                 IsScanned = false;
             }
-
             return CurrentScannedObject;
         }
         catch (Exception ex)
