@@ -47,7 +47,6 @@ public class ScanningService : IScanningService
             return null;
         }
     }
-
     public void ResetScan()
     {
         CurrentScannedObject = null;
