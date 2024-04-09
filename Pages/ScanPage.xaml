@@ -13,16 +13,60 @@
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"></toolkit:InvertedBoolConverter>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Grid>
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Fill"
+            HorizontalOptions="Fill">
+            <cv:CameraView x:Name="cameraView"  
+                           BarCodeDetectionEnabled="True"
+                           HeightRequest="300"
+                            WidthRequest="300"
+                            CamerasLoaded="OnCameraLoaded"
+                           BarcodeDetected="OnBarcodeDetected"
+                           IsVisible="{Binding IsScanned, Converter={StaticResource InvertedBoolConverter}}"
+                           Margin="5">
+            </cv:CameraView>
+            <Label Text="Scan Result" IsVisible="{Binding IsScanned}" Padding="15" HorizontalTextAlignment="Center" FontSize="Title"></Label>
+            <Label Text="QR code:" IsVisible="{Binding IsScanned}"></Label>
+            <Label Text="{Binding ObjectInfo.QRCode, StringFormat='{0}'}" IsVisible="{Binding IsScanned}" Padding="0, 3, 5, 15" LineBreakMode="WordWrap" MaxLines="2"></Label>
+            <Label Text="Machine:" IsVisible="{Binding IsScanned}"></Label>
+            <Label Text="{Binding ObjectInfo.Name, StringFormat='{0}'}" IsVisible="{Binding IsScanned}" Padding="0, 3, 5, 15"></Label>
+            <Label Text="Location:" IsVisible="{Binding IsScanned}"></Label>
+            <Label Text="{Binding ObjectInfo.Location, StringFormat='{0}'}" IsVisible="{Binding IsScanned}" Padding="0, 3, 5, 15"></Label>
+            <Button Margin="0,10,0,10" Padding="10" Text="Start the Camera" Clicked="StartCamera" 
+                    IsVisible="{Binding IsScanned, Converter={StaticResource InvertedBoolConverter}}">
+            </Button>
+            <Button Margin="0,10,0,10" Text="Simulate camera scan" 
+                        Command="{Binding SimulateScan}" Clicked="StopCamera"></Button>
+            <Button Margin="0,10,0,10" Text="Report" 
+                        Command="{Binding OnReport}"
+                        IsVisible="{Binding IsScanned}"></Button>
+        <Button Margin="0,10,0,10" Text="Scan again" 
+                        Clicked="ScanAgain"
+                        IsVisible="{Binding IsScanned}"></Button>
+    </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+
+
+
+
+
+
+
+<!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-    <!--<VerticalStackLayout
+    --><!--<VerticalStackLayout
             Spacing="25"
             Padding="30,0"
             VerticalOptions="Fill"
-            HorizontalOptions="Fill">-->
+            HorizontalOptions="Fill">--><!--
         <cv:CameraView x:Name="cameraView"  
                            BarCodeDetectionEnabled="True"
                            VerticalOptions="FillAndExpand"
@@ -53,6 +97,6 @@
                         Clicked="ScanAgain"
                         IsVisible="{Binding IsScanned}"></Button>
         </VerticalStackLayout>
-    <!--</VerticalStackLayout>-->
+    --><!--</VerticalStackLayout>--><!--
         </Grid>
-</ContentPage>
+</ContentPage>-->

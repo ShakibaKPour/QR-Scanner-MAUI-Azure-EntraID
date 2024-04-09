@@ -1,7 +1,9 @@
 using Camera.MAUI;
+using Camera.MAUI.ZXingHelper;
 using RepRepair.Extensions;
 using RepRepair.Services.AlertService;
 using RepRepair.ViewModels;
+using ZXing.Net.Maui;
 
 namespace RepRepair.Pages;
 
@@ -19,16 +21,16 @@ public partial class ScanPage : ContentPage
 
         BindingContext = _viewModel;
 
-        if (cameraView != null)
-        {
+        //if (cameraView != null)
+        //{
             cameraView.CamerasLoaded += OnCameraLoaded;
             ConfigureCameraForScanning();
             cameraView.BarcodeDetected += OnBarcodeDetected;
-    }
-        else
-        {
-            AlertCameraNotSupported();
-}
+//    }
+//        else
+//        {
+//            AlertCameraNotSupported();
+//}
     }
 
     private async void AlertCameraNotSupported()
@@ -69,14 +71,14 @@ public partial class ScanPage : ContentPage
     {
         if (cameraView != null)
         {
-            cameraView.BarCodeOptions = new BarcodeDecodeOptions
-            {
-                AutoRotate = true,
-                PossibleFormats = { BarcodeFormat.QR_CODE },
-                ReadMultipleCodes = false,
-                TryHarder = true,
-                TryInverted = true
-            };
+            //cameraView.BarCodeOptions = new BarcodeDecodeOptions
+            //{
+            //    AutoRotate = true,
+            //    //PossibleFormats = { BarcodeFormat.QR_CODE },
+            //    ReadMultipleCodes = false,
+            //    TryHarder = true,
+            //    TryInverted = true
+            //};
             cameraView.BarCodeDetectionEnabled = true;
         }
     }
