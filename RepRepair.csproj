@@ -67,10 +67,10 @@
 		<PackageReference Include="Camera.MAUI" Version="1.4.4" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.36.0" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.60.1" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.14" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.14" />
+		<PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.37.0" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.60.3" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Plugin.Maui.Audio" Version="2.1.0" />
