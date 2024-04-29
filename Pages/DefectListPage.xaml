@@ -7,66 +7,40 @@
              x:DataType="viewmodels:DefectListViewModel"
              Title="Choose a Defect">
 
-    <!--<StackLayout Padding="20">
-        <Picker Title="Choose an alternative" 
-            ItemsSource="{Binding Defects}"
-                ItemDisplayBinding="{Binding Description}"
-                SelectedItem="{Binding SelectedDefect, Mode=TwoWay}">
-        </Picker>
-        <Button Text="Refresh" Command="{Binding OnRefresh}"></Button>
-        <Button Text="Submit" Command="{Binding SubmitDefectCommand}" />
-    </StackLayout>-->
-    <Grid Padding="20">
+    <Grid Padding="30" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <!-- For the Refresh button -->
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="*"/>
-            <!-- For the Picker and potentially other content -->
-            <RowDefinition Height="Auto"/>
-            <!-- For the Submit button -->
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.15*"/>
         </Grid.RowDefinitions>
-
-        <!-- Refresh Button at Top Left -->
-        <!--<Button Grid.Row="0"
-            Text="Refresh"
-            Command="{Binding OnRefresh}"
-            HorizontalOptions="Start"
-            VerticalOptions="Start"
-            WidthRequest="100"
-            HeightRequest="40"
-            BackgroundColor="#E0E0E0"
-            FontFamily="OpenSansRegular"
-            FontSize="Small"/>-->
-
-        <Button Grid.Row="0" 
-            Command="{Binding OnRefresh}"
-            HorizontalOptions="Start"
-            VerticalOptions="Start"
-            WidthRequest="40"
-            HeightRequest="40"
-            BackgroundColor="Transparent"
-            Padding="0">
-            <Button.ImageSource>
-                <FontImageSource FontFamily="{StaticResource MaterialFontFamily}" 
-                             Glyph="&#xe5d5;" 
-                             Size="24" />
-            </Button.ImageSource>
-        </Button>
-
-        <Picker Grid.Row="1" 
-            Title="Choose an alternative" 
+        <Label Grid.Row="0" Text="Press on the picker, choose from the list"
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               FontSize="Default"
+               Margin="10"></Label>
+        <Picker Grid.Row="1" Grid.RowSpan="4"
+            Title="Click on the box and choose an alternative" 
             ItemsSource="{Binding Defects}"
             ItemDisplayBinding="{Binding Description}"
             SelectedItem="{Binding SelectedDefect, Mode=TwoWay}"
             HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"/>
-
-        <Button Grid.Row="2"
+            VerticalOptions="FillAndExpand"
+            Margin="10"
+             />
+        <Button Grid.Row="5"
             Text="Submit"
             Command="{Binding SubmitDefectCommand}"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="End"
-            Margin="0,10,0,0"/>
+              Padding="5"
+              Margin="0,20,0,0"
+              WidthRequest="100"
+              HorizontalOptions="CenterAndExpand"
+              FontAttributes="Bold"
+             />
     </Grid>
 
 

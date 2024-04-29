@@ -149,33 +149,6 @@ public class DatabaseService : IDatabaseService
         }
     }
 
-    public async Task<List<DefectList>> GetDefectListAsync()
-    {
-        try
-        {
-            await SetAuthenticationHeaderAsync();
-            var requestUrl = _config.BaseFunctionUrlGetDefectList; //$"{_baseFunctionUrlGetDefectList}";
-            var response = await _httpClient.GetAsync(requestUrl);
-            if (response.IsSuccessStatusCode)
-            {
-                return await DeserializeResponseContent<List<DefectList>>(response);
-            }
-            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                return new List<DefectList>();
-            }
-            else
-            {
-                return new List<DefectList>();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-            return new List<DefectList>();
-        }
-    }
-
     public async Task<List<ReportType>?> GetReportTypesAsync()
     {
         try

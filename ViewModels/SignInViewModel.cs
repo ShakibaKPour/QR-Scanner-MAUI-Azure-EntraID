@@ -22,7 +22,6 @@ public class SignInViewModel : BaseViewModel
     {
         try
         {
-            //Todo: try to inject the authenticationservice directly and see if it solves the problem with the token on windows machine
             var authResult = await App._authenticationService.SignInAsync();
             if (authResult != null)
             {
@@ -43,32 +42,4 @@ public class SignInViewModel : BaseViewModel
         }
     }
 }
-
-
-    //public ICommand SignInCommand { get; }
-
-    //public SignInViewModel()
-    //{
-    //    SignInCommand = new Command(async () => await SignInAsync());
-    //}
-
-    //private async Task SignInAsync()
-    //{
-    //    try
-    //    {
-    //        var authResult =  await App._authenticationService.SignInAsync();
-    //        if (authResult != null)
-    //        {
-    //            MessagingCenter.Send<App>(Application.Current as App, "SignInSuccessful");
-    //        }
-    //    }
-    //    catch (MsalClientException ex)
-    //    {
-    //        Console.WriteLine(ex.Message);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Console.WriteLine($"An unexpected error occurred during sign-in: {ex.Message}");
-    //    }
-    //}
 
