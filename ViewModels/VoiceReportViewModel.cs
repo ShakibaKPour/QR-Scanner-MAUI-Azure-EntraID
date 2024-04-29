@@ -90,7 +90,6 @@ public class VoiceReportViewModel : BaseViewModel
             DeleteRecordingCommand = new Command(DeleteRecording);
             SubmitCommand = new Command(async () => await Submit());
             OnGoBack = new Command(async () => await NavigateBackAsync());
-            OnRefresh = new Command(async () => await RefreshCommandExecuted());
         }
 
         private async void ValidateIsScanned()
@@ -171,11 +170,6 @@ public class VoiceReportViewModel : BaseViewModel
         await _reportServiceType.RefreshReportTypes();
     }
 
-    public async Task RefreshCommandExecuted()
-    {
-        await _languageSettingsService.RefreshAvailableLanguages(ServiceHelper.GetService<IDatabaseService>());
-        await _reportServiceType.RefreshReportTypes();
-    }
 }
 
 

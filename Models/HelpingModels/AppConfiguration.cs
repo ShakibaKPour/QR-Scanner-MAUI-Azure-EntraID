@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RepRepair.Models
+namespace RepRepair.Models.HelpingModels
 {
     public class AppConfiguration
     {
@@ -15,10 +15,7 @@ namespace RepRepair.Models
         public string BaseFunctionUrlGetReportTypes { get; set; }
         public string BaseFunctionUrlGetDefectList { get; set; }
 
-        // You can add more configuration properties as needed.
 
-        // Example constructor to set default values
-        // These could also be set from an external configuration source
         public AppConfiguration()
         {
             UseAuthentication = true; // Default to using authentication, can be overridden by external configuration
