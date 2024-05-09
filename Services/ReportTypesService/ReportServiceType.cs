@@ -2,48 +2,47 @@
 using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.DB;
 
-namespace RepRepair.Services.ReportTypesService
+namespace RepRepair.Services.ReportTypesService;
+
+public class ReportServiceType
 {
-    public class ReportServiceType
+    private readonly IDatabaseService _databaseService;
+
+    public List<ReportType> CachedReportTypes { get; } = new List<ReportType>();
+
+    public ReportServiceType()
     {
-        private readonly IDatabaseService _databaseService;
-
-        public List<ReportType> CachedReportTypes { get; } = new List<ReportType>();
-
-        public ReportServiceType()
+            _databaseService = ServiceHelper.GetService<IDatabaseService>();
+    }
+    public async Task<List<ReportType>> GetReportTypesAsync()
+    {
+        if( CachedReportTypes != null && CachedReportTypes.Count > 0)
         {
-                _databaseService = ServiceHelper.GetService<IDatabaseService>();
-        }
-        public async Task<List<ReportType>> GetReportTypesAsync()
-        {
-            if( CachedReportTypes != null && CachedReportTypes.Count > 0)
-            {
-                return CachedReportTypes;
-            }
-
-            var reportTypes = await _databaseService.GetReportTypesAsync();
-            if (reportTypes != null && reportTypes.Count > 0)
-            {
-                CachedReportTypes?.Clear();
-                foreach (var reportType in reportTypes)
-                {
-                    CachedReportTypes?.Add(reportType);
-                }
-                return CachedReportTypes;
-            }
-            return new List<ReportType>();
+            return CachedReportTypes;
         }
 
-        public async Task RefreshReportTypes()
+        var reportTypes = await _databaseService.GetReportTypesAsync();
+        if (reportTypes != null && reportTypes.Count > 0)
         {
-            var reportTypes = await _databaseService.GetReportTypesAsync();
-            if (reportTypes != null)
+            CachedReportTypes?.Clear();
+            foreach (var reportType in reportTypes)
             {
-                CachedReportTypes.Clear();
-                foreach(var reportType in reportTypes)
-                {
-                    CachedReportTypes?.Add(reportType);
-                }
+                CachedReportTypes?.Add(reportType);
+            }
+            return CachedReportTypes;
+        }
+        return new List<ReportType>();
+    }
+
+    public async Task RefreshReportTypes()
+    {
+        var reportTypes = await _databaseService.GetReportTypesAsync();
+        if (reportTypes != null)
+        {
+            CachedReportTypes.Clear();
+            foreach(var reportType in reportTypes)
+            {
+                CachedReportTypes?.Add(reportType);
             }
         }
     }

@@ -1,10 +1,6 @@
 ﻿using RepRepair.Models.DatabaseModels;
 using RepRepair.Services.DB;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Maui.Storage;
 using RepRepair.Extensions;
 using RepRepair.Services.AlertService;
 
@@ -92,6 +88,5 @@ public class LanguageSettingsService
                 AvailableLanguages.Add(language);
             }
         }
-       // await FetchAndUpdateAvailableLanguages(); // Reuse the logic in FetchAndUpdateAvailableLanguages
     }
 }

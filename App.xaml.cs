@@ -3,7 +3,6 @@ using RepRepair.Extensions;
 using RepRepair.Pages;
 using RepRepair.Services.AlertService;
 using RepRepair.Services.Auth;
-using RepRepair.Services.DB;
 using RepRepair.Services.ReportTypesService;
 
 namespace RepRepair
@@ -13,13 +12,11 @@ namespace RepRepair
         public static IAuthenticationService _authenticationService { get; private set; }
         private readonly LanguageSettingsService _languageSettingsService;
         private readonly ReportServiceType _reportServiceType;
-        public static IAlertService AlertSvc;
         public App()
         {
             InitializeComponent();
             _authenticationService = ServiceHelper.GetService<IAuthenticationService>();
             CheckSignInStatus();
-            AlertSvc = ServiceHelper.GetService<IAlertService>();
             _languageSettingsService = ServiceHelper.GetService<LanguageSettingsService>();
             _reportServiceType = ServiceHelper.GetService<ReportServiceType>();
             InitializeGlobalLanguagesAsync();
@@ -38,7 +35,7 @@ namespace RepRepair
             }
             catch (MsalUiRequiredException)
             {
-                Current.Dispatcher.Dispatch(() =>
+                this.Dispatcher.Dispatch(() =>
                 {
                     Current.MainPage = new NavigationPage(new SignInPage());
                 });
